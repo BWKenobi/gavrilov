@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<div class="mx-auto mb-2 col-md-6 col-lg-6">
+			<h4 class="display-5 text-center">Список квитанций</h4>
+
+			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+				<div class="row align-middle">
+					<div class="col-md-12 text-center">
+						<input type="submit" value="Добавить квитануию">
+					</div>
+				</div>
+				<div class="row align-middle mt-5">
+					{% for invoice in invoices %}
+						<div class="col-md-8">
+							<b>Квитанция от: </b> {{ invoice.date }} <b>на сумму:</b> {{ invoice.summa }} руб.  
+						</div>
+						<div class="col-md-2 text-center">
+							<a href="{{ invoice.file.url }}" target="_blank">Скачать</a>
+						</div>
+						<div class="col-md-2 text-center">
+							<a href="{{ invoice.pk }}" class="del_invoice">Удалить</a>
+						</div>
+						<div class="mx-auto col-md-12 col-lg-12">
+							<div class="border-top my-3"></div>
+						</div>
+					{% endfor %}
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.del_invoice').click(function(){
+				invoice_id = $(this).attr('href');
+				url = "{% url 'invoices:ajax_del_invoice' %}";
+
+				$.ajax({
+					url: url,
+					data: {
+						'invoice': invoice_id
+					},
+					success: function(data){
+						document.location.reload();
+					}
+				});
+				return false;
+			});
+		});
+	</script>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<div class="mx-auto mb-2 col-md-6 col-lg-6">
+			<h4 class="display-5 text-center">Члены жюри</h4>
+
+			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+				<div class="row align-middle">
+					<div class="col-md-6 text-center">
+						<input type="submit" value="Назначить члена жюри">
+					</div>
+					<div class="col-md-6 text-center">
+						<input type="submit" value="Добавить члена жюри" name="new">
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div class="mx-auto mb-3 col-md-12 col-lg-12">
+			<div class="mx-auto col-md-12 col-lg-12">
+				<div class="border-top my-3"></div>
+			</div>
+		</div>
+		<div class="mx-auto mb-2 col-md-12 col-lg-12">
+			<h5 class="display-5 text-center">Председатель жюри</h5>
+			{% for chef_juri in chef_juris %}
+				<div class="row mx-auto mb-2 col-md-6 col-lg-6">
+					<div class="mx-auto col-md-8 col-lg-8">
+						{{ chef_juri.get_file_name }}
+					</div>
+					<div class="col-md-2 text-center">
+						<a href="{% url 'juri_change' pk=chef_juri.pk %}" class="edit_juri">Изменить</a>
+					</div>
+					<div class="col-md-2 text-center">
+						<a href="{{ chef_juri.pk }}" class="del_juri">Удалить</a>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+		<div class="mx-auto mb-3 col-md-12 col-lg-12">
+			<div class="mx-auto col-md-12 col-lg-12">
+				<div class="border-top my-3"></div>
+			</div>
+		</div>
+		<div class="mx-auto mb-2 col-md-12 col-lg-12">
+			<h5 class="display-5 text-center">Члены жюри</h5>
+			{% for juri in juris %}
+				<div class="row mx-auto mb-2 col-md-6 col-lg-6">
+					<div class="mx-auto col-md-8 col-lg-8">
+						{{ juri.get_file_name }}
+					</div>
+					<div class="col-md-2 text-center">
+						<a href="{% url 'juri_change' pk=juri.pk %}" class="edit_juri">Изменить</a>
+					</div>
+					<div class="col-md-2 text-center">
+						<a href="{{ juri.pk }}" class="del_juri">Удалить</a>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.del_juri').click(function(){
+				juri_id = $(this).attr('href');
+				url = "{% url 'ajax_delete_juri' %}";
+
+				$.ajax({
+					url: url,
+					data: {
+						'juri': juri_id
+					},
+					success: function(data){
+						document.location.reload();
+					}
+				});
+				return false;
+			});
+		});
+	</script>
+{% endblock %}

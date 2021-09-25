@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row col-md-12 col-lg-12 ">
+		<div class="mx-auto mb-5 col-md-6 col-lg-6">
+			<h4 class="display-5 text-center mb-5">Изменить статус члена жюри</h4>
+			<h5 class="text-center">{{ pretendent.get_full_name }}</h5>
+			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+				
+				<div class="row align-middle text-center">
+					<div class="col-md-12 text-center">
+						{{form.as_p}}
+						<input type="submit" value="Изменить">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

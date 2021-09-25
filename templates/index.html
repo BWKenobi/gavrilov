@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+	<div class="col-md-12 col-lg-12">
+		<div class="text-center container">
+			<h1 class="jumbotron-heading">Всероссийский</h1>
+			<h1 class="jumbotron-heading">фестиваль-конкурс народного творчества</h1>
+			<h1 class="jumbotron-heading text-uppercase">«ГАВРИЛОВСКИЕ ГУЛЯНИЯ»</h1>
+			{% if not user.is_authenticated and not register_block %}
+				<a href="{% url 'register' %}" class="btn btn-secondary my-2">Зарегистрироваться</a>
+			{% endif %}
+		</div>
+		{% if not user.is_authenticated %}
+			<h4 class="text-center"> Конкурс проводится по специальностям сольное, ансамблевое и хоровое народное пение, декоративно-прикладное искусство.</h4>
+			<p class="text-center text-danger"><b>В 2021 году конкурс проводится только в дистанционном формате.</b></p>
+
+			<p>К участию в конкурсе допускаются студенты учреждений среднего и высшего профессионального образования, любительские коллективы, профессионалы.</p>
+
+			<p>Участники конкурса распределяются по категориям: 
+				<ul>
+					<li>студенты учреждений среднего профессионального образования;</li>
+					<li>студенты высших учебных заведений;</li>
+					<li>преподаватели, руководители коллективов;</li>
+					<li>любительские коллективы.</li>
+				</ul>
+			</p>
+
+			<p>Концертная программа участников конкурса должна включать два разнохарактерных произведения, одно из которых исполняется a’cappella. Допускается исполнение под минусовую фонограмму.</p>
+			<p>Требования для участия в выставочной программе по номинациям декоративно-прикладного искусства можно прочитать в положении фестиваля-конкурса. </p>
+
+			<h4 class="text-center text-primary"><b>ПОРЯДОК ПОДАЧИ ЗАЯВОК</b></h4>
+			<p>Срок подачи заявок до 14 октября 2021 года в Талдомский филиал ГАПОУ МО «Московский Губернский колледж искусств». Заявки подаются на сайте в личном кабинете конкурса.</p>
+
+			<p>Телефон: <a href="tel:+74962075009" class="text-secondary" target="_blank">(49620) 7-50-09</a></p>
+
+			<p>Наш сайт: <a href="http://tdpi.ru/" target="_blank">tdpi.ru</a></p>
+
+			<p>Контактный телефон конкурса: <a href="tel:+79099615780" class="text-secondary" target="_blank">8-909-961-57-80</a> (Корнеева Ирина Владимировна)</p>
+
+			<h5 class="text-center">Председатель жюри фестиваля-конкурса — <b>Засимова Евгения Осиповна</b>, профессор, заслуженный деятель искусств Российской Федерации, художественный руководитель Русской фольклорной Академии «Карагод»</h5>
+		{% else %}
+
+
+
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+
+{% endblock %}
+
+			<div class="container mt-3">
+				<h3 class=" text-center mb-5">Московский Губернский колледж искусств приглашает вас на запланированную конференцию: <b>Zoom</b>.</h3>
+				<h5><b>Тема:</b> областнойтной открытый студенческий конкурс «История глазами молодых»</h5>
+				<br>
+				<h5><b>Время:</b> 15 мая 2021 09:45 AM Москва</h5>
+				<h5>Подключиться к конференции <b>Zoom</b>:</h5>
+				<ul>
+				<li><h5><a href="https://us02web.zoom.us/j/87517639694?pwd=T2NzTXVDcURlekRxNWpDaGYxQUxOdz09" target="_blank">Перейти по ссылке</a></h5></li>
+				<li><h5>Идентификатор конференции: 875 1763 9694</h5></li>
+				<li><h5>Код доступа: Pz1VEq</h5></li>
+				</ul>
+				<h5>Начало конкурса <b>10:00</b></h5>
+				<h5>Попробовать подключение можно с <b>9:45</b></h5>
+				<!--<p>В текущем году конкурс посвящается воинской славе России.</p>-->
+			</div>
+
+
+
+
+
+
+			
+<div class="mx-auto mb-3 col-md-12 col-lg-12">
+					<div class="mx-auto col-md-12 col-lg-12">
+						<div class="border-top mt-3 mb-5"></div>
+					</div>
+				</div>
+
+
+<h3 class=" text-center mb-5">Московский Губернский колледж искусств приглашает вас на запланированную конференцию: <b>Zoom</b>.</h3>
+<h5><b>Тема:</b> Областной открытый студенческий конкурс «История глазами молодых»</h5>
+<br>
+<h5><b>Время:</b> 15 мая 2021 09:45 AM Москва</h5>
+<h5>Подключиться к конференции <b>Zoom</b>:</h5>
+<ul>
+<li><h5><a href="https://us02web.zoom.us/j/87517639694?pwd=T2NzTXVDcURlekRxNWpDaGYxQUxOdz09" target="_blank">Перейти по ссылке</a></h5></li>
+<li><h5>Идентификатор конференции: 875 1763 9694</h5></li>
+<li><h5>Код доступа: Pz1VEq</h5></li>
+</ul>
+<h5>Начало конкурса <b>10:00</b></h5>
+<h5>Попробовать подключение можно с <b>9:45</b></h5>
+
+
+
+
+<div class="container mt-5">
+				<div class="mx-auto mb-3 col-md-12 col-lg-12">
+					<div class="mx-auto col-md-12 col-lg-12">
+						<div class="border-top mt-3 mb-5"></div>
+					</div>
+				</div>
+				<h3 class="text-center mb-5">Отрывки из литературных произведений</h3>
+
+				<div class="row mx-auto mb-3 col-md-12 col-lg-12">
+					<div class="mx-auto col-md-3 col-lg-3">
+						<a href="{% static 'files/text_1.docx' %}" target="_blank">Скачать отрывок 1</a>
+					</div>
+					<div class="mx-auto col-md-3 col-lg-3">
+						<a href="{% static 'files/text_2.docx' %}" target="_blank">Скачать отрывок 2</a>
+					</div>
+					<div class="mx-auto col-md-3 col-lg-3">
+						<a href="{% static 'files/text_3.docx' %}" target="_blank">Скачать отрывок 3</a>
+					</div>
+					<div class="mx-auto col-md-3 col-lg-3">
+						<a href="{% static 'files/text_4.docx' %}" target="_blank">Скачать отрывок 4</a>
+					</div>
+				</div>
+
+			</div>
+
+
+
+
+
+
+
+
+
+				<table class="table mt-5">
+					<thead>
+						<tr>
+							<th scope="col" class="table-cel-width-5 align-middle">№</th>
+							<th scope="col" class="table-cel-width-30 align-middle">Конкурсант</th>
+							<th scope="col" class="table-cel-width-30 align-middle">Преподаватель</th>
+							<th scope="col" class="table-cel-width-25 align-middle text-center">Номер сертификата</th>
+							<th scope="col" class="table-cel-width-10 align-middle text-center">Сертификат</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for certificate in certificates %}
+							<tr>
+								<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+								<td class="align-middle table_click">{{ certificate.child.get_full_name }}</td>
+								<td class="align-middle table_click">{% if certificate.child.teacher_plus %}{{ certificate.child.teacher_plus.get_full_name }}{% else %}{{ certificate.child.teacher.profile.get_full_name }}{% endif %}</td>
+								<td class="align-middle text-center table_click">{{ certificate.certificate_num }}</td>
+								<td class="align-middle text-center table_click">{% if certificate.certificate_file %}<a href="{{ certificate.certificate_file.url }}" target="_blank">Скачать</a>{% endif %}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row col-md-12 col-lg-12 ">
+		<div class="mx-auto mb-5 col-md-6 col-lg-6">
+			<h4 class="display-5 text-center">Назначить члена жюри</h4>
+
+			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+				{{form.as_p}}
+				<div class="row align-middle">
+					<div class="col-md-12 text-center">
+						<input type="submit" value="Назначить">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#id_teacher_plus').attr('disabled', 'true');
+    	});
+
+		$(document).ready(function() {
+			$('#id_teacher_plus_flag').change(function(){
+				if ($(this).prop('checked')){
+					$('#id_teacher_plus').attr('required', 'true');
+					$('#id_teacher_plus').removeAttr('disabled');
+				}else{
+					$('#id_teacher_plus').removeAttr('required');
+					$('#id_teacher_plus').attr('disabled', 'true');
+				}
+
+				
+			});
+		});
+	</script>
+{% endblock %}

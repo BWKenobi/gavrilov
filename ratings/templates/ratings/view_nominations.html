@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<div class="mx-auto mb-2 col-md-12 col-lg-12">
+			<h4 class="display-5 text-center">Номинация: <b>{{ nomination }}</b></h4>
+		</div>
+		<form action="" method="post" class="mx-auto col-md-12 col-lg-12"> {% csrf_token %}
+			<div class="mx-auto my-5 col-md-12 col-lg-12">
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="nav-item">
+						<a class="nav-link active" href="#type_1">ДШИ, ДХШ (13-14 лет)</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#type_2">ДШИ, ДХШ (от 15 лет)</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#type_3">Студенты СПО</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#type_4">Студенты ВПО</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="tab-content col-md-12 col-lg-12">
+				<div class="tab-pane active" id="type_1" role="tab-panel">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-5 align-middle">ID</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_1 %}
+							{% with picture=pictures_list_1|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'children:view_child' pk=picture.author.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<th scope="row" class="align-middle table_click">{{ picture.author.id }}</th>
+									<td class="align-middle table_click">{{ picture.name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }} (возраст: {{ picture.author.age }})</td>
+									<td class="align-middle table_click">{% if picture.author.teacher_plus %}{{ picture.author.teacher_plus.get_full_name }}{% else %}{{ picture.author.teacher.profile.get_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{{ picture.author.teacher.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_1">
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane" id="type_2" role="tab-panel">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-5 align-middle">ID</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_2 %}
+							{% with picture=pictures_list_2|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'children:view_child' pk=picture.author.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<th scope="row" class="align-middle table_click">{{ picture.author.id }}</th>
+									<td class="align-middle table_click">{{ picture.name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }} (возраст: {{ picture.author.age }})</td>
+									<td class="align-middle table_click">{% if picture.author.teacher_plus %}{{ picture.author.teacher_plus.get_full_name }}{% else %}{{ picture.author.teacher.profile.get_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{{ picture.author.teacher.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_2">
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane" id="type_3" role="tab-panel">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-5 align-middle">ID</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_3 %}
+							{% with picture=pictures_list_3|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'children:view_child' pk=picture.author.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<th scope="row" class="align-middle table_click">{{ key }}</th>
+									<td class="align-middle table_click">{{ picture.name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }} (возраст: {{ picture.author.age }})</td>
+									<td class="align-middle table_click">{% if picture.author.teacher_plus %}{{ picture.author.teacher_plus.get_full_name }}{% else %}{{ picture.author.teacher.profile.get_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{{ picture.author.teacher.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_3">
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane" id="type_4" role="tab-panel">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-5 align-middle">ID</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_4 %}
+							{% with picture=pictures_list_4|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'children:view_child' pk=picture.author.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<th scope="row" class="align-middle table_click">{{ picture.author.id }}</th>
+									<td class="align-middle table_click">{{ picture.name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }} (возраст: {{ picture.author.age }})</td>
+									<td class="align-middle table_click">{% if picture.author.teacher_plus %}{{ picture.author.teacher_plus.get_full_name }}{% else %}{{ picture.author.teacher.profile.get_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{{ picture.author.teacher.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_4">
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		</form>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.table_click').click(function(){
+				url = $(this).parent().attr('child-href');
+				col = parseInt($(this).index());
+				if (col != 5)
+					document.location.href = url;
+			});
+
+
+			$('#myTab a').on('click', function(e){
+				e.preventDefault();
+				$(this).tab('show')
+			});
+		});
+	</script>
+{% endblock %}

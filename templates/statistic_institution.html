@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<div class="row col-md-12 col-lg-12 mb-3">
+			<h4 class="display-5 text-center">Список по учреждениям</h4>
+		</div>
+
+		{% for profile in profiles %}
+			<div class="mx-auto  col-md-12 col-lg-12 mb-5">
+				<h5 class="display-5">{{ profile.institution }}</h5>
+				<p><b>Куратор:</b> {{ profile.get_full_name }} (<em>{{ profile.user.email }}</em>)</p>
+				<p><b>Оплаченная сумма:</b> {% if array_sum|lookup:profile.pk %}<span class="text-danger">{{ array_sum|lookup:profile.pk }}</span>{% else %}0{% endif %} руб.</p>
+				<p><b>Всего едениц участия: </b>{{ array_works|lookup:profile.pk }}</p>
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col" class="table-cel-width-5 align-middle">№</th>
+							<th scope="col" class="table-cel-width-30 align-middle">Конкурсант</th>
+							<th scope="col" class="table-cel-width-30 align-middle">Преподаватель</th>
+							<th scope="col" class="table-cel-width-10 align-middle text-center">Количество работ</th>
+							<th scope="col" class="table-cel-width-25 align-middle text-center">Участие в кокурсе профессионального мастерства</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for child in array|lookup:profile.pk %}
+							<tr>
+								<th scope="row" class="align-middle">{{ forloop.counter }}</th>
+								<td class="align-middle">{{ child.get_full_name }}</td>
+								<td class="align-middle">{% if child.teacher_plus %}{{ child.teacher_plus.get_full_name }}{% else %}{{ child.teacher.profile.get_full_name }}{% endif %}</td>
+								<td class="align-middle text-center">{{ array_cnt|lookup:child.pk }}</td>
+								<td class="align-middle text-center">{% if child.master_flag %}<span class="text-primary"> Участвует</span>{% else %}Не участвует{% endif %}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endfor %}
+
+		<div class="col-md-12 text-right pb-3">
+			<form action="" method="post"> {% csrf_token %}
+				<input type="submit" value="Выгрузить список">
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+						<tr>
+							<th scope="row" class="align-middle">{{ forloop.counter }}</th>
+							<td class="align-middle">{{ profile.get_full_name }}</td>
+							<td class="align-middle">{{ profile.institution }}</td>
+							<td class="align-middle">{% if array_sum|lookup:profile.pk %}{{ array_sum|lookup:profile.pk }}{% endif %}</td>
+							<td class="align-middle text-center">
+								{% if array|lookup:profile.pk %}
+									{% for invoice in array|lookup:profile.pk %}
+									<div>
+										<b>Дата: </b> {{ invoice.date }} <b>, сумма:</b> {{ invoice.summa }} руб. <a href="{{ invoice.file.url }}" target="_blank">Скачать</a>
+									</div>
+									{% endfor %}
+								{% endif %}
+							</td>
+						</tr>
