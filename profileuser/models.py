@@ -86,7 +86,10 @@ class Profile(models.Model):
 				return self.surname + ' ' + self.name[0] + '.' + self.name2[0]+ '.'
 			return self.surname + ' ' + self.name[0]+ '.'
 
-		return self.name
+		if self.name:
+			return self.name
+
+		return str(self.user)
 	
 
 
