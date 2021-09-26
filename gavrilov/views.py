@@ -100,6 +100,7 @@ def register_view(request):
 			new_user.set_password(user_form.cleaned_data['password'])
 			new_user.save()
 
+			new_user.profile.category = user_form.cleaned_data['category']
 			new_user.profile.name = user_form.cleaned_data['name']
 			new_user.profile.name2 = user_form.cleaned_data['name2']
 			new_user.profile.surname = user_form.cleaned_data['surname']
@@ -112,6 +113,7 @@ def register_view(request):
 			new_user.profile.surname_musician = user_form.cleaned_data['surname_musician']
 			new_user.profile.name_musician = user_form.cleaned_data['name_musician']
 			new_user.profile.name2_musician = user_form.cleaned_data['name2_musician']
+
 			new_user.profile.save()
 
 			current_site = get_current_site(request)

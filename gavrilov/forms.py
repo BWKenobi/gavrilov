@@ -36,7 +36,16 @@ class UserLoginForm(forms.Form):
 
 
 class UserRegistrationForm(forms.ModelForm):
+	CHOICES = (
+		('1', 'Студенты учреждений среднего профессионального образовани'),
+		('2', 'Студенты высших учебных заведений'),
+		('3', 'Преподаватели, руководители коллективов'),
+		('4', 'Любительские коллективы'),
+	)
+
 	email = forms.EmailField(label = 'Ваш e-mail*', widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+
+	category = forms.ChoiceField(choices=CHOICES,label = 'Категория*',  widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
 	surname = forms.CharField(label = 'Ваша фамилия*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	name  = forms.CharField(label = 'Ваше имя*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
