@@ -8,9 +8,6 @@
 			
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
-				<div class="text-center mb-5">
-				<img src="{% static 'img/blank_img.jpg' %}" class="rounded img-fluid" id="img_field">
-			</div>
 				<div class="row align-middle">
 					<div class="col-md-12 text-center">
 						<input type="submit" value="Добавить" class="show-loader">

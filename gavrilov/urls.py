@@ -9,7 +9,7 @@ from django.contrib.auth import views as auth_views
 
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 
-from .views import home_view, policy_view, juri_view, statistic_children_view, statistic_invoices_view, statistic_institution_view
+from .views import home_view, policy_view, juri_view, statistic_contestant_view, statistic_invoices_view, statistic_institution_view
 from .views import juri_set, juri_change, juri_new
 from .views import login_view, logout_view, register_view, change_password, activate
 from .views import delete_juri
@@ -21,7 +21,7 @@ urlpatterns = [
     path('', home_view, name = 'home'),
     path('policy', policy_view, name = 'policy'),
     path('juri', juri_view, name = 'juri_view'),
-    path('statistic_childs', statistic_children_view, name = 'statistic_children'),
+    path('statistic_contestant', statistic_contestant_view, name = 'statistic_contestant'),
     path('statistic_invoices', statistic_invoices_view, name = 'statistic_invoices'),
     path('statistic_institution', statistic_institution_view, name = 'statistic_institution'),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
@@ -44,9 +44,8 @@ urlpatterns += [
 
 urlpatterns += [
     path('profile/', include(('profileuser.urls', 'profiles'))),
-    path('teachers/', include(('teachers.urls', 'teachers'))),
-    path('children/', include(('children.urls', 'children'))),
     path('pictures/', include(('pictures.urls', 'pictures'))),
+    path('movies/', include(('movies.urls', 'movies'))),
     path('nominations/', include(('nominations.urls', 'nominations'))),
     path('mailing/', include(('mailing.urls', 'mailing'))),
     path('invoices/', include(('invoices.urls', 'invoices'))),

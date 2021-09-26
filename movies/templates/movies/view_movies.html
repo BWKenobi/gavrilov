@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<form action="" method="post" enctype="multipart/form-data" autocomplete="false" class="col-md-12 col-lg-12"> {% csrf_token %}
+			<div class="mx-auto mb-12 col-md-12 col-lg-12">
+				<h4 class="display-5 text-center">Работы для конкурсно-вокальной программы</h4>
+
+				{% if not register_block %}
+					<div class="row align-middle">
+						<div class="col-md-12 text-center">
+							<input type="submit" value="Добавить работу" name="addpict">
+						</div>
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="mx-auto mb-3 col-md-12 col-lg-12">
+				<div class="mx-auto col-md-12 col-lg-12">
+					<div class="border-top my-3"></div>
+				</div>
+			</div>
+
+
+
+			<div class="tab-content col-md-12 col-lg-12">
+				<div class="tab-pane {% if not master %}active{% endif %}" id="pictures" role="tab-panel">
+					<div class="mx-auto mb-5 col-md-12 col-lg-12">
+						{% for movie in movies %}
+							<div class="text-center mb-5 col-md-8 mx-auto">
+								<div class="embed-responsive embed-responsive-16by9">
+								 	<iframe class="embed-responsive-item" src="{{ movie.file }}"></iframe>
+								</div>
+							</div>
+							<div class="row align-middle">
+								<div class="col-md-4 text-center">
+									<b>Название:</b> {{ movie.name }}{% if movie.composer %}, муз. {{movie.composer}}{% endif %}{% if movie.poet %}, сл. {{movie.poet}}{% endif %}{% if movie.descritpion %} ({{movie.descritpion}}){% endif %}
+								</div>
+								<div class="col-md-4 text-center">
+									<b>Номинация:</b> {{ movie.nomination }}
+								</div>
+								<div class="col-md-2 text-center">
+									{% if not register_block %}<a href="{% url 'movies:edit_movie' pk=movie.pk %}" class="edit_image">Изменить данные</a>{% endif %}
+								</div>
+								<div class="col-md-2 text-center">
+									{% if not register_block %}<a href="{{ movie.pk }}" class="del_movie">Удалить</a>{% endif %}
+								</div>
+							</div>
+							<hr>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.del_movie').click(function(){
+				movie_id = $(this).attr('href');
+				url = "{% url 'movies:ajax_del_movie' %}";
+
+				$.ajax({
+					url: url,
+					data: {
+						'movie': movie_id
+					},
+					success: function(data){
+						document.location.reload();
+					}
+				});
+				return false;
+			});
+
+			$('#myTab a').on('click', function(e){
+				e.preventDefault();
+				$(this).tab('show')
+			});
+
+			
+			$('.autosubmition').change(function(){
+				$('.content-blocker').show();
+				$('form').unbind('submit').submit();
+			});
+		});
+	</script>
+{% endblock %}

@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 
-from teachers.models import Teacher
 
 def make_invoice_path(instance, filename):
 	names = filename.split('.')

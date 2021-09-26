@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 
-from children.models import Child
 
 
 def make_certificate_path(instance, filename):
@@ -31,7 +30,7 @@ class Certificate(models.Model):
 		('4', 'Сертификат'),
 	)
 
-	child = models.ForeignKey(Child, verbose_name='Конкурсант', on_delete=models.CASCADE, blank=True, null=True)
+	contestant = models.ForeignKey(User, verbose_name='Конкурсант', on_delete=models.CASCADE, blank=True, null=True)
 
 	type = models.CharField(verbose_name="Тип", max_length=1, choices=TYPE, default='4')	
 

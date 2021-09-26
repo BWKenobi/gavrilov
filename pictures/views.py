@@ -13,19 +13,28 @@ from django.contrib.auth import update_session_auth_hash
 
 from .forms import PictureUploadForm, PictureEditForm
 from .models import Picture
-from children.models import Child
-from .models import Picture
 
 
 @login_required(login_url='/login/')
-def load_image(request, pk):
+def view_arts(request):
+	pictures = Picture.objects.filter(author=request.user)
+
+	if request.method=='POST':
+		return redirect('pictures:load_image')
+
+	args = {
+		'pictures': pictures,
+	}
+	return render(request, 'pictures/view_arts.html', args)
+
+
+@login_required(login_url='/login/')
+def load_image(request):
 	if not request.user.profile.member_access:
 		return redirect('home')
 
-	author = Child.objects.get(pk=pk)
+	author = request.user
 
-	if author.teacher != request.user:
-		return redirect('home')
 
 	if request.method=='POST':
 		form_img = PictureUploadForm(request.POST, request.FILES, label_suffix='')
@@ -39,7 +48,7 @@ def load_image(request, pk):
 				new_img.file = request.FILES['file']
 				new_img.save()
 
-			return redirect('children:view_child', pk = author.pk)
+			return redirect('pictures:view_arts')
 
 		args = {
 			'form': form_img,
@@ -60,9 +69,9 @@ def edit_image(request, pk):
 		return redirect('home')
 		
 	pict = Picture.objects.get(pk=pk)
-	author = pict.author
+	author = request.user
 
-	if author.teacher != request.user:
+	if pict.author != author:
 		return redirect('home')
 
 	if request.method=='POST':
@@ -73,12 +82,12 @@ def edit_image(request, pk):
 			new_img.author = author
 			new_img.save()	
 
-			return redirect('children:view_child', pk = author.pk)
+			return redirect('pictures:view_arts')
 
 		args = {
 			'form': form_img,
 		}
-		return render(request, 'pictures/load_image.html', args)	
+		return render(request, 'pictures/edit_image.html', args)	
 	
 	form_img = PictureEditForm(instance=pict, label_suffix='')
 
@@ -97,7 +106,7 @@ def ajax_del_image(request):
 	image_pk = request.GET['image']
 	picture = Picture.objects.get(pk=image_pk)
 
-	if picture.author.teacher != request.user:
+	if picture.author != request.user:
 		return HttpResponse(False)
 
 	picture.delete()

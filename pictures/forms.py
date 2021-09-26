@@ -7,25 +7,23 @@ from .models import Picture
 class PictureUploadForm(forms.ModelForm):
 	class Meta:
 		model = Picture
-		fields = ('name', 'technique', 'nomination', 'subnomination', 'file')
+		fields = ('name', 'technique', 'nomination', 'file')
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
-			if field != 'subnomination':
-				self.fields[field].required=True
+			self.fields[field].required=True
 
 
 class PictureEditForm(forms.ModelForm):
 	class Meta:
 		model = Picture
-		fields = ('name', 'technique', 'nomination', 'subnomination')
+		fields = ('name', 'technique', 'nomination')
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
-			if field != 'subnomination':
-				self.fields[field].required=True
+			self.fields[field].required=True
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Nomination, SubNomination
+from .models import ArtNomination, VocalNomination
 
 
-admin.site.register({Nomination, SubNomination})
+admin.site.register({ArtNomination, VocalNomination})

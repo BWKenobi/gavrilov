@@ -7,12 +7,13 @@ from .models import Profile
 class ProfileUdpateForm(forms.ModelForm):
 	class Meta:
 		model = Profile
-		fields = ('surname', 'name', 'name2', 'institution', 'adress', 'surname_director', 'name_director', 'name_director2')
+		fields = ('surname', 'name', 'name2', 'institution', 'adress', 'surname_teacher', 'name_teacher', 'name2_teacher', 'surname_musician', 'name_musician', 'name2_musician')
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
-			self.fields[field].required=True
+			if field == 'surname' or field == 'name':
+				self.fields[field].required=True
 			#self.fields[field].widget.attrs['disabled'] = 'disabled'
 

@@ -34,11 +34,11 @@ from django.core.mail import EmailMessage, send_mail
 from .tokens import accaunt_activation_token
 
 from profileuser.models import Profile
-from children.models import Child
+
 from pictures.models import Picture
 from invoices.models import Invoice
 from certificates.models import Certificate
-from children.forms import GroupForm
+
 from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm
 from .forms import SetJuriForm, ChangeJuriForm, NewJuriForm
 
@@ -50,8 +50,7 @@ def home_view(request):
 
 	if request.user.is_authenticated:
 		user = request.user
-		children = Child.objects.filter(teacher=user)
-		certificates = Certificate.objects.filter(child__in = children)
+		certificates = Certificate.objects.filter(contestant = user)
 
 	args = {
 		'certificates': certificates
@@ -106,9 +105,12 @@ def register_view(request):
 			new_user.profile.surname = user_form.cleaned_data['surname']
 			new_user.profile.institution = user_form.cleaned_data['institution']
 			new_user.profile.adress = user_form.cleaned_data['adress']
-			new_user.profile.surname_director = user_form.cleaned_data['surname_director']
-			new_user.profile.name_director = user_form.cleaned_data['name_director']
-			new_user.profile.name_director2 = user_form.cleaned_data['name_director2']
+			new_user.profile.surname_teacher = user_form.cleaned_data['surname_teacher']
+			new_user.profile.name_teacher = user_form.cleaned_data['name_teacher']
+			new_user.profile.name2_teacher = user_form.cleaned_data['name2_teacher']
+			new_user.profile.surname_musician = user_form.cleaned_data['surname_musician']
+			new_user.profile.name_musician = user_form.cleaned_data['name_musician']
+			new_user.profile.name2_musician = user_form.cleaned_data['name2_musician']
 			new_user.profile.save()
 
 			current_site = get_current_site(request)
@@ -192,394 +194,403 @@ def change_password(request):
 
 
 @login_required(login_url='/login/')
-def statistic_children_view(request):
-	if not request.user.profile.admin_access:
-		return redirect('home')
+def statistic_contestant_view(request):
+	pass
 
-	children = Child.objects.all().order_by('surname', 'name', 'name2')
-	pictures = Picture.objects.all()
-	array = {}
-	for child in children:
-		picts = pictures.filter(author=child)
-		if picts:
-			array[child.id] = len(picts)
-		else:
-			array[child.id] = 0
-
-	groups = {}
-	for child in children:
-		groups[child.pk] = GroupForm(instance=child)
-
-	if request.POST:
-		if 'saving' in request.POST:
-			cnt = 0
-			grs = request.POST.getlist('group')
-			for child in children:
-				child.group = grs[cnt]
-				child.save()
-				cnt += 1
-
-				groups[child.pk] = GroupForm(instance=child)
-		else:
-			dte = date.today()
-			document = Document()
-			section = document.sections[-1]
-			new_width, new_height = section.page_height, section.page_width
-			section.orientation = WD_ORIENT.PORTRAIT
-			section.page_width = Mm(297)
-			section.page_height = Mm(210)
-			section.left_margin = Mm(30)
-			section.right_margin = Mm(10)
-			section.top_margin = Mm(10)
-			section.bottom_margin = Mm(10)
-			section.header_distance = Mm(10)
-			section.footer_distance = Mm(10)
-
-			style = document.styles['Normal']
-			font = style.font
-			font.name = 'Times New Roman'
-			font.size = Pt(12)
+	# if not request.user.profile.admin_access:
+	# 	return redirect('home')
 
 
-			document.add_paragraph('Список участников конкурса').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-			p = document.add_paragraph()
-			p.add_run(dte.strftime('%d.%b.%Y')).italic = True
-			p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+	# users = User.objects.filter(is_active=True)
 
-			table = document.add_table(rows=1, cols=7)
-			table.allow_autifit = False
-			table.style = 'TableGrid'
-			table.columns[0].width = Mm(10)
-			table.columns[1].width = Mm(50)
-			table.columns[2].width = Mm(50)
-			table.columns[3].width = Mm(50)
-			table.columns[4].width = Mm(30)
-			table.columns[5].width = Mm(30)
-			table.columns[6].width = Mm(37)
+	# contestants = Profile.objects.filter(user__in=users, member_access=True).order_by('surname', 'name', 'name2')
+	# pictures = Picture.objects.all()
+	# array = {}
+	# for child in children:
+	# 	picts = pictures.filter(author=child)
+	# 	if picts:
+	# 		array[child.id] = len(picts)
+	# 	else:
+	# 		array[child.id] = 0
 
-			hdr_cells = table.rows[0].cells
-			hdr_cells[0].text = '№'
-			hdr_cells[0].width = Mm(10)
-			hdr_cells[1].text = 'Конкурсант'
-			hdr_cells[1].width = Mm(50)
-			hdr_cells[2].text = 'Преподаватель'
-			hdr_cells[2].width = Mm(50)
-			hdr_cells[3].text = 'Учреждение'
-			hdr_cells[3].width = Mm(50)
-			hdr_cells[4].text = 'Врзрастная группа'
-			hdr_cells[4].width = Mm(30)
-			hdr_cells[5].text = 'Кол-во работ'
-			hdr_cells[5].width = Mm(30)
-			hdr_cells[6].text = 'Участие в кокурсе профессионального мастерства'
-			hdr_cells[6].width = Mm(37)
+	# groups = {}
+	# for child in children:
+	# 	groups[child.pk] = GroupForm(instance=child)
 
-			for child in children:
-				row_cells = table.add_row().cells
-				row_cells[0].text = str(child.id)
-				row_cells[0].width = Mm(10)
-				row_cells[1].text = child.get_full_name()
-				row_cells[1].width = Mm(50)
-				if child.teacher_plus:
-					row_cells[2].text = child.teacher_plus.get_full_name()
-				else:
-					row_cells[2].text =child.teacher.profile.get_full_name()
-				row_cells[2].width = Mm(50)
-				row_cells[3].text = child.teacher.profile.institution
-				row_cells[3].width = Mm(50)
-				if child.group:
-					row_cells[4].text = child.get_group_display()
-				else:
-					row_cells[4].text = "-"
-				row_cells[4].width = Mm(30)
-				row_cells[5].text = str(array[child.id])
-				row_cells[5].width = Mm(30)
-				if child.master_flag:
-					row_cells[6].text = '+'
-				else:
-					row_cells[6].text = '-'
-				row_cells[6].width = Mm(37)
+	# if request.POST:
+	# 	if 'saving' in request.POST:
+	# 		cnt = 0
+	# 		grs = request.POST.getlist('group')
+	# 		for child in children:
+	# 			child.group = grs[cnt]
+	# 			child.save()
+	# 			cnt += 1
+
+	# 			groups[child.pk] = GroupForm(instance=child)
+	# 	else:
+	# 		dte = date.today()
+	# 		document = Document()
+	# 		section = document.sections[-1]
+	# 		new_width, new_height = section.page_height, section.page_width
+	# 		section.orientation = WD_ORIENT.PORTRAIT
+	# 		section.page_width = Mm(297)
+	# 		section.page_height = Mm(210)
+	# 		section.left_margin = Mm(30)
+	# 		section.right_margin = Mm(10)
+	# 		section.top_margin = Mm(10)
+	# 		section.bottom_margin = Mm(10)
+	# 		section.header_distance = Mm(10)
+	# 		section.footer_distance = Mm(10)
+
+	# 		style = document.styles['Normal']
+	# 		font = style.font
+	# 		font.name = 'Times New Roman'
+	# 		font.size = Pt(12)
 
 
+	# 		document.add_paragraph('Список участников конкурса').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	# 		p = document.add_paragraph()
+	# 		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+	# 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
-			response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-			response['Content-Disposition'] = 'attachment; filename=List (' + dte.strftime('%d-%b-%Y') + ').docx'
-			document.save(response)
+	# 		table = document.add_table(rows=1, cols=7)
+	# 		table.allow_autifit = False
+	# 		table.style = 'TableGrid'
+	# 		table.columns[0].width = Mm(10)
+	# 		table.columns[1].width = Mm(50)
+	# 		table.columns[2].width = Mm(50)
+	# 		table.columns[3].width = Mm(50)
+	# 		table.columns[4].width = Mm(30)
+	# 		table.columns[5].width = Mm(30)
+	# 		table.columns[6].width = Mm(37)
 
-			return response
+	# 		hdr_cells = table.rows[0].cells
+	# 		hdr_cells[0].text = '№'
+	# 		hdr_cells[0].width = Mm(10)
+	# 		hdr_cells[1].text = 'Конкурсант'
+	# 		hdr_cells[1].width = Mm(50)
+	# 		hdr_cells[2].text = 'Преподаватель'
+	# 		hdr_cells[2].width = Mm(50)
+	# 		hdr_cells[3].text = 'Учреждение'
+	# 		hdr_cells[3].width = Mm(50)
+	# 		hdr_cells[4].text = 'Врзрастная группа'
+	# 		hdr_cells[4].width = Mm(30)
+	# 		hdr_cells[5].text = 'Кол-во работ'
+	# 		hdr_cells[5].width = Mm(30)
+	# 		hdr_cells[6].text = 'Участие в кокурсе профессионального мастерства'
+	# 		hdr_cells[6].width = Mm(37)
 
-	args = {
-		'children': children,
-		'array': array,
-		'groups': groups
-	}
-	return render(request, 'statistic_children.html', args)
+	# 		for child in children:
+	# 			row_cells = table.add_row().cells
+	# 			row_cells[0].text = str(child.id)
+	# 			row_cells[0].width = Mm(10)
+	# 			row_cells[1].text = child.get_full_name()
+	# 			row_cells[1].width = Mm(50)
+	# 			if child.teacher_plus:
+	# 				row_cells[2].text = child.teacher_plus.get_full_name()
+	# 			else:
+	# 				row_cells[2].text =child.teacher.profile.get_full_name()
+	# 			row_cells[2].width = Mm(50)
+	# 			row_cells[3].text = child.teacher.profile.institution
+	# 			row_cells[3].width = Mm(50)
+	# 			if child.group:
+	# 				row_cells[4].text = child.get_group_display()
+	# 			else:
+	# 				row_cells[4].text = "-"
+	# 			row_cells[4].width = Mm(30)
+	# 			row_cells[5].text = str(array[child.id])
+	# 			row_cells[5].width = Mm(30)
+	# 			if child.master_flag:
+	# 				row_cells[6].text = '+'
+	# 			else:
+	# 				row_cells[6].text = '-'
+	# 			row_cells[6].width = Mm(37)
+
+
+
+	# 		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+	# 		response['Content-Disposition'] = 'attachment; filename=List (' + dte.strftime('%d-%b-%Y') + ').docx'
+	# 		document.save(response)
+
+	# 		return response
+
+	# args = {
+	# 	'children': children,
+	# 	'array': array,
+	# 	'groups': groups
+	# }
+	# return render(request, 'statistic_children.html', args)
 
 
 @login_required(login_url='/login/')
 def statistic_invoices_view(request):
-	if not request.user.profile.admin_access:
-		return redirect('home')
+	pass
 
-	profiles = Profile.objects.filter(member_access=True).exclude(user__username='admin').exclude(user__is_active=False).order_by('surname', 'name', 'name2')
-	invoices = Invoice.objects.all()
-	array = {}
-	array_sum = {}
-	for profile in profiles:
-		inces = invoices.filter(payer=profile.user)
-		if inces:
-			summa = 0
-			array[profile.id] = inces
-			for ince in inces:
-				summa += ince.summa
-			array_sum[profile.id] = summa
+	# if not request.user.profile.admin_access:
+	# 	return redirect('home')
 
-
-	if request.POST:
-		dte = date.today()
-		document = Document()
-		section = document.sections[-1]
-		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.PORTRAIT
-		section.page_width = Mm(297)
-		section.page_height = Mm(210)
-		section.left_margin = Mm(30)
-		section.right_margin = Mm(10)
-		section.top_margin = Mm(10)
-		section.bottom_margin = Mm(10)
-		section.header_distance = Mm(10)
-		section.footer_distance = Mm(10)
-
-		style = document.styles['Normal']
-		font = style.font
-		font.name = 'Times New Roman'
-		font.size = Pt(12)
+	# profiles = Profile.objects.filter(member_access=True).exclude(user__username='admin').exclude(user__is_active=False).order_by('surname', 'name', 'name2')
+	# invoices = Invoice.objects.all()
+	# array = {}
+	# array_sum = {}
+	# for profile in profiles:
+	# 	inces = invoices.filter(payer=profile.user)
+	# 	if inces:
+	# 		summa = 0
+	# 		array[profile.id] = inces
+	# 		for ince in inces:
+	# 			summa += ince.summa
+	# 		array_sum[profile.id] = summa
 
 
-		document.add_paragraph('Список оплат').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-		p = document.add_paragraph()
-		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
-		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+	# if request.POST:
+	# 	dte = date.today()
+	# 	document = Document()
+	# 	section = document.sections[-1]
+	# 	new_width, new_height = section.page_height, section.page_width
+	# 	section.orientation = WD_ORIENT.PORTRAIT
+	# 	section.page_width = Mm(297)
+	# 	section.page_height = Mm(210)
+	# 	section.left_margin = Mm(30)
+	# 	section.right_margin = Mm(10)
+	# 	section.top_margin = Mm(10)
+	# 	section.bottom_margin = Mm(10)
+	# 	section.header_distance = Mm(10)
+	# 	section.footer_distance = Mm(10)
 
-		table = document.add_table(rows=1, cols=5)
-		table.allow_autifit = False
-		table.style = 'TableGrid'
-		table.columns[0].width = Mm(10)
-		table.columns[1].width = Mm(70)
-		table.columns[2].width = Mm(70)
-		table.columns[3].width = Mm(30)
-		table.columns[4].width = Mm(77)
-
-
-		hdr_cells = table.rows[0].cells
-		hdr_cells[0].text = '№'
-		hdr_cells[0].width = Mm(10)
-		hdr_cells[1].text = 'Куратор'
-		hdr_cells[1].width = Mm(70)
-		hdr_cells[2].text = 'Учреждение'
-		hdr_cells[2].width = Mm(70)
-		hdr_cells[3].text = 'Оплаченная сумма'
-		hdr_cells[3].width = Mm(30)
-		hdr_cells[4].text = 'Квитанции'
-		hdr_cells[4].width = Mm(77)
-
-		cnt = 1
-		for profile in profiles:
-			row_cells = table.add_row().cells
-			row_cells[0].text = str(cnt)
-			row_cells[0].width = Mm(10)
-			row_cells[1].text = profile.get_full_name()
-			row_cells[1].width = Mm(70)
-			row_cells[2].text = profile.institution
-			row_cells[2].width = Mm(70)
-			row_cells[3].text = '0'
-			if profile.id in array_sum:
-				row_cells[3].text = str(array_sum[profile.id])
-			row_cells[3].width = Mm(30)
-			row_cells[4].text = ''
-			if profile.id in array:
-				for invoice in array[profile.id]:
-					row_cells[4].text += 'Дата: ' + str(invoice.date) + ', сумма: ' + str(invoice.summa) + ' руб.\n'
-			row_cells[4].width = Mm(77)
-
-			cnt += 1
+	# 	style = document.styles['Normal']
+	# 	font = style.font
+	# 	font.name = 'Times New Roman'
+	# 	font.size = Pt(12)
 
 
+	# 	document.add_paragraph('Список оплат').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	# 	p = document.add_paragraph()
+	# 	p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+	# 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
-		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-		response['Content-Disposition'] = 'attachment; filename=InvoiceList (' + dte.strftime('%d-%b-%Y') + ').docx'
-		document.save(response)
+	# 	table = document.add_table(rows=1, cols=5)
+	# 	table.allow_autifit = False
+	# 	table.style = 'TableGrid'
+	# 	table.columns[0].width = Mm(10)
+	# 	table.columns[1].width = Mm(70)
+	# 	table.columns[2].width = Mm(70)
+	# 	table.columns[3].width = Mm(30)
+	# 	table.columns[4].width = Mm(77)
 
-		return response
 
-	args = {
-		'profiles': profiles,
-		'array': array,
-		'array_sum': array_sum
-	}
-	return render(request, 'statistic_invoices.html', args)
+	# 	hdr_cells = table.rows[0].cells
+	# 	hdr_cells[0].text = '№'
+	# 	hdr_cells[0].width = Mm(10)
+	# 	hdr_cells[1].text = 'Куратор'
+	# 	hdr_cells[1].width = Mm(70)
+	# 	hdr_cells[2].text = 'Учреждение'
+	# 	hdr_cells[2].width = Mm(70)
+	# 	hdr_cells[3].text = 'Оплаченная сумма'
+	# 	hdr_cells[3].width = Mm(30)
+	# 	hdr_cells[4].text = 'Квитанции'
+	# 	hdr_cells[4].width = Mm(77)
+
+	# 	cnt = 1
+	# 	for profile in profiles:
+	# 		row_cells = table.add_row().cells
+	# 		row_cells[0].text = str(cnt)
+	# 		row_cells[0].width = Mm(10)
+	# 		row_cells[1].text = profile.get_full_name()
+	# 		row_cells[1].width = Mm(70)
+	# 		row_cells[2].text = profile.institution
+	# 		row_cells[2].width = Mm(70)
+	# 		row_cells[3].text = '0'
+	# 		if profile.id in array_sum:
+	# 			row_cells[3].text = str(array_sum[profile.id])
+	# 		row_cells[3].width = Mm(30)
+	# 		row_cells[4].text = ''
+	# 		if profile.id in array:
+	# 			for invoice in array[profile.id]:
+	# 				row_cells[4].text += 'Дата: ' + str(invoice.date) + ', сумма: ' + str(invoice.summa) + ' руб.\n'
+	# 		row_cells[4].width = Mm(77)
+
+	# 		cnt += 1
+
+
+
+	# 	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+	# 	response['Content-Disposition'] = 'attachment; filename=InvoiceList (' + dte.strftime('%d-%b-%Y') + ').docx'
+	# 	document.save(response)
+
+	# 	return response
+
+	# args = {
+	# 	'profiles': profiles,
+	# 	'array': array,
+	# 	'array_sum': array_sum
+	# }
+	# return render(request, 'statistic_invoices.html', args)
 
 	
 @login_required(login_url='/login/')
 def statistic_institution_view(request):
-	if not request.user.profile.admin_access:
-		return redirect('home')
+	pass
+	
+	# if not request.user.profile.admin_access:
+	# 	return redirect('home')
 
-	profiles = Profile.objects.filter(member_access=True).exclude(user__username='admin').exclude(user__is_active=False).order_by('surname', 'name', 'name2')
-	chilren = Child.objects.all()
-	invoices = Invoice.objects.all()
-	pictures = Picture.objects.all()
+	# profiles = Profile.objects.filter(member_access=True).exclude(user__username='admin').exclude(user__is_active=False).order_by('surname', 'name', 'name2')
+	# chilren = Child.objects.all()
+	# invoices = Invoice.objects.all()
+	# pictures = Picture.objects.all()
 
-	array = {}
-	array_sum = {}
-	array_cnt = {}
-	array_works = {}
-	for profile in profiles:
-		sum_work = 0
-		chlds = chilren.filter(teacher=profile.user)
-		inces = invoices.filter(payer=profile.user)
-		if chlds:
-			array[profile.id] = chlds
-			if inces:
-				summa = 0
-				for ince in inces:
-					summa += ince.summa
-				array_sum[profile.id] = summa
+	# array = {}
+	# array_sum = {}
+	# array_cnt = {}
+	# array_works = {}
+	# for profile in profiles:
+	# 	sum_work = 0
+	# 	chlds = chilren.filter(teacher=profile.user)
+	# 	inces = invoices.filter(payer=profile.user)
+	# 	if chlds:
+	# 		array[profile.id] = chlds
+	# 		if inces:
+	# 			summa = 0
+	# 			for ince in inces:
+	# 				summa += ince.summa
+	# 			array_sum[profile.id] = summa
 
-			for chld in chlds:
-				picts = pictures.filter(author=chld)
-				if picts:
-					array_cnt[chld.id] = len(picts)
-					sum_work += len(picts)
-				else:
-					array_cnt[chld.id] = 0
+	# 		for chld in chlds:
+	# 			picts = pictures.filter(author=chld)
+	# 			if picts:
+	# 				array_cnt[chld.id] = len(picts)
+	# 				sum_work += len(picts)
+	# 			else:
+	# 				array_cnt[chld.id] = 0
 
-				if chld.master_flag:
-					sum_work += 1
+	# 			if chld.master_flag:
+	# 				sum_work += 1
 
-		array_works[profile.id] = sum_work
-
-
-	if request.POST:
-		dte = date.today()
-		document = Document()
-		section = document.sections[-1]
-		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.PORTRAIT
-		section.page_width = Mm(297)
-		section.page_height = Mm(210)
-		section.left_margin = Mm(30)
-		section.right_margin = Mm(10)
-		section.top_margin = Mm(10)
-		section.bottom_margin = Mm(10)
-		section.header_distance = Mm(10)
-		section.footer_distance = Mm(10)
-
-		style = document.styles['Normal']
-		font = style.font
-		font.name = 'Times New Roman'
-		font.size = Pt(12)
+	# 	array_works[profile.id] = sum_work
 
 
-		document.add_paragraph('Список по учреждениям').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-		p = document.add_paragraph()
-		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
-		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+	# if request.POST:
+	# 	dte = date.today()
+	# 	document = Document()
+	# 	section = document.sections[-1]
+	# 	new_width, new_height = section.page_height, section.page_width
+	# 	section.orientation = WD_ORIENT.PORTRAIT
+	# 	section.page_width = Mm(297)
+	# 	section.page_height = Mm(210)
+	# 	section.left_margin = Mm(30)
+	# 	section.right_margin = Mm(10)
+	# 	section.top_margin = Mm(10)
+	# 	section.bottom_margin = Mm(10)
+	# 	section.header_distance = Mm(10)
+	# 	section.footer_distance = Mm(10)
 
-		for profile in profiles:
-			p = document.add_paragraph()
-			pp = p.add_run(profile.institution)
-			pp.font.size = Pt(14)
-			pp.bold = True
-			p.paragraph_format.space_after = 0
+	# 	style = document.styles['Normal']
+	# 	font = style.font
+	# 	font.name = 'Times New Roman'
+	# 	font.size = Pt(12)
 
-			p = document.add_paragraph()
-			p.add_run('Куратор: ').bold = True
-			p.add_run(profile.get_full_name())
-			p.add_run(' (' +  profile.user.email + ')').italic = True
-			p.paragraph_format.space_after = 0
+
+	# 	document.add_paragraph('Список по учреждениям').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	# 	p = document.add_paragraph()
+	# 	p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+	# 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+
+	# 	for profile in profiles:
+	# 		p = document.add_paragraph()
+	# 		pp = p.add_run(profile.institution)
+	# 		pp.font.size = Pt(14)
+	# 		pp.bold = True
+	# 		p.paragraph_format.space_after = 0
+
+	# 		p = document.add_paragraph()
+	# 		p.add_run('Куратор: ').bold = True
+	# 		p.add_run(profile.get_full_name())
+	# 		p.add_run(' (' +  profile.user.email + ')').italic = True
+	# 		p.paragraph_format.space_after = 0
 			
-			p = document.add_paragraph()
-			p.add_run('Оплаченная сумма: ').bold = True
-			try:
-				p.add_run(str(array_sum[profile.id]) + ' руб.')
-				p.paragraph_format.space_after = 0
-			except:
-				p.add_run('0 руб.')
-				p.paragraph_format.space_after = 0
+	# 		p = document.add_paragraph()
+	# 		p.add_run('Оплаченная сумма: ').bold = True
+	# 		try:
+	# 			p.add_run(str(array_sum[profile.id]) + ' руб.')
+	# 			p.paragraph_format.space_after = 0
+	# 		except:
+	# 			p.add_run('0 руб.')
+	# 			p.paragraph_format.space_after = 0
 
-			p = document.add_paragraph()
-			p.add_run('Всего едениц участия: ').bold = True	
-			p.add_run(str(array_works[profile.pk]))
-			p.paragraph_format.space_after = 0
-
-
-			table = document.add_table(rows=1, cols=5)
-			table.allow_autifit = False
-			table.style = 'TableGrid'
-			table.columns[0].width = Mm(10)
-			table.columns[1].width = Mm(90)
-			table.columns[2].width = Mm(90)
-			table.columns[3].width = Mm(30)
-			table.columns[4].width = Mm(37)
+	# 		p = document.add_paragraph()
+	# 		p.add_run('Всего едениц участия: ').bold = True	
+	# 		p.add_run(str(array_works[profile.pk]))
+	# 		p.paragraph_format.space_after = 0
 
 
-			hdr_cells = table.rows[0].cells
-			hdr_cells[0].text = '№'
-			hdr_cells[0].width = Mm(10)
-			hdr_cells[1].text = 'Конкурсант'
-			hdr_cells[1].width = Mm(90)
-			hdr_cells[2].text = 'Преподаватель'
-			hdr_cells[2].width = Mm(90)
-			hdr_cells[3].text = 'Количество работ'
-			hdr_cells[3].width = Mm(30)
-			hdr_cells[4].text = 'Участие в кокурсе профессионального мастерств'
-			hdr_cells[4].width = Mm(37)
+	# 		table = document.add_table(rows=1, cols=5)
+	# 		table.allow_autifit = False
+	# 		table.style = 'TableGrid'
+	# 		table.columns[0].width = Mm(10)
+	# 		table.columns[1].width = Mm(90)
+	# 		table.columns[2].width = Mm(90)
+	# 		table.columns[3].width = Mm(30)
+	# 		table.columns[4].width = Mm(37)
 
-			cnt = 1
-			try:
-				for child in array[profile.id]:
-					row_cells = table.add_row().cells
-					row_cells[0].text = str(cnt)
-					row_cells[0].width = Mm(10)
-					row_cells[1].text = child.get_full_name()
-					row_cells[1].width = Mm(90)
-					if child.teacher_plus:
-						row_cells[2].text = child.teacher_plus.get_full_name()
-					else:
-						row_cells[2].text = child.teacher.profile.get_full_name()
-					row_cells[2].width = Mm(90)
-					row_cells[3].text = '0'
-					row_cells[3].text = str(array_cnt[child.id])
-					row_cells[3].width = Mm(30)
-					if child.master_flag:
-						t = row_cells[4]
-						t.text = 'Участвует'
-						t.paragraphs[0].runs[0].bold = True
-					else:
-						row_cells[4].text = 'Не участвует'
-					row_cells[4].width = Mm(37)
 
-					cnt += 1
-			except:
-				pass
+	# 		hdr_cells = table.rows[0].cells
+	# 		hdr_cells[0].text = '№'
+	# 		hdr_cells[0].width = Mm(10)
+	# 		hdr_cells[1].text = 'Конкурсант'
+	# 		hdr_cells[1].width = Mm(90)
+	# 		hdr_cells[2].text = 'Преподаватель'
+	# 		hdr_cells[2].width = Mm(90)
+	# 		hdr_cells[3].text = 'Количество работ'
+	# 		hdr_cells[3].width = Mm(30)
+	# 		hdr_cells[4].text = 'Участие в кокурсе профессионального мастерств'
+	# 		hdr_cells[4].width = Mm(37)
 
-			document.add_paragraph().paragraph_format.space_after = 0
-			document.add_paragraph().paragraph_format.space_after = 0
+	# 		cnt = 1
+	# 		try:
+	# 			for child in array[profile.id]:
+	# 				row_cells = table.add_row().cells
+	# 				row_cells[0].text = str(cnt)
+	# 				row_cells[0].width = Mm(10)
+	# 				row_cells[1].text = child.get_full_name()
+	# 				row_cells[1].width = Mm(90)
+	# 				if child.teacher_plus:
+	# 					row_cells[2].text = child.teacher_plus.get_full_name()
+	# 				else:
+	# 					row_cells[2].text = child.teacher.profile.get_full_name()
+	# 				row_cells[2].width = Mm(90)
+	# 				row_cells[3].text = '0'
+	# 				row_cells[3].text = str(array_cnt[child.id])
+	# 				row_cells[3].width = Mm(30)
+	# 				if child.master_flag:
+	# 					t = row_cells[4]
+	# 					t.text = 'Участвует'
+	# 					t.paragraphs[0].runs[0].bold = True
+	# 				else:
+	# 					row_cells[4].text = 'Не участвует'
+	# 				row_cells[4].width = Mm(37)
 
-		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-		response['Content-Disposition'] = 'attachment; filename=InstitutionsList (' + dte.strftime('%d-%b-%Y') + ').docx'
-		document.save(response)
+	# 				cnt += 1
+	# 		except:
+	# 			pass
 
-		return response
+	# 		document.add_paragraph().paragraph_format.space_after = 0
+	# 		document.add_paragraph().paragraph_format.space_after = 0
 
-	args = {
-		'profiles': profiles,
-		'array': array,
-		'array_sum': array_sum,
-		'array_cnt': array_cnt,
-		'array_works': array_works
-	}
-	return render(request, 'statistic_institution.html', args)
+	# 	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+	# 	response['Content-Disposition'] = 'attachment; filename=InstitutionsList (' + dte.strftime('%d-%b-%Y') + ').docx'
+	# 	document.save(response)
+
+	# 	return response
+
+	# args = {
+	# 	'profiles': profiles,
+	# 	'array': array,
+	# 	'array_sum': array_sum,
+	# 	'array_cnt': array_cnt,
+	# 	'array_works': array_works
+	# }
+	# return render(request, 'statistic_institution.html', args)
 
 
 @login_required(login_url='/login/')

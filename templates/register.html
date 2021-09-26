@@ -4,17 +4,17 @@
 {% block content %}
 	<div class="row col-md-12 col-lg-12 ">
 		<div class="mx-auto mb-5 col-md-6 col-lg-6">
-			<h4 class="display-5 text-center">Регистрация участника конкурса (преподавателя)</h4>
+			<h4 class="display-5 text-center">Регистрация участника конкурса</h4>
 
 			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
 				<div class="text-center mt-5 mb-3 text-danger">
-					Зарегистрировать конурсанта будет возможно после подтверждения email'а участника.
+					Внимательно заполните все обязательные (отмечены звездочкой) и необязательные поля. Только введенные данные будут использоваться при подготовке резултатов конкурса, дипломов, благодарственных писем и т.д.
 				</div>
 
 				{{form.as_p}}
 				
 				<div class="text-center mb-5">
-					Нажимая на кнопку ЗАРЕГИСТРИРОВАТЬСЯ, Вы даете согласие на <u><a href="{% url 'policy' %}" target="_blank">обработку персональных данных</a></u>.
+					Нажимая на кнопку <b>ЗАРЕГИСТРИРОВАТЬСЯ</b>, Вы даете согласие на <u><a href="{% url 'policy' %}" target="_blank">обработку персональных данных</a></u> и несете полную ответственность за корректность и полноту введенных данных.
 				</div>
 				<div class="row align-middle">
 					<div class=" col-md-12 col-lg-12 text-center">

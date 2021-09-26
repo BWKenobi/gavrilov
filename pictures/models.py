@@ -7,8 +7,7 @@ from django.utils import timezone
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 
-from children.models import Child
-from nominations.models import Nomination, SubNomination
+from nominations.models import ArtNomination
 
 
 def make_picture_path(instance, filename):
@@ -26,9 +25,8 @@ def make_picture_path(instance, filename):
 
 class Picture(models.Model):
 	name = models.CharField(verbose_name="Название работы", max_length=100, blank=True)
-	author = models.ForeignKey(Child, verbose_name='Автор работы', on_delete=models.CASCADE)
-	nomination = models.ForeignKey(Nomination, verbose_name='Номинация', on_delete=models.SET_NULL, blank=True, null=True, default=None)
-	subnomination = models.ForeignKey(SubNomination, verbose_name='Направление', on_delete=models.SET_NULL, blank=True, null=True, default=None)
+	author = models.ForeignKey(User, verbose_name='Автор работы', on_delete=models.CASCADE)
+	nomination = models.ForeignKey(ArtNomination, verbose_name='Номинация', on_delete=models.SET_NULL, blank=True, null=True, default=None)
 	technique = models.CharField(verbose_name="Техника исполнения", max_length=50, blank=True)
 	file = models.ImageField(verbose_name='Изображение работы', blank=True, null=True, upload_to = make_picture_path)
 
@@ -36,7 +34,7 @@ class Picture(models.Model):
 
 
 	class Meta:
-		ordering = ['nomination', 'subnomination', 'name']
+		ordering = ['nomination', 'name']
 		verbose_name='Работа'
 		verbose_name_plural='Работы'
 

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<form action="" method="post" enctype="multipart/form-data" autocomplete="false" class="col-md-12 col-lg-12"> {% csrf_token %}
+			<div class="mx-auto mb-12 col-md-12 col-lg-12">
+				<h4 class="display-5 text-center">Работы для конкурсно-выставочной программы</h4>
+
+				{% if not register_block %}
+					<div class="row align-middle">
+						<div class="col-md-12 text-center">
+							<input type="submit" value="Добавить работу" name="addpict">
+						</div>
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="mx-auto mb-3 col-md-12 col-lg-12">
+				<div class="mx-auto col-md-12 col-lg-12">
+					<div class="border-top my-3"></div>
+				</div>
+			</div>
+
+
+
+			<div class="tab-content col-md-12 col-lg-12">
+				<div class="tab-pane {% if not master %}active{% endif %}" id="pictures" role="tab-panel">
+					<div class="mx-auto mb-5 col-md-12 col-lg-12">
+						{% for pict in pictures %}
+							<div class="text-center mb-5 col-md-8 mx-auto">
+								<img src="{{ pict.file.url }}" class="rounded img-fluid shadow" style="width: 100%;">
+							</div>
+							<div class="row align-middle">
+								<div class="col-md-4 text-center">
+									<b>Название:</b> {{ pict.name }}{% if pict.technique %}({{pict.technique}}){% endif %}
+								</div>
+								<div class="col-md-4 text-center">
+									<b>Номинация:</b> {{ pict.nomination }}{% if pict.subnomination %}/{{ pict.subnomination }}{% endif %}
+								</div>
+								<div class="col-md-2 text-center">
+									{% if not register_block %}<a href="{% url 'pictures:edit_image' pk=pict.pk %}" class="edit_image">Изменить данные</a>{% endif %}
+								</div>
+								<div class="col-md-2 text-center">
+									{% if not register_block %}<a href="{{ pict.pk }}" class="del_image">Удалить</a>{% endif %}
+								</div>
+							</div>
+							<hr>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.del_image').click(function(){
+				img_id = $(this).attr('href');
+				url = "{% url 'pictures:ajax_del_image' %}";
+
+				$.ajax({
+					url: url,
+					data: {
+						'image': img_id
+					},
+					success: function(data){
+						document.location.reload();
+					}
+				});
+				return false;
+			});
+
+			$('#myTab a').on('click', function(e){
+				e.preventDefault();
+				$(this).tab('show')
+			});
+
+			
+			$('.autosubmition').change(function(){
+				$('.content-blocker').show();
+				$('form').unbind('submit').submit();
+			});
+		});
+	</script>
+{% endblock %}

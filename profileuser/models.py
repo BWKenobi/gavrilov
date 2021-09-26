@@ -21,8 +21,17 @@ def make_certificate_path(instance, filename):
 
 
 class Profile(models.Model):
+	CATEGORY_TYPES = (
+		('1', 'Студенты учреждений среднего профессионального образовани'),
+		('2', 'Студенты высших учебных заведений'),
+		('3', 'Преподаватели, руководители коллективов'),
+		('4', 'Любительские коллективы'),
+	)
+
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
 	username = models.CharField("Username:", max_length=30, blank=True)
+
+	category  = models.CharField(verbose_name='Категория участника', max_length=1, choices=CATEGORY_TYPES, default='1')
 
 	surname = models.CharField(verbose_name="Фамилия", max_length=50, blank=True)
 	name = models.CharField(verbose_name="Имя", max_length=30, blank=True)
@@ -31,9 +40,14 @@ class Profile(models.Model):
 
 	institution = models.CharField(verbose_name="Учреждение", max_length=250, blank=True)
 	adress = models.CharField(verbose_name="Адрес учреждения", max_length=250, blank=True)
-	surname_director = models.CharField(verbose_name="Фамилия руководителя учреждения", max_length=50, blank=True)
-	name_director = models.CharField(verbose_name="Имя руководителя учреждения", max_length=30, blank=True)
-	name_director2 = models.CharField(verbose_name="Отчество руководителя учреждения", max_length=30, blank=True)
+
+	surname_teacher = models.CharField(verbose_name="Фамилия преподавателя", max_length=50, blank=True)
+	name_teacher = models.CharField(verbose_name="Имя преподавателя", max_length=30, blank=True)
+	name2_teacher = models.CharField(verbose_name="Отчество преподавателя", max_length=30, blank=True)
+
+	surname_musician = models.CharField(verbose_name="Фамилия концертмейстера", max_length=50, blank=True)
+	name_musician = models.CharField(verbose_name="Имя концертмейстера", max_length=30, blank=True)
+	name2_musician = models.CharField(verbose_name="Отчество концертмейстера", max_length=30, blank=True)
 
 	certificate_num = models.CharField(verbose_name="Номер сертификата", max_length=30, blank=True)
 	certificate_file = models.FileField(verbose_name='Сертификат', blank=True, null=True, upload_to = make_certificate_path)

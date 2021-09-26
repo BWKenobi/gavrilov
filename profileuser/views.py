@@ -24,7 +24,7 @@ def view_edit_profile(request):
 	username = request.user.username
 
 	if request.method=='POST':
-		form_profile = ProfileUdpateForm(request.POST, instance=request.user.profile, label_suffix='')
+		form_profile = ProfileUdpateForm(request.POST, instance=request.user.profile, label_suffix=':')
 
 		if "passchange" in request.POST:
 			return redirect('passchange')
@@ -42,7 +42,7 @@ def view_edit_profile(request):
 		}
 		return render(request, 'profileuser/view_edit_profile.html', args)
 
-	form_profile = ProfileUdpateForm(instance=request.user.profile, label_suffix='')
+	form_profile = ProfileUdpateForm(instance=request.user.profile, label_suffix=':')
 
 	args = {
 		'form': form_profile, 

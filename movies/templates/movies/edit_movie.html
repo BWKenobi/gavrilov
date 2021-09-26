@@ -9,8 +9,10 @@
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
 				<div class="text-center mb-5">
-				<img src="{{ pict.file.url }}" class="rounded img-fluid shadow" id="img_field">
-			</div>
+					<div class="embed-responsive embed-responsive-16by9">
+					 	<iframe class="embed-responsive-item" src="{{ movie.file }}"></iframe>
+					</div>
+				</div>
 				<div class="row align-middle">
 					<div class="col-md-12 text-center">
 						<input type="submit" value="Сохранить">

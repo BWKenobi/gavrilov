@@ -1,13 +1,9 @@
 from datetime import date
 
-from children.models import Child
-from teachers.models import Teacher
-from nominations.models import Nomination, SubNomination
+from nominations.models import ArtNomination, VocalNomination
 
 def base_context(request):
 	start = False
-	my_children = None
-	my_teachers = None
 
 	dte = date.today()
 	dte_deadline = date(2021,10,15)
@@ -17,23 +13,15 @@ def base_context(request):
 
 	if not request.user.is_authenticated:
 		start = True
-	else:
-		my_children = Child.objects.filter(teacher=request.user)
-		my_teachers = Teacher.objects.filter(host_accaunt=request.user)
 
-	nominations = Nomination.objects.all()
-	subnominations = {}
-	for nomination in nominations:
-		s = SubNomination.objects.filter(nomination = nomination)
-		if s:
-			subnominations[nomination.id] = s
+	arts = ArtNomination.objects.all()
+	vocals = VocalNomination.objects.all()
 
 	args = {
 		'start': start,
 		'register_block': register_block,
-		'nominations': nominations,
-		'subnominations': subnominations,
-		'my_children': my_children,
-		'my_teachers': my_teachers
+		'arts': arts,
+		'vocals': vocals
 	}
+	
 	return args

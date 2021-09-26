@@ -2,7 +2,7 @@ from django.db import models
 
 from django.contrib.auth.models import User
 from pictures.models import Picture
-from children.models import Child
+
 
 class PictureMark(models.Model):
 	criterai_one = models.DecimalField(verbose_name="Соответствие выбранной теме", blank=True, decimal_places=0, default=None, max_digits=2, null=True)
@@ -31,10 +31,10 @@ class MasterMark(models.Model):
 	criterai_five = models.DecimalField(verbose_name="Визуальное восприятие", blank=True, decimal_places=0, default=None, max_digits=2, null=True)
 
 	expert = models.ForeignKey(User, verbose_name='Член жюри', on_delete=models.CASCADE, blank=True, null=True)
-	work = models.ForeignKey(Child, verbose_name='Конкурсант', on_delete=models.CASCADE, blank=True, null=True)
+#	work = models.ForeignKey(Child, verbose_name='Конкурсант', on_delete=models.CASCADE, blank=True, null=True)
 
 	class Meta:
-		ordering = ['work']
+		ordering = ['expert']
 		verbose_name='Оценка проф.мастерства'
 		verbose_name_plural='Оценки проф.мастерства'
 
