@@ -38,6 +38,8 @@ class Profile(models.Model):
 	name2 = models.CharField(verbose_name="Отчество", max_length=30, blank=True)
 	rank = models.TextField(verbose_name='Звания', blank=True)
 
+	group = models.CharField(verbose_name="Название коллектива", max_length=250, blank=True)
+	
 	institution = models.CharField(verbose_name="Учреждение", max_length=250, blank=True)
 	adress = models.CharField(verbose_name="Адрес учреждения", max_length=250, blank=True)
 

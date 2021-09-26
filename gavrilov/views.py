@@ -103,6 +103,7 @@ def register_view(request):
 			new_user.profile.name = user_form.cleaned_data['name']
 			new_user.profile.name2 = user_form.cleaned_data['name2']
 			new_user.profile.surname = user_form.cleaned_data['surname']
+			new_user.profile.group = user_form.cleaned_data['group']
 			new_user.profile.institution = user_form.cleaned_data['institution']
 			new_user.profile.adress = user_form.cleaned_data['adress']
 			new_user.profile.surname_teacher = user_form.cleaned_data['surname_teacher']
