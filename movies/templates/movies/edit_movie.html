@@ -9,9 +9,13 @@
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
 				<div class="text-center mb-5">
-					<div class="embed-responsive embed-responsive-16by9">
-					 	<iframe class="embed-responsive-item" src="{{ movie.file }}"></iframe>
-					</div>
+					{% if movie.youtube_flag %}
+						<div class="embed-responsive embed-responsive-16by9">
+						 	<iframe class="embed-responsive-item" src="{{ movie.file }}"></iframe>
+						</div>
+					{% else %}
+						<h4 class="display-5 text-center"><a href="{{ movie.file }}" target="_blank">Просмотреть в новом окне</a></h4>
+					{% endif %}
 				</div>
 				<div class="row align-middle">
 					<div class="col-md-12 text-center">

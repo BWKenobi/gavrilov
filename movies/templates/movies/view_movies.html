@@ -29,9 +29,13 @@
 					<div class="mx-auto mb-5 col-md-12 col-lg-12">
 						{% for movie in movies %}
 							<div class="text-center mb-5 col-md-8 mx-auto">
-								<div class="embed-responsive embed-responsive-16by9">
-								 	<iframe class="embed-responsive-item" src="{{ movie.file }}"></iframe>
-								</div>
+								{% if movie.youtube_flag %}
+									<div class="embed-responsive embed-responsive-16by9">
+									 	<iframe class="embed-responsive-item" src="{{ movie.file }}"></iframe>
+									</div>
+								{% else %}
+									<h4 class="display-5 text-center"><a href="{{ movie.file }}" target="_blank">Просмотреть в новом окне</a></h4>
+								{% endif %}
 							</div>
 							<div class="row align-middle">
 								<div class="col-md-4 text-center">

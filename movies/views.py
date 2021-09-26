@@ -42,13 +42,17 @@ def load_movie(request):
 		if form_movie.is_valid():
 			new_movie = form_movie.save(commit=False)
 			new_movie.author = author
-			url = new_movie.file.split('=')
-			if len(url)>1:
-				url = url[1].split('&')
-				new_movie.file = 'https://www.youtube.com/embed/' + url[0]
-			else:
-				url = new_movie.file.split('/')
-				new_movie.file = 'https://www.youtube.com/embed/' + url[len(url)-1]
+			
+			if 'youtu' in new_movie.file:
+				url = new_movie.file.split('=')
+				if len(url)>1:
+					url = url[1].split('&')
+					new_movie.file = 'https://www.youtube.com/embed/' + url[0]
+				else:
+					url = new_movie.file.split('/')
+					new_movie.file = 'https://www.youtube.com/embed/' + url[len(url)-1]
+				new_movie.youtube_flag = True
+				
 			new_movie.save()	
 
 			return redirect('movies:view_movies')
