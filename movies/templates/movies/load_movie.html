@@ -4,8 +4,9 @@
 {% block content %}
 <div class="row col-md-12 col-lg-12 ">
 		<div class="mx-auto mb-5 col-md-6 col-lg-6">
-			<h4 class="display-5 text-center">Добавить работу</h4>
-			
+			<h4 class="display-5 text-center">Добавить исполнение</h4>
+			<p class="text-center">Добавьте "публичную" ссылку на Ваш видеофайл (Яндекс-диск, облако-mail.ru  и т.п.)</p>
+				<p class="text-center text-danger"><b>Однако рекомендуем использовать YouTube для Вашего видеофайла. </b></p>
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
 				<div class="row align-middle">
