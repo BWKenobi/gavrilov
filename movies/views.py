@@ -46,6 +46,9 @@ def load_movie(request):
 			if len(url)>1:
 				url = url[1].split('&')
 				new_movie.file = 'https://www.youtube.com/embed/' + url[0]
+			else:
+				url = new_movie.file.split('/')
+				new_movie.file = 'https://www.youtube.com/embed/' + url[len(url)-1]
 			new_movie.save()	
 
 			return redirect('movies:view_movies')
