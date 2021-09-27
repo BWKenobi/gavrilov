@@ -3,15 +3,16 @@
 
 {% block content %}
 	<div class="col-md-12 col-lg-12">
-		<div class="text-center container">
-			<h1 class="jumbotron-heading">Всероссийский</h1>
-			<h1 class="jumbotron-heading">фестиваль-конкурс народного творчества</h1>
-			<h1 class="jumbotron-heading text-uppercase">«ГАВРИЛОВСКИЕ ГУЛЯНИЯ»</h1>
-			{% if not user.is_authenticated and not register_block %}
-				<a href="{% url 'register' %}" class="btn btn-secondary my-2">Зарегистрироваться</a>
-			{% endif %}
-		</div>
 		{% if not user.is_authenticated %}
+			<div class="text-center container">
+				<h1 class="jumbotron-heading">Всероссийский</h1>
+				<h1 class="jumbotron-heading">фестиваль-конкурс народного творчества</h1>
+				<h1 class="jumbotron-heading text-uppercase">«ГАВРИЛОВСКИЕ ГУЛЯНИЯ»</h1>
+				{% if not user.is_authenticated and not register_block %}
+					<a href="{% url 'register' %}" class="btn btn-secondary my-2">Зарегистрироваться</a>
+				{% endif %}
+			</div>
+		
 			<h4 class="text-center"> Конкурс проводится по специальностям сольное, ансамблевое и хоровое народное пение, декоративно-прикладное искусство.</h4>
 			<p class="text-center text-danger"><b>В 2021 году конкурс проводится только в дистанционном формате.</b></p>
 
@@ -40,9 +41,19 @@
 
 			<h5 class="text-center">Председатель жюри фестиваля-конкурса — <b>Засимова Евгения Осиповна</b>, профессор, заслуженный деятель искусств Российской Федерации, художественный руководитель Русской фольклорной Академии «Карагод»</h5>
 		{% else %}
+			<div class="text-center container">
+				<h1 class="jumbotron-heading">Приветствуем участников</h1>
+				<h1 class="jumbotron-heading">Всероссийского фестиваля конкурса народного творчества</h1>
+				<h1 class="jumbotron-heading text-uppercase">«ГАВРИЛОВСКИЕ ГУЛЯНИЯ»</h1>
+			</div>
 
+			<h4 class="text-center text-danger my-mt">Обратите внимание, что все ваши регистрационные записи должны быть сделаны максимально внимательно, так как все дипломы и сертификаты по итогам конкурса будут генерироваться автоматически, в соответствии с записями, сделанными участниками конкурса при регистрации.</h4>
 
+			<p class=" my-mt">Телефон: <a href="tel:+74962075009" class="text-secondary" target="_blank">(49620) 7-50-09</a></p>
 
+			<p>Наш сайт: <a href="http://tdpi.ru/" target="_blank">tdpi.ru</a></p>
+
+			<p>Контактный телефон конкурса: <a href="tel:+79099615780" class="text-secondary" target="_blank">8-909-961-57-80</a> (Корнеева Ирина Владимировна)</p>
 		{% endif %}
 	</div>
 {% endblock %}
