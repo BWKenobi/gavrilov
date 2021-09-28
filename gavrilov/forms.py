@@ -169,12 +169,12 @@ class ChangeJuriForm(forms.ModelForm):
 
 class NewJuriForm(forms.ModelForm):
 	email = forms.EmailField(label = 'E-mail члена жюри*', widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
-	name  = forms.CharField(label = 'Имя члена жюри*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
-	name2  = forms.CharField(label = 'Отчество члена жюри*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	surname = forms.CharField(label = 'Фамилия члена жюри*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	name  = forms.CharField(label = 'Имя члена жюри*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	name2  = forms.CharField(label = 'Отчество члена жюри', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	institution = forms.CharField(label = 'Учреждение члена жюри*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	adress = forms.CharField(label = 'Адрес учреждения члена жюри*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
-	rank = forms.CharField(label = 'Регалии члена жюри*', widget=forms.Textarea	(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	rank = forms.CharField(label = 'Регалии члена жюри', widget=forms.Textarea	(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	chef_juri_accecc = forms.BooleanField(initial=False, required=False, label = 'Председатель жюри')
 
 	def __init__(self, *args, **kwargs):

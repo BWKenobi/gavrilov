@@ -36,6 +36,7 @@ from .tokens import accaunt_activation_token
 from profileuser.models import Profile
 
 from pictures.models import Picture
+from movies.models import Movie
 from invoices.models import Invoice
 from certificates.models import Certificate
 
@@ -198,27 +199,32 @@ def change_password(request):
 
 @login_required(login_url='/login/')
 def statistic_contestant_view(request):
-	pass
-
-	# if not request.user.profile.admin_access:
-	# 	return redirect('home')
+	if not request.user.profile.admin_access:
+		return redirect('home')
 
 
-	# users = User.objects.filter(is_active=True)
+	users = User.objects.filter(is_active=True).exclude(username='admin')
 
-	# contestants = Profile.objects.filter(user__in=users, member_access=True).order_by('surname', 'name', 'name2')
-	# pictures = Picture.objects.all()
-	# array = {}
-	# for child in children:
-	# 	picts = pictures.filter(author=child)
-	# 	if picts:
-	# 		array[child.id] = len(picts)
-	# 	else:
-	# 		array[child.id] = 0
+	contestants = Profile.objects.filter(user__in=users, member_access=True).order_by('surname', 'name', 'name2')
+	
+	pictures = Picture.objects.all()
+	movies = Movie.objects.all()
+	array_pictures = {}
+	array_movies = {}
+	for contestant in contestants:
+		picts = pictures.filter(author=contestant.user)
+		movs = movies.filter(author=contestant.user)
+		if picts:
+			array_pictures[contestant.id] = len(picts)
+		else:
+			array_pictures[contestant.id] = 0
 
-	# groups = {}
-	# for child in children:
-	# 	groups[child.pk] = GroupForm(instance=child)
+		if movs:
+			array_movies[contestant.id] = len(movs)
+		else:
+			array_movies[contestant.id] = 0
+
+
 
 	# if request.POST:
 	# 	if 'saving' in request.POST:
@@ -317,12 +323,12 @@ def statistic_contestant_view(request):
 
 	# 		return response
 
-	# args = {
-	# 	'children': children,
-	# 	'array': array,
-	# 	'groups': groups
-	# }
-	# return render(request, 'statistic_children.html', args)
+	args = {
+		'contestants': contestants,
+		'array_pictures': array_pictures,
+		'array_movies': array_movies
+	}
+	return render(request, 'statistic_contestant.html', args)
 
 
 @login_required(login_url='/login/')

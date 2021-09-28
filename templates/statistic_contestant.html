@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<h4 class="display-5 text-center">Список конкурсантов</h4>
+		<form action="" method="post"> {% csrf_token %}
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col" class="table-cel-width-5 align-middle">№</th>
+						<th scope="col" class="table-cel-width-5 align-middle">ID</th>
+						<th scope="col" class="table-cel-width-15 align-middle">Конкурсант (коллектив)</th>
+						<th scope="col" class="table-cel-width-15 align-middle">Преподаватель/концертмейстер</th>
+						<th scope="col" class="table-cel-width-15 align-middle">Учреждение</th>
+						<th scope="col" class="table-cel-width-15 align-middle">Категория</th>
+						<th scope="col" class="table-cel-width-15 align-middle text-center">Кол-во работ ДПИ</th>
+						<th scope="col" class="table-cel-width-15 align-middle text-center">Кол-во вокальных работ</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for contestant in contestants %}
+						<tr class="table_hover" child-href="">
+							<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+							<th scope="row" class="align-middle table_click">{{ contestant.pk }}</th>
+							<td class="align-middle table_click">{{ contestant.get_full_name }}{% if contestant.group %} ({{ contestant.group }}){% endif %}</td>
+							<td class="align-middle table_click">{% if contestant.surname_teacher %}Преп.: {{ contestant.get_teacher_full_name }}{% endif %} {% if contestant.surname_musician %}Конц.: {{ contestant.get_musician_full_name }}{% endif %}</td>
+							<td class="align-middle table_click">{% if contestant.group %}{{ contestant.group }}{% endif %}</td>
+							<td class="align-middle text-center table_click">{{ contestant.get_category_display }}</td>
+							<td class="align-middle text-center table_click">{{ array_pictures|lookup:contestant.pk }}</td>
+							<td class="align-middle text-center table_click">{{ array_movies|lookup:contestant.pk }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+			<div class="row col-md-12 col-lg-12 ">
+				<div class="col-md-10 text-right pb-3">
+					<input type="submit" value="Сохранить" name="saving" class="show-loader">
+				</div>
+				<div class="col-md-2 text-right pb-3">
+					<input type="submit" value="Выгрузить список">
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.table_click').click(function(){
+				url = $(this).parent().attr('child-href');
+				col = parseInt($(this).index());
+				if (col != 5)
+					document.location.href = url;
+			});
+		});
+	</script>
+{% endblock %}

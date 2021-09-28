@@ -72,15 +72,17 @@ class Profile(models.Model):
 
 	def sex(self):
 		sex = False
-		if self.name2[-1] =='ч' or self.name2[-1] == 'Ч':
-			sex = True
+		if self.name2:
+			if self.name2[-1] =='ч' or self.name2[-1] == 'Ч':
+				sex = True
 		return sex
 
 
 	def sex_valid(self):
 		sex_valid = False
-		if self.name2[-1] =='ч' or self.name2[-1] == 'Ч' or self.name2[-1] =='а' or self.name2[-1] == 'А':
-			sex_valid = True
+		if self.name2:
+			if self.name2[-1] =='ч' or self.name2[-1] == 'Ч' or self.name2[-1] =='а' or self.name2[-1] == 'А':
+				sex_valid = True
 		return sex_valid
 
 
@@ -122,6 +124,24 @@ class Profile(models.Model):
 			return self.surname + ' ' + self.name 
 
 		return self.name
+
+
+	def get_teacher_full_name(self):
+		if self.surname_teacher:
+			if self.name2_teacher:
+				return self.surname_teacher + ' ' + self.name_teacher + ' ' + self.name2_teacher 
+			return self.surname_teacher + ' ' + self.name_teacher 
+
+		return self.name_teacher
+
+
+	def get_musician_full_name(self):
+		if self.surname_musician:
+			if self.name2_musician:
+				return self.surname_musician + ' ' + self.name_musician + ' ' + self.name2_musician 
+			return self.surname_musician + ' ' + self.name_musician 
+
+		return self.name_musician
 
 	#Имя файла без пути
 	def file_short_name(self):
