@@ -9,7 +9,7 @@ from django.contrib.auth import views as auth_views
 
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 
-from .views import home_view, policy_view, juri_view, statistic_contestant_view, statistic_invoices_view, statistic_institution_view
+from .views import home_view, policy_view, juri_view, statistic_contestant_view, statistic_invoices_view, view_contestant
 from .views import juri_set, juri_change, juri_new
 from .views import login_view, logout_view, register_view, change_password, activate
 from .views import delete_juri
@@ -23,7 +23,7 @@ urlpatterns = [
     path('juri', juri_view, name = 'juri_view'),
     path('statistic_contestant', statistic_contestant_view, name = 'statistic_contestant'),
     path('statistic_invoices', statistic_invoices_view, name = 'statistic_invoices'),
-    path('statistic_institution', statistic_institution_view, name = 'statistic_institution'),
+    path('view_contestant/<int:pk>/', view_contestant, name = 'view_contestant'),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 
@@ -50,7 +50,7 @@ urlpatterns += [
     path('mailing/', include(('mailing.urls', 'mailing'))),
     path('invoices/', include(('invoices.urls', 'invoices'))),
     path('ratings/', include(('ratings.urls', 'ratings'))),
-    path('certificates/', include(('certificates.urls', 'certificates'))),
+    #path('certificates/', include(('certificates.urls', 'certificates'))),
 ]
 
 urlpatterns += [

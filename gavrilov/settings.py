@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     'invoices',
     'marks',
     'ratings',
-    'certificates',
+    #'certificates',
     'years',
 ]
 

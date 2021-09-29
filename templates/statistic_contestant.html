@@ -21,13 +21,13 @@
 				</thead>
 				<tbody>
 					{% for contestant in contestants %}
-						<tr class="table_hover" child-href="">
+						<tr class="table_hover" child-href="{% url 'view_contestant' pk=contestant.pk %}">
 							<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 							<th scope="row" class="align-middle table_click">{{ contestant.pk }}</th>
-							<td class="align-middle table_click">{{ contestant.get_full_name }}{% if contestant.group %} ({{ contestant.group }}){% endif %}</td>
-							<td class="align-middle table_click">{% if contestant.surname_teacher %}Преп.: {{ contestant.get_teacher_full_name }}{% endif %} {% if contestant.surname_musician %}Конц.: {{ contestant.get_musician_full_name }}{% endif %}</td>
-							<td class="align-middle table_click">{% if contestant.group %}{{ contestant.group }}{% endif %}</td>
-							<td class="align-middle text-center table_click">{{ contestant.get_category_display }}</td>
+							<td class="align-middle table_click">{{ contestant.get_full_name }}{% if contestant.group %} <b>({{ contestant.group }})</b>{% endif %}</td>
+							<td class="align-middle table_click">{% if contestant.surname_teacher %}<b><u>Преп.:</u></b> {{ contestant.get_teacher_full_name }}{% endif %} {% if contestant.surname_musician %}<b><u>Конц.:</u></b> {{ contestant.get_musician_full_name }}{% endif %}</td>
+							<td class="align-middle table_click">{% if contestant.institution %}{{ contestant.institution }}{% endif %}</td>
+							<td class="align-middle table_click">{{ contestant.get_category_display }}</td>
 							<td class="align-middle text-center table_click">{{ array_pictures|lookup:contestant.pk }}</td>
 							<td class="align-middle text-center table_click">{{ array_movies|lookup:contestant.pk }}</td>
 						</tr>
@@ -36,10 +36,7 @@
 			</table>
 
 			<div class="row col-md-12 col-lg-12 ">
-				<div class="col-md-10 text-right pb-3">
-					<input type="submit" value="Сохранить" name="saving" class="show-loader">
-				</div>
-				<div class="col-md-2 text-right pb-3">
+				<div class="col-md-12 text-right pb-3">
 					<input type="submit" value="Выгрузить список">
 				</div>
 			</div>
