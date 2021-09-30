@@ -11,16 +11,16 @@
 			<div class="mx-auto my-5 col-md-12 col-lg-12">
 				<ul class="nav nav-tabs" id="myTab">
 					<li class="nav-item">
-						<a class="nav-link active" href="#type_1">ДШИ, ДХШ (13-14 лет)</a>
+						<a class="nav-link active" href="#type_1">Студенты СПО</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#type_2">ДШИ, ДХШ (от 15 лет)</a>
+						<a class="nav-link" href="#type_2">Студенты ВПО</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#type_3">Студенты СПО</a>
+						<a class="nav-link" href="#type_3">Преподаватели, руководители коллективов</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#type_4">Студенты ВПО</a>
+						<a class="nav-link" href="#type_4">Любительские коллективы</a>
 					</li>
 				</ul>
 			</div>
@@ -42,13 +42,13 @@
 						<tbody>
 							{% for key, val in sorting_1 %}
 							{% with picture=pictures_list_1|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'children:view_child' pk=picture.author.pk %}">
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<th scope="row" class="align-middle table_click">{{ picture.author.id }}</th>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.get_full_name }} (возраст: {{ picture.author.age }})</td>
-									<td class="align-middle table_click">{% if picture.author.teacher_plus %}{{ picture.author.teacher_plus.get_full_name }}{% else %}{{ picture.author.teacher.profile.get_full_name }}{% endif %}</td>
-									<td class="align-middle table_click">{{ picture.author.teacher.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.get_teacher_full_name}}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
 							{% endwith %}
@@ -79,13 +79,13 @@
 						<tbody>
 							{% for key, val in sorting_2 %}
 							{% with picture=pictures_list_2|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'children:view_child' pk=picture.author.pk %}">
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<th scope="row" class="align-middle table_click">{{ picture.author.id }}</th>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.get_full_name }} (возраст: {{ picture.author.age }})</td>
-									<td class="align-middle table_click">{% if picture.author.teacher_plus %}{{ picture.author.teacher_plus.get_full_name }}{% else %}{{ picture.author.teacher.profile.get_full_name }}{% endif %}</td>
-									<td class="align-middle table_click">{{ picture.author.teacher.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.get_teacher_full_name}}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
 							{% endwith %}
@@ -116,13 +116,13 @@
 						<tbody>
 							{% for key, val in sorting_3 %}
 							{% with picture=pictures_list_3|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'children:view_child' pk=picture.author.pk %}">
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
-									<th scope="row" class="align-middle table_click">{{ key }}</th>
+									<th scope="row" class="align-middle table_click">{{ picture.author.id }}</th>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.get_full_name }} (возраст: {{ picture.author.age }})</td>
-									<td class="align-middle table_click">{% if picture.author.teacher_plus %}{{ picture.author.teacher_plus.get_full_name }}{% else %}{{ picture.author.teacher.profile.get_full_name }}{% endif %}</td>
-									<td class="align-middle table_click">{{ picture.author.teacher.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.get_teacher_full_name}}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
 							{% endwith %}
@@ -153,13 +153,13 @@
 						<tbody>
 							{% for key, val in sorting_4 %}
 							{% with picture=pictures_list_4|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'children:view_child' pk=picture.author.pk %}">
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<th scope="row" class="align-middle table_click">{{ picture.author.id }}</th>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.get_full_name }} (возраст: {{ picture.author.age }})</td>
-									<td class="align-middle table_click">{% if picture.author.teacher_plus %}{{ picture.author.teacher_plus.get_full_name }}{% else %}{{ picture.author.teacher.profile.get_full_name }}{% endif %}</td>
-									<td class="align-middle table_click">{{ picture.author.teacher.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.get_teacher_full_name}}</td>
+									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
 							{% endwith %}

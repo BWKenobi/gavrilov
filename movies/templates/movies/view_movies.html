@@ -34,12 +34,12 @@
 									 	<iframe class="embed-responsive-item" src="{{ movie.file }}"></iframe>
 									</div>
 								{% else %}
-									<h4 class="display-5 text-center"><a href="{{ movie.file }}" target="_blank">Просмотреть в новом окне</a></h4>
+									<h4 class="display-5 text-center"><a href="{{ movie.file }}" target="_blank">Просмотреть в отдельном окне</a></h4>
 								{% endif %}
 							</div>
 							<div class="row align-middle">
 								<div class="col-md-4 text-center">
-									<b>Название:</b> {{ movie.name }}{% if movie.composer %}, муз. {{movie.composer}}{% endif %}{% if movie.poet %}, сл. {{movie.poet}}{% endif %}{% if movie.descritpion %} ({{movie.descritpion}}){% endif %}
+									<b>Название:</b> {{ movie.name }}{% if movie.composer %}, <b>муз.</b> {{movie.composer}}{% endif %}{% if movie.poet %}, <b>сл.</b> {{movie.poet}}{% endif %}{% if movie.descritpion %} (<em>{{movie.descritpion}}</em>){% endif %}
 								</div>
 								<div class="col-md-4 text-center">
 									<b>Номинация:</b> {{ movie.nomination }}

@@ -30,14 +30,11 @@
 									<img src="{{ pict.file.url }}" class="rounded img-fluid shadow" style="max-height: 80vh;">
 								</div>
 								<div class="row  mx-auto align-middle col-md-10 col-lg-10 mb-5">
-									<div class="col-md-4">
+									<div class="col-md-6">
 										<b>Техника:</b> {{ pict.technique }}
 									</div>
-									<div class="col-md-4 text-center">
-										<b>Возраст:</b> {{ pict.author.age }}
-									</div>
-									<div class="col-md-4 text-right">
-										<b>Возрастная группа:</b> {{ pict.author.get_group_display }}
+									<div class="col-md-6 text-right">
+										<b>Категория:</b> {{ pict.author.profile.get_category_display }}
 									</div>
 								</div>
 								{% with form=forms|lookup:pict.pk %}
@@ -91,32 +88,3 @@
 	</div>
 {% endblock %}
 
-{% block scripts %}
-    {{ block.super }}
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('.del_image').click(function(){
-				img_id = $(this).attr('href');
-				url = "{% url 'pictures:ajax_del_image' %}";
-
-				$.ajax({
-					url: url,
-					data: {
-						'image': img_id
-					},
-					success: function(data){
-						document.location.reload();
-					}
-				});
-				return false;
-			});
-
-			$('#myTab a').on('click', function(e){
-				e.preventDefault();
-				$(this).tab('show')
-			});
-
-
-		});
-	</script>
-{% endblock %}

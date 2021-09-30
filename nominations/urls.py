@@ -1,15 +1,9 @@
 from django.urls import path
 from django.conf.urls import url
-from .views import view_nomination, view_subnomination, view_master, ajax_load_subnomination
+from .views import view_art_nomination, view_movie_nomination
 
 urlpatterns = [
-	path('view-nomination/<int:pk>', view_nomination, name = 'view_nomination'),
-	path('view-subnomination/<int:pk>', view_subnomination, name = 'view_subnomination'),
-	path('view-master', view_master, name = 'view_master'),
+	path('view-art-nomination/<int:pk>', view_art_nomination, name = 'view_art_nomination'),
+	path('view-movie-nomination/<int:pk>', view_movie_nomination, name = 'view_movie_nomination'),
 ]
 
-
-urlpatterns += [
-	path('ajax/load-subnomination/', ajax_load_subnomination, name = 'ajax_load_subnomination'),
-
-]

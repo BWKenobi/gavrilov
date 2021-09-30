@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<form action="" method="post" enctype="multipart/form-data" autocomplete="false" class="col-md-12 col-lg-12"> {% csrf_token %}
+			<div class="mx-auto mb-2 col-md-12 col-lg-12">
+				<h4 class="display-5 text-center">Номинация: <b>{{ nomination }}</b></h4>
+				<h5 class="text-center text-danger">После выставления оценок, нажмите кнопку <b>"Сохранить оценки работ"</b> внизу страницы</h5>
+			</div>
+
+			<div class="mx-auto mb-3 col-md-12 col-lg-12">
+				<div class="mx-auto col-md-12 col-lg-12">
+					<div class="border-top mt-3 mb-5"></div>
+				</div>
+			</div>
+
+			<form action="" method="post" autocomplete="false"> {% csrf_token %}
+				<div class="tab-content col-md-12 col-lg-12">
+					<div class="tab-pane {% if not master %}active{% endif %}" id="pictures" role="tab-panel">
+						<div class="mx-auto mb-5 col-md-12 col-lg-12">
+							{% for movie in movies %}
+								<div class="mx-auto text-center">
+									<h3>{{ movie.name }}</h3>
+								</div>
+
+								{% if movie.youtube_flag %}
+									<div class="embed-responsive embed-responsive-16by9 mb-5">
+									 	<iframe class="embed-responsive-item" src="{{ movie.file }}"></iframe>
+									</div>
+								{% else %}
+									<h4 class="display-5 text-center mb-5"><a href="{{ movie.file }}" target="_blank">Просмотреть в отдельном окне</a></h4>
+								{% endif %}
+
+
+
+								<div class="row  mx-auto align-middle col-md-10 col-lg-10 mb-5">
+									<div class="col-md-8">
+										{% if movie.composer %}<b>Муз.</b> {{movie.composer}}{% endif %}{% if movie.poet %}, <b>Сл.</b> {{movie.poet}}{% endif %}{% if movie.descritpion %} (<em>{{movie.descritpion}}</em>){% endif %}
+									</div>
+									<div class="col-md-4 text-right">
+										<b>Категория:</b> {{ movie.author.profile.get_category_display }}
+									</div>
+								</div>
+								{% with form=forms|lookup:movie.pk %}
+									<div class="row  mx-auto align-middle col-md-12 col-lg-12">
+										<div class="text-center col-md-4 col-lg-4 mx-auto">
+											{{ form.criterai_one.label_tag }}
+										</div>
+										<div class="text-center col-md-4 col-lg-4 mx-auto">
+											{{ form.criterai_two.label_tag }}
+										</div>
+										<div class="text-center col-md-4 col-lg-4 mx-auto">
+											{{ form.criterai_three.label_tag }}
+										</div>
+									</div>
+									<div class="row  mx-auto align-middle col-md-12 col-lg-12">
+										<div class="text-center col-md-4 col-lg-4 mx-auto">
+											{{ form.criterai_one }}
+										</div>
+										<div class="text-center col-md-4 col-lg-4 mx-auto">
+											{{ form.criterai_two }}
+										</div>
+										<div class="text-center col-md-4 col-lg-4 mx-auto">
+											{{ form.criterai_three }}
+										</div>
+									</div>
+								{% endwith %}
+								<hr>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+				<div class="row align-middle">
+					<div class="col-md-12 text-center">
+						<input type="submit" value="Сохранить оценки работ" class="show-loader">
+					</div>
+				</div>
+			</form>
+		</form>
+	</div>
+{% endblock %}
+

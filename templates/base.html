@@ -132,7 +132,7 @@
                                     <ul>
                                         {% for art in arts %}
                                              <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'ratings:view_subnomination' pk=art.pk %}">
+                                                <a class="nav-link" href="{% url 'ratings:view_art_nomination' pk=art.pk %}">
                                                     <span data-feather="image"></span>
                                                     <em><u>{{ art }}</u></em>
                                                 </a>
@@ -148,7 +148,7 @@
                                     <ul>
                                         {% for vocal in vocals %}
                                              <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'ratings:view_subnomination' pk=vocal.pk %}">
+                                                <a class="nav-link" href="{% url 'ratings:view_mov_nomination' pk=vocal.pk %}">
                                                     <span data-feather="film"></span>
                                                     <em><u>{{ vocal }}</u></em>
                                                 </a>
@@ -162,31 +162,35 @@
                                     <li class="nav-item">
                                         <div class="nav-link">
                                             <span data-feather="award"></span>
-                                            Оценивание работ 
+                                            Оценивание работ (ДПИ)
                                         </div>
                                     </li>
                                     <ul>
-                                        {% for nomination in nominations %}
-                                            <li class="nav-item list-unstyled ">
-                                                <a class="nav-link {% if subnominations|lookup:nomination.pk %}togle{% endif %} {% if nomination_pk == nomination.pk %}active{% endif %}" href="{% url 'nominations:view_nomination' pk=nomination.pk %}">
-                                                    <span data-feather="check-circle"></span>
-                                                    {% if subnominations|lookup:nomination.pk %}<b>{% else %}<em>{% endif %}{{ nomination }}{% if subnominations|lookup:nomination.pk %}</b>{% else %}</em>{% endif %}
+                                        {% for art in arts %}
+                                             <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'nominations:view_art_nomination' pk=art.pk %}">
+                                                    <span data-feather="image"></span>
+                                                    <em><u>{{ art }}</u></em>
                                                 </a>
                                             </li>
-                                            {% if subnominations|lookup:nomination.pk %}
-                                            <ul class="d-none">
-                                                {% for sub in subnominations|lookup:nomination.pk %}
-                                                     <li class="nav-item list-unstyled ">
-                                                        <a class="nav-link {% if subnomination_pk == sub.pk %}active{% endif %}" href="{% url 'nominations:view_subnomination' pk=sub.pk %}">
-                                                            <span data-feather="check"></span>
-                                                            <em><u>{{ sub }}</u></em>
-                                                        </a>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                            {% endif %}
                                         {% endfor %}
+                                    </ul>
 
+                                    <li class="nav-item">
+                                        <div class="nav-link">
+                                            <span data-feather="award"></span>
+                                            Оценивание работ (Вокал)
+                                        </div>
+                                    </li>
+                                    <ul>
+                                        {% for vocal in vocals %}
+                                             <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'nominations:view_movie_nomination' pk=vocal.pk %}">
+                                                    <span data-feather="image"></span>
+                                                    <em><u>{{ vocal }}</u></em>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
                                     </ul>
                                     <div class="border-top my-3"></div>
                                 {% endif %}
