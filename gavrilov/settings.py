@@ -4,12 +4,26 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '6wmm1&@-eaw34@7*tg__^d$+1x^fgj4$=($vx$e)8vn5wc9_mo'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['gavrilov.tdpi.ru', '127.0.0.1']
 
 
-# Application definition
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        }
+    },
+}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -26,7 +40,6 @@ INSTALLED_APPS = [
     'invoices',
     'marks',
     'ratings',
-    #'certificates',
     'years',
 ]
 
@@ -66,6 +79,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'CONN_MAX_AGE': 1000,
     }
 }
 
