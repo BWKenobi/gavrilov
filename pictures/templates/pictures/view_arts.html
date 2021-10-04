@@ -36,7 +36,7 @@
 									<b>Название:</b> {{ pict.name }}{% if pict.technique %}({{pict.technique}}){% endif %}
 								</div>
 								<div class="col-md-4 text-center">
-									<b>Номинация:</b> {{ pict.nomination }}{% if pict.subnomination %}/{{ pict.subnomination }}{% endif %}
+									<b>Номинация:</b> {{ pict.nomination }}
 								</div>
 								<div class="col-md-2 text-center">
 									{% if not register_block %}<a href="{% url 'pictures:edit_image' pk=pict.pk %}" class="edit_image">Изменить данные</a>{% endif %}

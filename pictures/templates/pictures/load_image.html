@@ -39,28 +39,5 @@
 			readURL(this);
 		});
 
-		$('#id_nomination').change(function(){
-			nomination_id = $(this).val();
-			url = "{% url 'nominations:ajax_load_subnomination' %}";
-			$('#id_subnomination').val('');
-
-			$.ajax({
-				url: url,
-				data: {
-					'nomination': nomination_id
-				},
-				success: function(data){
-					if (data=='True'){
-						$('#id_subnomination').attr('required', 'true');
-						$('#id_subnomination').removeAttr('disabled');
-					}else{
-						$('#id_subnomination').removeAttr('required');
-						$('#id_subnomination').attr('disabled', 'true');
-					}
-				}
-			});
-			return false;
-
-		});
 	</script>
 {% endblock %}
