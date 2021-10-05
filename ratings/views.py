@@ -118,7 +118,7 @@ def view_art_nomination(request, pk):
 			ratings_4[picture.id] = summa;
 		else:
 			ratings_4[picture.id] = 0
-		pictures_list_4[picture.id]=picture[picture.id]=picture
+		pictures_list_4[picture.id]=picture
 
 
 	sorting_1 = sorted(ratings_1.items(), key=operator.itemgetter(1), reverse=True)
