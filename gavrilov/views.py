@@ -242,32 +242,35 @@ def statistic_contestant_view(request):
 		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
-		table = document.add_table(rows=1, cols=7)
+		table = document.add_table(rows=1, cols=8)
 		table.allow_autifit = False
 		table.style = 'TableGrid'
 		table.columns[0].width = Mm(10)
 		table.columns[1].width = Mm(57)
-		table.columns[2].width = Mm(50)
-		table.columns[3].width = Mm(50)
-		table.columns[4].width = Mm(50)
-		table.columns[5].width = Mm(20)
+		table.columns[2].width = Mm(30)
+		table.columns[3].width = Mm(40)
+		table.columns[4].width = Mm(40)
+		table.columns[5].width = Mm(40)
 		table.columns[6].width = Mm(20)
+		table.columns[7].width = Mm(20)
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
 		hdr_cells[0].width = Mm(10)
 		hdr_cells[1].text = 'Конкурсант (ансамбль)'
 		hdr_cells[1].width = Mm(57)
-		hdr_cells[2].text = 'Преподаватель/Концертмейстер'
-		hdr_cells[2].width = Mm(50)
-		hdr_cells[3].text = 'Учреждение'
-		hdr_cells[3].width = Mm(50)
-		hdr_cells[4].text = 'Категория'
-		hdr_cells[4].width = Mm(50)
-		hdr_cells[5].text = 'Кол-во работ (ДПИ)'
-		hdr_cells[5].width = Mm(20)
-		hdr_cells[6].text = 'Кол-во работ (вокал)'
+		hdr_cells[2].text = 'Email'
+		hdr_cells[2].width = Mm(30)
+		hdr_cells[3].text = 'Преподаватель/Концертмейстер'
+		hdr_cells[3].width = Mm(40)
+		hdr_cells[4].text = 'Учреждение'
+		hdr_cells[4].width = Mm(40)
+		hdr_cells[5].text = 'Категория'
+		hdr_cells[5].width = Mm(40)
+		hdr_cells[6].text = 'Кол-во работ (ДПИ)'
 		hdr_cells[6].width = Mm(20)
+		hdr_cells[7].text = 'Кол-во работ (вокал)'
+		hdr_cells[7].width = Mm(20)
 
 		for contestant in contestants:
 			row_cells = table.add_row().cells
@@ -277,20 +280,22 @@ def statistic_contestant_view(request):
 			if contestant.group:
 				row_cells[1].text += ' (' + contestant.group + ')'
 			row_cells[1].width = Mm(57)
-			row_cells[2].text = ''
+			row_cells[2].text = contestant.user.email
+			row_cells[2].width = Mm(30)
+			row_cells[3].text = ''
 			if contestant.surname_teacher:
-				row_cells[2].text += 'Преп.: ' + contestant.get_teacher_full_name()
+				row_cells[3].text += 'Преп.: ' + contestant.get_teacher_full_name()
 			if contestant.surname_musician:
-				row_cells[2].text += ' Конц.: ' + contestant.get_musician_full_name()
-			row_cells[2].width = Mm(50)
-			row_cells[3].text = contestant.institution
-			row_cells[3].width = Mm(50)
-			row_cells[4].text = contestant.get_category_display ()
-			row_cells[4].width = Mm(50)
-			row_cells[5].text = str(array_pictures[contestant.id])
-			row_cells[5].width = Mm(20)
-			row_cells[6].text = str(array_movies[contestant.id])
+				row_cells[3].text += ' Конц.: ' + contestant.get_musician_full_name()
+			row_cells[3].width = Mm(40)
+			row_cells[4].text = contestant.institution
+			row_cells[4].width = Mm(40)
+			row_cells[5].text = contestant.get_category_display ()
+			row_cells[5].width = Mm(40)
+			row_cells[6].text = str(array_pictures[contestant.id])
 			row_cells[6].width = Mm(20)
+			row_cells[7].text = str(array_movies[contestant.id])
+			row_cells[7].width = Mm(20)
 
 
 
