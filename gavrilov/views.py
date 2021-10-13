@@ -517,7 +517,7 @@ def juri_new(request):
 				protocol = 'https'
 			current_site = get_current_site(request)
 
-			mail_subject = 'Конкурс "История глазами молодых"'
+			mail_subject = 'Конкурс "Гавриловские гуляния"'
 			to_email = new_user.email
 			sex = new_user.profile.sex()
 			sex_valid = new_user.profile.sex_valid()
