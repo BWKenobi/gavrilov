@@ -42,7 +42,7 @@ class Invoice(models.Model):
 
 ######################################################################
 @receiver(post_delete, sender = Invoice)
-def profile_post_delete_handler(sender, **kwargs):
+def invoice_post_delete_handler(sender, **kwargs):
 	invoce = kwargs['instance']
 
 	if invoce.file:
@@ -51,7 +51,7 @@ def profile_post_delete_handler(sender, **kwargs):
 
 
 @receiver(pre_save, sender = Invoice)
-def profile_pre_save_handler(sender, **kwargs):
+def invoice_pre_save_handler(sender, **kwargs):
 	invoce = kwargs['instance']
 
 	if not invoce.pk:

@@ -49,6 +49,7 @@ urlpatterns += [
     path('nominations/', include(('nominations.urls', 'nominations'))),
     path('mailing/', include(('mailing.urls', 'mailing'))),
     path('invoices/', include(('invoices.urls', 'invoices'))),
+    path('protocols/', include(('protocols.urls', 'protocols'))),
     path('ratings/', include(('ratings.urls', 'ratings'))),
     #path('certificates/', include(('certificates.urls', 'certificates'))),
 ]

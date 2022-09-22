@@ -80,11 +80,19 @@
                             <div class="border-top my-3"></div>
                             {% if not start %}
                                 <li class="nav-item">
-                                    <a class="nav-link {% if 'profile' in request.path or 'passchange' in request.path %}active{% endif %}" href="{% url 'profiles:view_edit_profile' %}">
+                                    <a class="nav-link {% if 'view_edit_profile' in request.path or 'passchange' in request.path %}active{% endif %}" href="{% url 'profiles:view_edit_profile' %}">
                                         <span data-feather="user"></span>
                                         {{ user.profile.get_file_name }}<span class="sr-only"></span>
                                     </a>
                                 </li>
+                                {% if request.user.profile.member_access %}
+                                    <li class="nav-item">
+                                        <a class="nav-link {% if 'view_coprofiles' in request.path or 'view_edit_coprofile' in request.path or 'new_coprofile' in request.path %}active{% endif %}" href="{% url 'profiles:view_coprofiles' %}">
+                                            <span data-feather="users"></span>
+                                            Преподаватели/концертмейстеры<span class="sr-only"></span>
+                                        </a>
+                                    </li>
+                                {% endif %}
                                 <div class="border-top my-3"></div>
                                 {% if request.user.profile.admin_access or request.user.profile.message_accecc %}
                                     <li class="nav-item">
@@ -225,11 +233,17 @@
                                             Квитанции
                                         </a>
                                     </li>
+                                    <li class="nav-item list-unstyled">
+                                        <a class="nav-link {% if '/protocols/' in request.path %}active{% endif %}" href="{% url 'protocols:view_protocol' %}">
+                                            <span data-feather="layers"></span>
+                                            Протокол I тура (при наличие)
+                                        </a>
+                                    </li>
                                     <div class="border-top my-3"></div>
                                 {% endif %}
                             {% endif %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% static 'files/polozhenie-2021.pdf' %}" target="_blank">
+                                <a class="nav-link" href="{% static 'files/polozhenie-2022.pdf' %}" target="_blank">
                                     <span data-feather="book"></span>
                                     Положение
                                 </a>

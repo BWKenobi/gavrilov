@@ -1,28 +1,27 @@
 {% extends 'base.html' %}
-{% load objects_extras %}
 {% load static %}
 
 {% block content %}
 	<div class="row col-md-12 col-lg-12 ">
 		<div class="mx-auto mb-2 col-md-6 col-lg-6">
-			<h4 class="display-5 text-center">Список квитанций</h4>
+			<h4 class="display-5 text-center">Список протоколов I тура</h4>
 
 			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
 				<div class="row align-middle">
 					<div class="col-md-12 text-center">
-						<input type="submit" value="Добавить квитануию">
+						<input type="submit" value="Добавить протокол">
 					</div>
 				</div>
 				<div class="row align-middle mt-5">
-					{% for invoice in invoices %}
+					{% for protocol in protocols %}
 						<div class="col-md-8">
-							<b>Квитанция от: </b> {{ invoice.date }} <b>на сумму:</b> {{ invoice.summa }} руб.  
+							<b>Протокол от: </b> {{ protocol.registration_date }}  
 						</div>
 						<div class="col-md-2 text-center">
-							<a href="{{ invoice.file.url }}" target="_blank">Скачать</a>
+							<a href="{{ protocol.file.url }}" target="_blank">Скачать</a>
 						</div>
 						<div class="col-md-2 text-center">
-							<a href="{{ invoice.pk }}" class="del_invoice">Удалить</a>
+							<a href="{{ protocol.pk }}" class="del_protocol">Удалить</a>
 						</div>
 						<div class="mx-auto col-md-12 col-lg-12">
 							<div class="border-top my-3"></div>
@@ -39,14 +38,14 @@
     {{ block.super }}
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.del_invoice').click(function(){
-				invoice_id = $(this).attr('href');
-				url = "{% url 'invoices:ajax_del_invoice' %}";
+			$('.del_protocol').click(function(){
+				protocol_pk = $(this).attr('href');
+				url = "{% url 'protocols:ajax_del_protocol' %}";
 
 				$.ajax({
 					url: url,
 					data: {
-						'invoice': invoice_id
+						'protocol': protocol_pk
 					},
 					success: function(data){
 						document.location.reload();

@@ -28,6 +28,7 @@
 				<div class="tab-pane {% if not master %}active{% endif %}" id="pictures" role="tab-panel">
 					<div class="mx-auto mb-5 col-md-12 col-lg-12">
 						{% for movie in movies %}
+							{% if request.user.profile.participation == '2' %}
 							<div class="text-center mb-5 col-md-8 mx-auto">
 								{% if movie.youtube_flag %}
 									<div class="embed-responsive embed-responsive-16by9">
@@ -37,6 +38,7 @@
 									<h4 class="display-5 text-center"><a href="{{ movie.file }}" target="_blank">Просмотреть в отдельном окне</a></h4>
 								{% endif %}
 							</div>
+							{% endif %}
 							<div class="row align-middle">
 								<div class="col-md-4 text-center">
 									<b>Название:</b> {{ movie.name }}{% if movie.composer %}, <b>муз.</b> {{movie.composer}}{% endif %}{% if movie.poet %}, <b>сл.</b> {{movie.poet}}{% endif %}{% if movie.descritpion %} (<em>{{movie.descritpion}}</em>){% endif %}

@@ -95,19 +95,14 @@ def register_view(request):
 			new_user.save()
 
 			new_user.profile.category = user_form.cleaned_data['category']
+			new_user.profile.participation = user_form.cleaned_data['participation']
 			new_user.profile.name = user_form.cleaned_data['name']
 			new_user.profile.name2 = user_form.cleaned_data['name2']
 			new_user.profile.surname = user_form.cleaned_data['surname']
 			new_user.profile.group = user_form.cleaned_data['group']
 			new_user.profile.institution = user_form.cleaned_data['institution']
 			new_user.profile.adress = user_form.cleaned_data['adress']
-			new_user.profile.surname_teacher = user_form.cleaned_data['surname_teacher']
-			new_user.profile.name_teacher = user_form.cleaned_data['name_teacher']
-			new_user.profile.name2_teacher = user_form.cleaned_data['name2_teacher']
-			new_user.profile.surname_musician = user_form.cleaned_data['surname_musician']
-			new_user.profile.name_musician = user_form.cleaned_data['name_musician']
-			new_user.profile.name2_musician = user_form.cleaned_data['name2_musician']
-
+			
 			new_user.profile.save()
 
 			current_site = get_current_site(request)

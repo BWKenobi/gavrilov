@@ -8,6 +8,7 @@ from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 
 from nominations.models import ArtNomination
+from profileuser.models import CoProfile
 
 
 def make_picture_path(instance, filename):
@@ -41,6 +42,21 @@ class Picture(models.Model):
 
 	def __str__(self):
 		return self.name
+
+class CoPicturee(models.Model):
+	picture = models.ForeignKey(Picture, verbose_name='Произведение', on_delete=models.CASCADE)
+	coauthor = models.ForeignKey(CoProfile, verbose_name='Соисполнитель', on_delete=models.CASCADE)
+
+	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
+
+	class Meta:
+		ordering = ['picture', 'coauthor']
+		verbose_name='Соисполнитель'
+		verbose_name_plural='Соисполнители'
+
+
+	def __str__(self):
+		return str(self.picture) + ' - ' + str(self.coauthor)
 
 
 ######################################################################

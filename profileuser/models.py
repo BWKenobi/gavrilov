@@ -28,10 +28,16 @@ class Profile(models.Model):
 		('4', 'Любительские коллективы'),
 	)
 
+	PARTICIPATION_TYPE = (
+		('1', 'Очное'),
+		('2', 'Заочное'),
+	)
+	
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
 	username = models.CharField("Username:", max_length=30, blank=True)
 
-	category  = models.CharField(verbose_name='Категория участника', max_length=1, choices=CATEGORY_TYPES, default='1')
+	category = models.CharField(verbose_name='Категория участника', max_length=1, choices=CATEGORY_TYPES, default='1')
+	participation = models.CharField(verbose_name='Тип участия', max_length=1, choices=PARTICIPATION_TYPE, default='1')
 
 	surname = models.CharField(verbose_name="Фамилия", max_length=50, blank=True)
 	name = models.CharField(verbose_name="Имя", max_length=30, blank=True)
@@ -42,14 +48,6 @@ class Profile(models.Model):
 	
 	institution = models.CharField(verbose_name="Учреждение", max_length=250, blank=True)
 	adress = models.CharField(verbose_name="Адрес учреждения", max_length=250, blank=True)
-
-	surname_teacher = models.CharField(verbose_name="Фамилия преподавателя", max_length=50, blank=True)
-	name_teacher = models.CharField(verbose_name="Имя преподавателя", max_length=30, blank=True)
-	name2_teacher = models.CharField(verbose_name="Отчество преподавателя", max_length=30, blank=True)
-
-	surname_musician = models.CharField(verbose_name="Фамилия концертмейстера", max_length=50, blank=True)
-	name_musician = models.CharField(verbose_name="Имя концертмейстера", max_length=30, blank=True)
-	name2_musician = models.CharField(verbose_name="Отчество концертмейстера", max_length=30, blank=True)
 
 	certificate_num = models.CharField(verbose_name="Номер сертификата", max_length=30, blank=True)
 	certificate_file = models.FileField(verbose_name='Сертификат', blank=True, null=True, upload_to = make_certificate_path)
@@ -125,30 +123,85 @@ class Profile(models.Model):
 
 		return self.name
 
+class CoProfile(models.Model):
+	PROFILE_TYPE = (
+		('1', 'Руководитель'),
+		('2', 'Преподаватель'),
+		('3', 'Хормейстер'),
+		('4', 'Концертмейстер'),
+		('5', 'Хореограф'),
+	)
+	
+	main_user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-	def get_teacher_full_name(self):
-		if self.surname_teacher:
-			if self.name2_teacher:
-				return self.surname_teacher + ' ' + self.name_teacher + ' ' + self.name2_teacher 
-			return self.surname_teacher + ' ' + self.name_teacher 
+	profile_type = models.CharField(verbose_name='Категория', max_length=1, choices=PROFILE_TYPE, default='1')
 
-		return self.name_teacher
+	surname = models.CharField(verbose_name="Фамилия", max_length=50, blank=True)
+	name = models.CharField(verbose_name="Имя", max_length=30, blank=True)
+	name2 = models.CharField(verbose_name="Отчество", max_length=30, blank=True)
+
+	certificate_num = models.CharField(verbose_name="Номер сертификата", max_length=30, blank=True)
+	certificate_file = models.FileField(verbose_name='Сертификат', blank=True, null=True, upload_to = make_certificate_path)
+
+	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
+
+	def __str__(self):
+		return self.get_file_name() + ' (' + self.get_profile_type_display() + ')'
+
+	def sex(self):
+		sex = False
+		if self.name2:
+			if self.name2[-1] =='ч' or self.name2[-1] == 'Ч':
+				sex = True
+		return sex
 
 
-	def get_musician_full_name(self):
-		if self.surname_musician:
-			if self.name2_musician:
-				return self.surname_musician + ' ' + self.name_musician + ' ' + self.name2_musician 
-			return self.surname_musician + ' ' + self.name_musician 
+	def sex_valid(self):
+		sex_valid = False
+		if self.name2:
+			if self.name2[-1] =='ч' or self.name2[-1] == 'Ч' or self.name2[-1] =='а' or self.name2[-1] == 'А':
+				sex_valid = True
+		return sex_valid
 
-		return self.name_musician
 
-	#Имя файла без пути
-	def file_short_name(self):
-		str = self.report_file.path
-		str = str[str.rfind('/')+1:len(str):1]
-		return str
+	def get_name(self):
+		admin = ''
+		if self.admin_access:
+			admin = ' (Администратор)'
+		if self.surname:
+			if self.name2:
+				return self.surname + ' ' + self.name[0] + '.' + self.name2[0]+ '.' + admin
+			return self.surname + ' ' + self.name[0]+ '.'  + admin
 
+		return self.name + admin
+
+
+	def get_file_name(self):
+		if self.surname:
+			if self.name2:
+				return self.surname + ' ' + self.name[0] + '.' + self.name2[0]+ '.'
+			return self.surname + ' ' + self.name[0]+ '.'
+
+		if self.name:
+			return self.name
+
+		return str(self.user)
+	
+
+
+	def get_io_name(self):
+		if self.name2:
+			return self.name + ' ' + self.name2 
+		return self.name 
+
+
+	def get_full_name(self):
+		if self.surname:
+			if self.name2:
+				return self.surname + ' ' + self.name + ' ' + self.name2 
+			return self.surname + ' ' + self.name 
+
+		return self.name
 
 ######################################################################
 @receiver(post_save, sender=User)
@@ -188,5 +241,33 @@ def profile_pre_save_handler(sender, **kwargs):
 				if os.path.isfile(old_file.path):
 					os.remove(old_file.path)
 	except Profile.DoesNotExist:
+		pass
+
+
+@receiver(post_delete, sender = CoProfile)
+def coprofile_post_delete_handler(sender, **kwargs):
+	coprofile = kwargs['instance']
+
+	if coprofile.certificate_file:
+		if os.path.isfile(coprofile.certificate_file.path):
+			os.remove(coprofile.certificate_file.path)
+
+
+@receiver(pre_save, sender = CoProfile)
+def coprofile_pre_save_handler(sender, **kwargs):
+	coprofile = kwargs['instance']
+
+	if not coprofile.pk:
+		return False
+
+	try:
+		old_file = CoProfile.objects.get(pk=coprofile.pk).certificate_file
+
+		if old_file:
+			new_file = coprofile.certificate_file
+			if not old_file==new_file:
+				if os.path.isfile(old_file.path):
+					os.remove(old_file.path)
+	except CoProfile.DoesNotExist:
 		pass
 	

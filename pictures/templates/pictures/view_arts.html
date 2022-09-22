@@ -28,9 +28,13 @@
 				<div class="tab-pane {% if not master %}active{% endif %}" id="pictures" role="tab-panel">
 					<div class="mx-auto mb-5 col-md-12 col-lg-12">
 						{% for pict in pictures %}
+							{% if request.user.profile.participation == '2' %}
 							<div class="text-center mb-5 col-md-8 mx-auto">
+								{% if pict.file %}
 								<img src="{{ pict.file.url }}" class="rounded img-fluid shadow" style="width: 100%;">
+								{% endif %}
 							</div>
+							{% endif %}
 							<div class="row align-middle">
 								<div class="col-md-4 text-center">
 									<b>Название:</b> {{ pict.name }}{% if pict.technique %}({{pict.technique}}){% endif %}

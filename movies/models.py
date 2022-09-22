@@ -8,6 +8,7 @@ from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 
 from nominations.models import VocalNomination
+from profileuser.models import CoProfile
 
 
 class Movie(models.Model):
@@ -35,3 +36,17 @@ class Movie(models.Model):
 		return self.name
 
 
+class CoMovie(models.Model):
+	movie = models.ForeignKey(Movie, verbose_name='Произведение', on_delete=models.CASCADE)
+	coauthor = models.ForeignKey(CoProfile, verbose_name='Соисполнитель', on_delete=models.CASCADE)
+
+	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
+
+	class Meta:
+		ordering = ['movie', 'coauthor']
+		verbose_name='Соисполнитель'
+		verbose_name_plural='Соисполнители'
+
+
+	def __str__(self):
+		return str(self.movie) + ' - ' + str(self.coauthor)

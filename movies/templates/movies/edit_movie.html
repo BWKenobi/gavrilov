@@ -1,13 +1,23 @@
 {% extends 'base.html' %}
+{% load objects_extras %}
 {% load static %}
 
 {% block content %}
 <div class="row col-md-12 col-lg-12 ">
-		<div class="mx-auto mb-5 col-md-6 col-lg-6">
+		<div class="mx-auto mb-5 col-md-8 col-lg-8">
 			<h4 class="display-5 text-center">Редактировать данные работы</h4>
 			
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
+				<h5 class="text-center mt-5">Преподаватели/концертмейстеры и т.п.</h5>
+				<p class="text-center text-danger">Для добавления соисполнителей воспользуйтесь соответсвующим пунктом в боковом меню.</p>
+				{% for coprofile in coprofiles %}
+				<div class="row">
+					<div class="col-md-11 mb-3">{{ coprofile.get_file_name }} <em>({{ coprofile.get_profile_type_display }})</em></div>
+					<div class="col-md-1"><input type="checkbox" name="coprofile-check-{{ coprofile.pk }}" id="checked-{{ coprofile.pk }}" {% if comovies_list|lookup:coprofile.pk %}checked{% endif %}></div>
+				</div>
+				{% endfor %}
+				{% if request.user.profile.participation == '2' %}
 				<div class="text-center mb-5">
 					{% if movie.youtube_flag %}
 						<div class="embed-responsive embed-responsive-16by9">
@@ -17,6 +27,7 @@
 						<h4 class="display-5 text-center"><a href="{{ movie.file }}" target="_blank">Просмотреть в новом окне</a></h4>
 					{% endif %}
 				</div>
+				{% endif %}
 				<div class="row align-middle">
 					<div class="col-md-12 text-center">
 						<input type="submit" value="Сохранить">

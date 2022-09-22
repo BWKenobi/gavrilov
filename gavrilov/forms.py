@@ -43,8 +43,13 @@ class UserRegistrationForm(forms.ModelForm):
 		('4', 'Любительские коллективы'),
 	)
 
-	email = forms.EmailField(label = 'Ваш e-mail*', widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	PARTICIPATION_TYPE = (
+		('1', 'Очное'),
+		('2', 'Заочное'),
+	)
 
+	participation = forms.ChoiceField(choices=PARTICIPATION_TYPE,label = 'Тип участия*',  widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	email = forms.EmailField(label = 'Ваш e-mail*', widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	category = forms.ChoiceField(choices=CHOICES,label = 'Категория*',  widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
 	surname = forms.CharField(label = 'Ваша фамилия*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
@@ -55,14 +60,6 @@ class UserRegistrationForm(forms.ModelForm):
 
 	institution = forms.CharField(label = 'Учреждение', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	adress = forms.CharField(label = 'Адрес учреждения', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-
-	surname_teacher = forms.CharField(label = 'Фамилия преподавателя', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	name_teacher = forms.CharField(label = 'Имя преподавателя', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	name2_teacher	 = forms.CharField(label = 'Отчество преподавателя', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-
-	surname_musician = forms.CharField(label = 'Фамилия концертмейстера', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	name_musician = forms.CharField(label = 'Имя концертмейстера', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	name2_musician	 = forms.CharField(label = 'Отчество концертмейстера', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 
 	password = forms.CharField(label = 'Задайте пароль*', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
