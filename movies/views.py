@@ -19,12 +19,18 @@ from profileuser.models import CoProfile
 @login_required(login_url='/login/')
 def view_movies(request):
 	movies = Movie.objects.filter(author=request.user)
+	comovies_list = {}
+
 
 	if request.method=='POST':
 		return redirect('movies:load_movie')
 
+	for movie in movies:
+		comovies_list[movie.pk] = CoMovie.objects.filter(movie = movie)
+
 	args = {
 		'movies': movies,
+		'comovies_list': comovies_list
 	}
 	return render(request, 'movies/view_movies.html', args)
 

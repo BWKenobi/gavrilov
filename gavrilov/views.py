@@ -33,7 +33,7 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMessage, send_mail
 from .tokens import accaunt_activation_token
 
-from profileuser.models import Profile
+from profileuser.models import Profile, CoProfile
 
 from pictures.models import Picture
 from movies.models import Movie
@@ -193,7 +193,8 @@ def statistic_contestant_view(request):
 	users = User.objects.filter(is_active=True).exclude(username='admin')
 
 	contestants = Profile.objects.filter(user__in=users, member_access=True).order_by('surname', 'name', 'name2')
-	
+	coprofile_list = {}
+
 	pictures = Picture.objects.all()
 	movies = Movie.objects.all()
 	array_pictures = {}
@@ -210,6 +211,8 @@ def statistic_contestant_view(request):
 			array_movies[contestant.id] = len(movs)
 		else:
 			array_movies[contestant.id] = 0
+
+		coprofile_list[contestant.pk] = CoProfile.objects.filter(main_user = contestant.user)
 
 	if request.POST:
 		dte = date.today()
@@ -303,7 +306,8 @@ def statistic_contestant_view(request):
 	args = {
 		'contestants': contestants,
 		'array_pictures': array_pictures,
-		'array_movies': array_movies
+		'array_movies': array_movies,
+		'coprofile_list': coprofile_list
 	}
 	return render(request, 'statistic_contestant.html', args)
 

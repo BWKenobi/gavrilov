@@ -18,12 +18,17 @@ from profileuser.models import CoProfile
 @login_required(login_url='/login/')
 def view_arts(request):
 	pictures = Picture.objects.filter(author=request.user)
+	copictures_list = {}
 
 	if request.method=='POST':
 		return redirect('pictures:load_image')
 
+	for picture in pictures:
+		copictures_list[picture.pk] = CoPicturee.objects.filter(picture = picture)
+
 	args = {
 		'pictures': pictures,
+		'copictures_list': copictures_list
 	}
 	return render(request, 'pictures/view_arts.html', args)
 

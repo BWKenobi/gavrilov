@@ -10,11 +10,10 @@
 				<thead>
 					<tr>
 						<th scope="col" class="table-cel-width-5 align-middle">№</th>
-						<th scope="col" class="table-cel-width-5 align-middle">ID</th>
 						<th scope="col" class="table-cel-width-15 align-middle">Конкурсант (коллектив)</th>
 						<th scope="col" class="table-cel-width-10 align-middle">Email</th>
 						<th scope="col" class="table-cel-width-15 align-middle">Преподаватель/концертмейстер</th>
-						<th scope="col" class="table-cel-width-15 align-middle">Учреждение</th>
+						<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
 						<th scope="col" class="table-cel-width-15 align-middle">Категория</th>
 						<th scope="col" class="table-cel-width-10 align-middle text-center">Кол-во работ ДПИ</th>
 						<th scope="col" class="table-cel-width-10 align-middle text-center">Кол-во вокальных работ</th>
@@ -24,10 +23,9 @@
 					{% for contestant in contestants %}
 						<tr class="table_hover" child-href="{% url 'view_contestant' pk=contestant.pk %}">
 							<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
-							<th scope="row" class="align-middle table_click">{{ contestant.pk }}</th>
 							<td class="align-middle table_click">{{ contestant.get_full_name }}{% if contestant.group %} <b>({{ contestant.group }})</b>{% endif %}</td>
 							<th scope="row" class="align-middle table_click">{{ contestant.user.email }}</th>
-							<td class="align-middle table_click">{% if contestant.surname_teacher %}<b><u>Преп.:</u></b> {{ contestant.get_teacher_full_name }}{% endif %} {% if contestant.surname_musician %}<b><u>Конц.:</u></b> {{ contestant.get_musician_full_name }}{% endif %}</td>
+							<td class="align-middle table_click">{% for coprofile in coprofile_list|lookup:contestant.pk %}<br>{{ coprofile.get_file_name }} <em>({{ coprofile.get_profile_type_display }})</em>{% endfor %}</td>
 							<td class="align-middle table_click">{% if contestant.institution %}{{ contestant.institution }}{% endif %}</td>
 							<td class="align-middle table_click">{{ contestant.get_category_display }}</td>
 							<td class="align-middle text-center table_click">{{ array_pictures|lookup:contestant.pk }}</td>

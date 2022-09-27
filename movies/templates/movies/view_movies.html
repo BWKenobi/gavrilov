@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load objects_extras %}
 {% load static %}
 
 {% block content %}
@@ -40,8 +41,11 @@
 							</div>
 							{% endif %}
 							<div class="row align-middle">
-								<div class="col-md-4 text-center">
+								<div class="col-md-4">
 									<b>Название:</b> {{ movie.name }}{% if movie.composer %}, <b>муз.</b> {{movie.composer}}{% endif %}{% if movie.poet %}, <b>сл.</b> {{movie.poet}}{% endif %}{% if movie.descritpion %} (<em>{{movie.descritpion}}</em>){% endif %}
+									{% for comovies in comovies_list|lookup:movie.pk %}
+									<br>{{ comovies.coauthor.get_file_name }} <em>({{ comovies.coauthor.get_profile_type_display }})</em>
+									{% endfor %}
 								</div>
 								<div class="col-md-4 text-center">
 									<b>Номинация:</b> {{ movie.nomination }}

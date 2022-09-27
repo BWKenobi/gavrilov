@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load objects_extras %}
 {% load static %}
 
 {% block content %}
@@ -36,8 +37,11 @@
 							</div>
 							{% endif %}
 							<div class="row align-middle">
-								<div class="col-md-4 text-center">
+								<div class="col-md-4">
 									<b>Название:</b> {{ pict.name }}{% if pict.technique %}({{pict.technique}}){% endif %}
+									{% for copictures in copictures_list|lookup:pict.pk %}
+									<br>{{ copictures.coauthor.get_file_name }} <em>({{ copictures.coauthor.get_profile_type_display }})</em>
+									{% endfor %}
 								</div>
 								<div class="col-md-4 text-center">
 									<b>Номинация:</b> {{ pict.nomination }}
