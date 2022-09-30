@@ -76,7 +76,7 @@
 						<div class="col-md-12">
 							<b>Соисполнители:</b>
 							{% for comovie in comovie_list|lookup:movie.pk %}
-							{{ comovie.coauthor.get_file_name }} <em>({{ copicture.coauthor.get_profile_type_display }})</em>
+							{{ comovie.coauthor.get_file_name }} <em>({{ comovie.coauthor.get_profile_type_display }})</em>
 							{% endfor %}
 						</div>
 					</div>
