@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'marks',
     'ratings',
     'years',
+    'statements',
 ]
 
 MIDDLEWARE = [

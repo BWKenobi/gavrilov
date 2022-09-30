@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<div class="mx-auto mb-2 col-md-6 col-lg-6">
+			<h4 class="display-5 text-center">Список файлов заявок</h4>
+
+			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+				<div class="row align-middle">
+					<div class="col-md-12 text-center">
+						<input type="submit" value="Добавить заявку">
+					</div>
+				</div>
+				<div class="row align-middle mt-5">
+					{% for statement in statements %}
+						<div class="col-md-8">
+							<b>Заявка: </b> {{ statement.registration_date }}  
+						</div>
+						<div class="col-md-2 text-center">
+							<a href="{{ statement.file.url }}" target="_blank">Скачать</a>
+						</div>
+						<div class="col-md-2 text-center">
+							<a href="{{ statement.pk }}" class="del_statement">Удалить</a>
+						</div>
+						<div class="mx-auto col-md-12 col-lg-12">
+							<div class="border-top my-3"></div>
+						</div>
+					{% endfor %}
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.del_statement').click(function(){
+				statement_pk = $(this).attr('href');
+				url = "{% url 'statements:ajax_del_statement' %}";
+
+				$.ajax({
+					url: url,
+					data: {
+						'statement': statement_pk
+					},
+					success: function(data){
+						document.location.reload();
+					}
+				});
+				return false;
+			});
+		});
+	</script>
+{% endblock %}

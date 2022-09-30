@@ -7,7 +7,7 @@ from .models import Profile, CoProfile
 class ProfileUdpateForm(forms.ModelForm):
 	class Meta:
 		model = Profile
-		fields = ('surname', 'name', 'name2', 'group', 'institution', 'adress')
+		fields = ('category', 'surname', 'name', 'name2', 'group', 'institution', 'adress')
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)

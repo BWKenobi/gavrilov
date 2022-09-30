@@ -82,7 +82,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link {% if 'view_edit_profile' in request.path or 'passchange' in request.path %}active{% endif %}" href="{% url 'profiles:view_edit_profile' %}">
                                         <span data-feather="user"></span>
-                                        {{ user.profile.get_file_name }}<span class="sr-only"></span>
+                                        {{ user.profile.get_file_name }}{% if request.user.profile.member_access %} <b>({{ request.user.profile.get_participation_display }} участие)</b>{% endif %}<span class="sr-only"></span>
                                     </a>
                                 </li>
                                 {% if request.user.profile.member_access %}
@@ -120,7 +120,13 @@
                                             <li class="nav-item list-unstyled ">
                                                 <a class="nav-link" href="{% url 'statistic_contestant' %}">
                                                     <span data-feather="minus"></span>
-                                                    Статистика конкурсантов
+                                                    Статистика конкурсантов (заочное)
+                                                </a>
+                                            </li>
+                                            <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'statistic_contestant_add' %}">
+                                                    <span data-feather="minus"></span>
+                                                    Статистика конкурсантов (очное)
                                                 </a>
                                             </li>
                                             <li class="nav-item list-unstyled ">
@@ -207,9 +213,9 @@
 
                                 {% if request.user.profile.member_access %}
                                     <li class="nav-item">
-                                        <div class="nav-link {% if '/teachers/' in request.path %}active{% endif %}">
-                                            <span data-feather="award"></span>
-                                            Мои работы 
+                                        <div class="nav-link text-danger">
+                                            <span data-feather="award" class="text-danger"></span>
+                                            Мои заявки 
                                         </div>
                                     </li>
                                     <ul>
@@ -237,6 +243,12 @@
                                         <a class="nav-link {% if '/protocols/' in request.path %}active{% endif %}" href="{% url 'protocols:view_protocol' %}">
                                             <span data-feather="layers"></span>
                                             Протокол I тура (при наличие)
+                                        </a>
+                                    </li>
+                                    <li class="nav-item list-unstyled">
+                                        <a class="nav-link {% if '/statements/' in request.path %}active{% endif %}" href="{% url 'statements:view_statement' %}">
+                                            <span data-feather="layers"></span>
+                                            Сканы заявок
                                         </a>
                                     </li>
                                     <div class="border-top my-3"></div>

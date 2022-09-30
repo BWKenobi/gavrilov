@@ -35,7 +35,7 @@ def new_protocol(request):
 			return redirect('protocols:view_protocol')
 
 		args ={
-			'form': form_invoice, 
+			'form': form_protocol, 
 		}
 		return render(request, 'protocols/new_protocol.html', args)
 

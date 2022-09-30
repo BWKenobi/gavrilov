@@ -35,9 +35,11 @@ from .tokens import accaunt_activation_token
 
 from profileuser.models import Profile, CoProfile
 
-from pictures.models import Picture
-from movies.models import Movie
+from pictures.models import Picture, CoPicturee
+from movies.models import Movie, CoMovie
 from invoices.models import Invoice
+from protocols.models import Protocol
+from statements.models import Statement
 
 from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm
 from .forms import SetJuriForm, ChangeJuriForm, NewJuriForm
@@ -186,14 +188,27 @@ def change_password(request):
 
 
 @login_required(login_url='/login/')
-def statistic_contestant_view(request):
+def statistic_contestant_add_view(request):
+	return statistic_contestant_view(request, part = 1)
+
+
+@login_required(login_url='/login/')
+def statistic_contestant_view(request, part = None):
 	if not request.user.profile.admin_access:
 		return redirect('home')
 
+	name = 'Список конкурсантов (заочное участие)'
+	participation = '2'
+	if part:
+		name = 'Список конкурсантов (очное участие)'
+		participation = '1'
+
 	users = User.objects.filter(is_active=True).exclude(username='admin')
 
-	contestants = Profile.objects.filter(user__in=users, member_access=True).order_by('surname', 'name', 'name2')
+	contestants = Profile.objects.filter(user__in=users, member_access=True, participation = participation).order_by('surname', 'name', 'name2')
 	coprofile_list = {}
+	protocol_list = {}
+	statement_list = {}
 
 	pictures = Picture.objects.all()
 	movies = Movie.objects.all()
@@ -213,6 +228,9 @@ def statistic_contestant_view(request):
 			array_movies[contestant.id] = 0
 
 		coprofile_list[contestant.pk] = CoProfile.objects.filter(main_user = contestant.user)
+		protocol_list[contestant.pk] = Protocol.objects.filter(owner = contestant.user)
+		statement_list[contestant.pk] = Statement.objects.filter(owner = contestant.user)
+
 
 	if request.POST:
 		dte = date.today()
@@ -305,9 +323,12 @@ def statistic_contestant_view(request):
 
 	args = {
 		'contestants': contestants,
+		'name': name,
 		'array_pictures': array_pictures,
 		'array_movies': array_movies,
-		'coprofile_list': coprofile_list
+		'coprofile_list': coprofile_list,
+		'protocol_list': protocol_list,
+		'statement_list': statement_list
 	}
 	return render(request, 'statistic_contestant.html', args)
 
@@ -567,10 +588,22 @@ def view_contestant(request, pk):
 	pictures = Picture.objects.filter(author = contestant.user)
 	movies = Movie.objects.filter(author = contestant.user)
 
+	copicture_list = {}
+	comovie_list = {}
+
+	for picture in pictures:
+		copicture_list[picture.pk] = CoPicturee.objects.filter(picture = picture, coauthor__main_user = contestant.user)
+
+	for movie in movies:
+		comovie_list[movie.pk] = CoMovie.objects.filter(movie = movie, coauthor__main_user = contestant.user)
+
+
 	args = {
 		'contestant': contestant,
 		'pictures': pictures,
 		'movies': movies,
+		'copicture_list': copicture_list,
+		'comovie_list': comovie_list
 	}
 	return render(request, 'view_contestant.html', args)
 
