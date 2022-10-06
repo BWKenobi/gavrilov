@@ -199,9 +199,11 @@ def statistic_contestant_view(request, part = None):
 
 	name = 'Список конкурсантов (заочное участие)'
 	participation = '2'
+	file_name = 'List (far)'
 	if part:
 		name = 'Список конкурсантов (очное участие)'
 		participation = '1'
+		file_name = 'List (near)'
 
 	users = User.objects.filter(is_active=True).exclude(username='admin')
 
@@ -253,7 +255,10 @@ def statistic_contestant_view(request, part = None):
 		font.size = Pt(12)
 
 
-		document.add_paragraph('Список участников конкурса').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		if part:
+			document.add_paragraph('Список участников конкурса (очное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		else:
+			document.add_paragraph('Список участников конкурса (заочное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		p = document.add_paragraph()
 		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
@@ -288,22 +293,30 @@ def statistic_contestant_view(request, part = None):
 		hdr_cells[7].text = 'Кол-во работ (вокал)'
 		hdr_cells[7].width = Mm(20)
 
+		count = 1
 		for contestant in contestants:
 			row_cells = table.add_row().cells
-			row_cells[0].text = str(contestant.id)
+			row_cells[0].text = str(count)
 			row_cells[0].width = Mm(10)
+			count += 1
 			row_cells[1].text = contestant.get_full_name()
 			if contestant.group:
 				row_cells[1].text += ' (' + contestant.group + ')'
 			row_cells[1].width = Mm(57)
 			row_cells[2].text = contestant.user.email
 			row_cells[2].width = Mm(30)
-			row_cells[3].text = ''
-			if contestant.surname_teacher:
-				row_cells[3].text += 'Преп.: ' + contestant.get_teacher_full_name()
-			if contestant.surname_musician:
-				row_cells[3].text += ' Конц.: ' + contestant.get_musician_full_name()
+
+
+			coprofiles = CoProfile.objects.filter(main_user = contestant.user)
+			coprofile_str = ''
+			for coprofile in coprofiles:
+				coprofile_str += coprofile.get_full_name() + ' (' + coprofile.get_profile_type_display() + '); '
+			if coprofile_str:
+				coprofile_str += coprofile_str[:-2]
+			row_cells[3].text = coprofile_str
 			row_cells[3].width = Mm(40)
+
+
 			row_cells[4].text = contestant.institution
 			row_cells[4].width = Mm(40)
 			row_cells[5].text = contestant.get_category_display ()
@@ -316,7 +329,7 @@ def statistic_contestant_view(request, part = None):
 
 
 		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-		response['Content-Disposition'] = 'attachment; filename=List (' + dte.strftime('%d-%b-%Y') + ').docx'
+		response['Content-Disposition'] = 'attachment; filename=' + file_name + ' (' + dte.strftime('%d-%b-%Y') + ').docx'
 		document.save(response)
 
 		return response
