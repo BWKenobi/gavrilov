@@ -101,6 +101,7 @@ def register_view(request):
 			new_user.profile.name = user_form.cleaned_data['name']
 			new_user.profile.name2 = user_form.cleaned_data['name2']
 			new_user.profile.surname = user_form.cleaned_data['surname']
+			new_user.profile.phone = user_form.cleaned_data['phone']
 			new_user.profile.group = user_form.cleaned_data['group']
 			new_user.profile.institution = user_form.cleaned_data['institution']
 			new_user.profile.adress = user_form.cleaned_data['adress']
@@ -280,7 +281,7 @@ def statistic_contestant_view(request, part = None):
 		hdr_cells[0].width = Mm(10)
 		hdr_cells[1].text = 'Конкурсант (ансамбль)'
 		hdr_cells[1].width = Mm(57)
-		hdr_cells[2].text = 'Email'
+		hdr_cells[2].text = 'Email\nТелефон'
 		hdr_cells[2].width = Mm(30)
 		hdr_cells[3].text = 'Преподаватель/Концертмейстер'
 		hdr_cells[3].width = Mm(40)
@@ -304,6 +305,8 @@ def statistic_contestant_view(request, part = None):
 				row_cells[1].text += ' (' + contestant.group + ')'
 			row_cells[1].width = Mm(57)
 			row_cells[2].text = contestant.user.email
+			if contestant.phone:
+				row_cells[2].text += '\n' + contestant.phone
 			row_cells[2].width = Mm(30)
 
 

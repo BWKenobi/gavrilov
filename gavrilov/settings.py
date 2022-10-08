@@ -4,7 +4,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '6wmm1&@-eaw34@7*tg__^d$+1x^fgj4$=($vx$e)8vn5wc9_mo'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['gavrilov.tdpi.ru', '127.0.0.1']
 

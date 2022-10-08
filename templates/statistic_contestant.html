@@ -11,7 +11,7 @@
 					<tr>
 						<th scope="col" class="table-cel-width-5 align-middle">№</th>
 						<th scope="col" class="table-cel-width-15 align-middle">Конкурсант (коллектив)</th>
-						<th scope="col" class="table-cel-width-10 align-middle">Email</th>
+						<th scope="col" class="table-cel-width-10 align-middle">Email<br>Телефон</th>
 						<th scope="col" class="table-cel-width-15 align-middle">Преподаватель<br>концертмейстер</th>
 						<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
 						<th scope="col" class="table-cel-width-15 align-middle">Категория</th>
@@ -25,7 +25,7 @@
 						<tr class="table_hover" child-href="{% url 'view_contestant' pk=contestant.pk %}">
 							<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 							<td class="align-middle table_click">{{ contestant.get_full_name }}{% if contestant.group %} <b>({{ contestant.group }})</b>{% endif %}</td>
-							<th scope="row" class="align-middle table_click">{{ contestant.user.email }}</th>
+							<th scope="row" class="align-middle table_click">{{ contestant.user.email }}{% if contestant.phone %}<br>{{ contestant.phone }}{% endif %}</th>
 							<td class="align-middle table_click">{% for coprofile in coprofile_list|lookup:contestant.pk %}<br>{{ coprofile.get_file_name }} <em>({{ coprofile.get_profile_type_display }})</em>{% endfor %}</td>
 							<td class="align-middle table_click">{% if contestant.institution %}{{ contestant.institution }}{% endif %}</td>
 							<td class="align-middle table_click">{{ contestant.get_category_display }}</td>

@@ -42,6 +42,7 @@ class Profile(models.Model):
 	surname = models.CharField(verbose_name="Фамилия", max_length=50, blank=True)
 	name = models.CharField(verbose_name="Имя", max_length=30, blank=True)
 	name2 = models.CharField(verbose_name="Отчество", max_length=30, blank=True)
+	phone = models.CharField(verbose_name="Телефон", max_length=30, blank=True)
 	rank = models.TextField(verbose_name='Звания', blank=True)
 
 	group = models.CharField(verbose_name="Название коллектива", max_length=250, blank=True)

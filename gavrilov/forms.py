@@ -55,7 +55,8 @@ class UserRegistrationForm(forms.ModelForm):
 	surname = forms.CharField(label = 'Ваша фамилия*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	name  = forms.CharField(label = 'Ваше имя*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	name2  = forms.CharField(label = 'Ваше отчество', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	
+	phone  = forms.CharField(label = 'Ваш телефон', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+
 	group = forms.CharField(label = 'Название коллектива', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 
 	institution = forms.CharField(label = 'Учреждение', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
