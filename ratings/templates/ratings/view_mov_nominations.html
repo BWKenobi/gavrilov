@@ -46,7 +46,7 @@
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
-									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }}){% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
@@ -80,7 +80,7 @@
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
-									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }}){% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
@@ -116,7 +116,7 @@
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
-									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }}){% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
@@ -150,7 +150,7 @@
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
-									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }}){% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
@@ -186,7 +186,7 @@
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
-									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }}){% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
@@ -220,7 +220,7 @@
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
-									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }}){% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
@@ -256,7 +256,7 @@
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
-									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }}){% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
@@ -290,7 +290,7 @@
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
-									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }}){% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>

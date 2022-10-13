@@ -19,8 +19,8 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
 from docx.shared import Mm, Pt
 
-from pictures.models import Picture
-from movies.models import Movie
+from pictures.models import Picture, CoPicturee
+from movies.models import Movie, CoMovie
 from nominations.models import ArtNomination, VocalNomination
 from marks.models import PictureMark, MovieMark
 
@@ -33,6 +33,12 @@ def view_art_nomination(request, pk):
 		return redirect('home')
 
 	nomination = ArtNomination.objects.get(pk=pk)
+
+	pictures_all = Picture.objects.filter(nomination=nomination)
+	copictures = {}
+	for picture_all in pictures_all:
+		copictures[picture_all.pk] = CoPicturee.objects.filter(picture=picture_all)
+
 	pictures_1_1 = Picture.objects.filter(nomination=nomination, author__profile__category='1', author__profile__participation='1')
 	pictures_2_1 = Picture.objects.filter(nomination=nomination, author__profile__category='2', author__profile__participation='1')
 	pictures_3_1 = Picture.objects.filter(nomination=nomination, author__profile__category='3', author__profile__participation='1')
@@ -354,6 +360,7 @@ def view_art_nomination(request, pk):
 		'sorting_2_2': sorting_2_2,
 		'sorting_3_2': sorting_3_2,
 		'sorting_4_2': sorting_4_2,
+		'copictures': copictures
 	}
 	return render(request, 'ratings/view_art_nominations.html', args)
 
@@ -365,6 +372,13 @@ def view_mov_nomination(request, pk):
 
 
 	nomination = VocalNomination.objects.get(pk=pk)
+
+	movies_all = Movie.objects.filter(nomination=nomination)
+	comovies = {}
+	for move_all in movies_all:
+		comovies[move_all.pk] = CoMovie.objects.filter(movie=move_all)
+
+
 	movies_1_1 = Movie.objects.filter(nomination=nomination, author__profile__category='1', author__profile__participation='1')
 	movies_2_1 = Movie.objects.filter(nomination=nomination, author__profile__category='2', author__profile__participation='1')
 	movies_3_1 = Movie.objects.filter(nomination=nomination, author__profile__category='3', author__profile__participation='1')
@@ -673,5 +687,6 @@ def view_mov_nomination(request, pk):
 		'sorting_2_2': sorting_2_2,
 		'sorting_3_2': sorting_3_2,
 		'sorting_4_2': sorting_4_2,
+		'comovies': comovies
 	}
 	return render(request, 'ratings/view_mov_nominations.html', args)
