@@ -329,7 +329,7 @@ def view_art_nomination(request, pk):
 			row_cells[2].width = Mm(60)
 			row_cells[3].text = ''
 			for copicture in copictures[key]:
-				row_cells[3].text += copicture.coauthor.get_file_name() + '(' + copicture.coauthor.get_profile_type_display() + ')'
+				row_cells[3].text += copicture.coauthor.get_file_name() + ' (' + copicture.coauthor.get_profile_type_display() + ')\n'
 			row_cells[3].width = Mm(50)
 			row_cells[4].text = picture.author.profile.institution
 			row_cells[4].width = Mm(50)
@@ -658,7 +658,7 @@ def view_mov_nomination(request, pk):
 			row_cells[2].width = Mm(60)
 			row_cells[3].text = ''
 			for comove in comovies[key]:
-				row_cells[3].text += comove.coauthor.get_file_name() + '(' + comove.coauthor.get_profile_type_display() + ')'
+				row_cells[3].text += comove.coauthor.get_file_name() + ' (' + comove.coauthor.get_profile_type_display() + ')\n'
 			row_cells[3].width = Mm(50)
 			row_cells[4].text = movie.author.profile.institution
 			row_cells[4].width = Mm(50)
