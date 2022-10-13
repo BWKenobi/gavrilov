@@ -1,11 +1,15 @@
 from django.urls import path
 from django.conf.urls import url
-from .views import view_arts, load_image, edit_image, ajax_del_image
+from .views import view_arts, load_image, load_image_admin, edit_image, edit_image_admin, ajax_del_image
 
 urlpatterns = [
 	path('view_arts', view_arts, name = 'view_arts'),
 	path('load_image', load_image, name = 'load_image'),
+	path('load_image_admin', load_image_admin, name = 'load_image_admin'),
+	path('load_image_admin/<int:pk>', load_image_admin, name = 'load_image_admin'),
 	path('edit_image/<int:pk>', edit_image, name = 'edit_image'),
+	path('edit_image_admin', edit_image_admin, name = 'edit_image_admin'),
+	path('edit_image_admin/<int:pk>', edit_image_admin, name = 'edit_image_admin'),
 ]
 
 urlpatterns += [

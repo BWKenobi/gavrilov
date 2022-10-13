@@ -95,6 +95,35 @@ def new_coprofile(request):
 
 
 @login_required(login_url='/login/')
+def new_coprofile_admin(request, pk):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	main_user = Profile.objects.get(pk = pk)
+	if request.method=='POST':
+		form_coprofile = CoProfileForm(request.POST, label_suffix='')
+
+		if form_coprofile.is_valid():
+			coprofile = form_coprofile.save(commit=False)
+			coprofile.main_user = main_user.user
+			coprofile.save()	
+
+			return redirect('view_contestant', pk = pk)
+
+		args ={
+			'form': form_coprofile, 
+		}
+		return render(request, 'profileuser/new_coprofile.html', args)
+
+	form_coprofile = CoProfileForm(label_suffix='')
+
+	args = {
+		'form': form_coprofile, 
+	}
+	return render(request, 'profileuser/new_coprofile.html', args)
+
+
+@login_required(login_url='/login/')
 def view_edit_coprofile(request, pk):
 	if not request.user.profile.member_access:
 		return redirect('home')
@@ -124,6 +153,35 @@ def view_edit_coprofile(request, pk):
 	return render(request, 'profileuser/view_edit_coprofile.html', args)
 
 
+@login_required(login_url='/login/')
+def view_edit_coprofile_admin(request, pk):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	coprofile = CoProfile.objects.get(pk = pk)
+
+	if request.method=='POST':
+		form_coprofile = CoProfileForm(request.POST, instance=coprofile, label_suffix=':')
+
+		if form_coprofile.is_valid():
+			if form_coprofile.has_changed():
+				coprofile = form_coprofile.save(False)
+				coprofile.save()	
+
+			return redirect('view_contestant', pk = coprofile.main_user.profile.pk)
+
+		args ={
+			'form': form_coprofile, 
+		}
+		return render(request, 'profileuser/view_edit_coprofile.html', args)
+
+	form_coprofile = CoProfileForm(instance=coprofile, label_suffix=':')
+
+	args = {
+		'form': form_coprofile, 
+	}
+	return render(request, 'profileuser/view_edit_coprofile.html', args)
+
 # --------------------------------
 #           Для ajax'а
 # --------------------------------
@@ -132,7 +190,7 @@ def ajax_del_coprofile(request):
 	coprofile_pk = request.GET['coprofile']
 	coprofile = CoProfile.objects.get(pk=coprofile_pk)
 
-	if coprofile.main_user != request.user:
+	if not request.user.profile.admin_access and coprofile.main_user != request.user:
 		return HttpResponse(False)
 
 	coprofile.delete()

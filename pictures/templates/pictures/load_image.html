@@ -9,7 +9,7 @@
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
 				<div class="mb-5">
-					{% if request.user.profile.participation == '2' %}
+					{% if author.profile.participation == '2' %}
 					<img src="{% static 'img/blank_img.jpg' %}" class="rounded img-fluid" id="img_field">
 					{% endif %}
 					<h5 class="text-center mt-5">Преподаватели/концертмейстеры и т.п.</h5>

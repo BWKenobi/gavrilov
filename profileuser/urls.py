@@ -1,12 +1,15 @@
 from django.urls import path
 from django.conf.urls import url
-from .views import view_edit_profile, view_coprofiles, view_edit_coprofile, new_coprofile, ajax_del_coprofile
+from .views import view_edit_profile, view_coprofiles, view_edit_coprofile, view_edit_coprofile_admin, new_coprofile, new_coprofile_admin, ajax_del_coprofile
 
 urlpatterns = [
 	path('view_edit_profile', view_edit_profile, name = 'view_edit_profile'),
 	path('view_coprofiles', view_coprofiles, name = 'view_coprofiles'),
 	path('view_edit_coprofile/<int:pk>', view_edit_coprofile, name = 'view_edit_coprofile'),
+	path('view_edit_coprofile_admin/<int:pk>', view_edit_coprofile_admin, name = 'view_edit_coprofile_admin'),
 	path('new_coprofile', new_coprofile, name = 'new_coprofile'),
+	path('new_coprofile_admin', new_coprofile_admin, name = 'new_coprofile_admin'),
+	path('new_coprofile_admin/<int:pk>', new_coprofile_admin, name = 'new_coprofile_admin'),
 ]
 
 urlpatterns += [

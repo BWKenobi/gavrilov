@@ -8,7 +8,25 @@
 			<h4 class="display-5 text-center">{{ contestant.get_full_name }}{% if contestant.group %} <b>({{ contestant.group }})</b>{% endif %}</h4>
 			<p class="display-5 text-center"><em>Категория: {{ contestant.get_category_display }}</em></p>
 		</div>
-		<form action="" method="post" class="mx-auto col-md-12 col-lg-12"> {% csrf_token %}
+		<div class="row align-middle mx-auto">
+			<div class="col-md-12 text-center">
+				<input type="submit" value="Добавить соисполнителя" data-pk="{{ contestant.pk }}" id="add_coprofile">
+			</div>
+		</div>
+		<div class="row col-md-12 align-middle mt-5">
+			{% for coprofile in coprofiles %}
+				<div class="col-md-8">
+					<b>{{ coprofile.get_full_name }} </b> ({{ coprofile.get_profile_type_display }})  
+				</div>
+				<div class="col-md-2 text-center">
+					<a href="{% url 'profiles:view_edit_coprofile_admin' pk=coprofile.pk %}">Изменить</a>
+				</div>
+				<div class="col-md-2 text-center">
+					<a href="{{ coprofile.pk }}" class="del_coprofile">Удалить</a>
+				</div>
+			{% endfor %}
+		</div>
+		<div class="mx-auto col-md-12 col-lg-12">
 		<div class="mx-auto my-5 col-md-12 col-lg-12">
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="nav-item">
@@ -32,8 +50,12 @@
 						<div class="col-md-6 text-center">
 							<b>Название:</b> {{ pict.name }}{% if pict.technique %}({{pict.technique}}){% endif %}
 						</div>
-						<div class="col-md-6 text-center">
+						<div class="col-md-5 text-center">
 							<b>Номинация:</b> {{ pict.nomination }}
+						</div>
+						<div class="col-md-1 text-center">
+							<a href="{% url 'pictures:edit_image_admin' pk=pict.pk %}"><span data-feather="edit-3"></span></a>
+							<a href="{{ pict.pk }}" class="del_pict"><span data-feather="trash-2"></span></a>
 						</div>
 					</div>
 					{% if copicture_list|lookup:pict.pk %}
@@ -48,6 +70,12 @@
 					{% endif %}
 					<hr>
 				{% endfor %}
+
+				<div class="row align-middle mx-auto">
+					<div class="col-md-12 text-center">
+						<input type="submit" value="Добавить работу" data-pk="{{ contestant.pk }}" id="add_picture">
+					</div>
+				</div>
 			</div>
 
 			<div class="tab-pane" id="type_2" role="tab-panel">
@@ -67,8 +95,12 @@
 						<div class="col-md-6 text-center">
 							<b>Название:</b> {{ movie.name }}{% if movie.composer %}, <b>муз.</b> {{movie.composer}}{% endif %}{% if movie.poet %}, <b>сл.</b> {{movie.poet}}{% endif %}{% if movie.descritpion %} (<em>{{movie.descritpion}}</em>){% endif %}
 						</div>
-						<div class="col-md-6 text-center">
+						<div class="col-md-5 text-center">
 							<b>Номинация:</b> {{ movie.nomination }}
+						</div>
+						<div class="col-md-1 text-center">
+							<a href="{% url 'movies:edit_movie_admin' pk=movie.pk %}"><span data-feather="edit-3"></span></a>
+							<a href="{{ movie.pk }}" class="del_movie"><span data-feather="trash-2"></span></a>
 						</div>
 					</div>
 					{% if comovie_list|lookup:movie.pk %}
@@ -83,9 +115,14 @@
 					{% endif %}
 					<hr>
 				{% endfor %}
+				<div class="row align-middle mx-auto">
+					<div class="col-md-12 text-center">
+						<input type="submit" value="Добавить работу" data-pk="{{ contestant.pk }}" id="add_movie">
+					</div>
+				</div>
 			</div>
 		</div>
-	</form>
+	</div>
 	</div>
 {% endblock %}
 
@@ -99,5 +136,90 @@
 				return false;
 			});
 		});
+
+		$(document).ready(function() {
+			$('.del_coprofile').click(function(){
+				coprofile_pk = $(this).attr('href');
+				url = "{% url 'profiles:ajax_del_coprofile' %}";
+
+				$.ajax({
+					url: url,
+					data: {
+						'coprofile': coprofile_pk
+					},
+					success: function(data){
+						document.location.reload();
+					}
+				});
+				return false;
+			});
+		});
+
+		$(document).ready(function() {
+			$('.del_pict').click(function(){
+				image_pk = $(this).attr('href');
+				url = "{% url 'pictures:ajax_del_image' %}";
+
+				$.ajax({
+					url: url,
+					data: {
+						'image': image_pk
+					},
+					success: function(data){
+						document.location.reload();
+					}
+				});
+				return false;
+			});
+		});
+
+		$(document).ready(function() {
+			$('.del_movie').click(function(){
+				movie_pk = $(this).attr('href');
+				url = "{% url 'movies:ajax_del_movie' %}";
+
+				$.ajax({
+					url: url,
+					data: {
+						'movie': movie_pk
+					},
+					success: function(data){
+						document.location.reload();
+					}
+				});
+				return false;
+			});
+		});
+
+
+		$(document).ready(function() {
+			$('#add_coprofile').click(function(){
+
+				url = "{% url 'profiles:new_coprofile_admin' %}";
+				window.location.href = url + '/' + $(this).attr('data-pk');
+				
+			});
+		});
+
+		$(document).ready(function() {
+			$('#add_picture').click(function(){
+
+				url = "{% url 'pictures:load_image_admin' %}";
+				window.location.href = url + '/' + $(this).attr('data-pk');
+				
+			});
+		});
+
+		$(document).ready(function() {
+			$('#add_movie').click(function(){
+
+				url = "{% url 'movies:load_movie_admin' %}";
+				window.location.href = url + '/' + $(this).attr('data-pk');
+				
+			});
+		});
+
+
+
 	</script>
 {% endblock %}

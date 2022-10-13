@@ -613,13 +613,15 @@ def view_contestant(request, pk):
 	for movie in movies:
 		comovie_list[movie.pk] = CoMovie.objects.filter(movie = movie, coauthor__main_user = contestant.user)
 
-
+	coprofiles = CoProfile.objects.filter(main_user = contestant.user).order_by('main_user')
+	
 	args = {
 		'contestant': contestant,
 		'pictures': pictures,
 		'movies': movies,
 		'copicture_list': copicture_list,
-		'comovie_list': comovie_list
+		'comovie_list': comovie_list,
+		'coprofiles': coprofiles
 	}
 	return render(request, 'view_contestant.html', args)
 

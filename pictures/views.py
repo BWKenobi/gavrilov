@@ -10,8 +10,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.models import User
 
 from .forms import PictureUploadForm, PictureUploadNoneFileForm, PictureEditForm
+from profileuser.models import Profile, CoProfile
 from .models import Picture, CoPicturee
 from profileuser.models import CoProfile
 
@@ -43,7 +45,7 @@ def load_image(request):
 
 	if request.method=='POST':
 		
-		if request.user.profile.participation == '2':
+		if author.profile.participation == '2':
 			form_img = PictureUploadForm(request.POST, request.FILES, label_suffix='')
 		else:
 			form_img = PictureUploadNoneFileForm(request.POST, label_suffix='')
@@ -53,7 +55,7 @@ def load_image(request):
 			new_img.author = author
 			new_img.save()	
 			
-			if request.user.profile.participation == '2':
+			if author.profile.participation == '2':
 				if 'file' in request.FILES:
 					new_img.file = request.FILES['file']
 					new_img.save()
@@ -70,11 +72,12 @@ def load_image(request):
 
 		args = {
 			'form': form_img,
-			'coprofiles': coprofiles
+			'coprofiles': coprofiles,
+			'author': author
 		}
 		return render(request, 'pictures/load_image.html', args)	
 	
-	if request.user.profile.participation == '2':
+	if author.profile.participation == '2':
 		form_img = PictureUploadForm(label_suffix='')
 	else:
 		form_img = PictureUploadNoneFileForm(label_suffix='')
@@ -82,7 +85,65 @@ def load_image(request):
 
 	args = {
 		'form': form_img,
-		'coprofiles': coprofiles
+		'coprofiles': coprofiles,
+		'author': author
+	}
+	return render(request, 'pictures/load_image.html', args)
+
+
+
+@login_required(login_url='/login/')
+def load_image_admin(request, pk):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	author = Profile.objects.get(pk = pk).user
+	coprofiles = CoProfile.objects.filter(main_user = author)
+
+	if request.method=='POST':
+		
+		if author.profile.participation == '2':
+			form_img = PictureUploadForm(request.POST, request.FILES, label_suffix='')
+		else:
+			form_img = PictureUploadNoneFileForm(request.POST, label_suffix='')
+
+		if form_img.is_valid():
+			new_img = form_img.save(commit=False)
+			new_img.author = author
+			new_img.save()	
+			
+			if author.profile.participation == '2':
+				if 'file' in request.FILES:
+					new_img.file = request.FILES['file']
+					new_img.save()
+
+			for coprofile in coprofiles:
+				test_str = 'coprofile-check-' + str(coprofile.pk)
+				if test_str in request.POST:
+					if not CoPicturee.objects.filter(picture = new_img, coauthor = coprofile):
+						CoPicturee.objects.create(picture = new_img, coauthor = coprofile)
+				else:
+					CoPicturee.objects.filter(picture = new_img, coauthor = coprofile).delete()
+
+			return redirect('view_contestant', pk = author.profile.pk)
+
+		args = {
+			'form': form_img,
+			'coprofiles': coprofiles,
+			'author': author
+		}
+		return render(request, 'pictures/load_image.html', args)	
+	
+	if author.profile.participation == '2':
+		form_img = PictureUploadForm(label_suffix='')
+	else:
+		form_img = PictureUploadNoneFileForm(label_suffix='')
+
+
+	args = {
+		'form': form_img,
+		'coprofiles': coprofiles,
+		'author': author
 	}
 	return render(request, 'pictures/load_image.html', args)
 
@@ -137,7 +198,59 @@ def edit_image(request, pk):
 	}
 	return render(request, 'pictures/edit_image.html', args)
 
+
+
+@login_required(login_url='/login/')
+def edit_image_admin(request, pk):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+		
+	pict = Picture.objects.get(pk=pk)
+	author = pict.author
+	coprofiles = CoProfile.objects.filter(main_user = author)
+	copictures_list = {}
+
+	if pict.author != author:
+		return redirect('home')
+
+	if request.method=='POST':
+		form_img = PictureEditForm(request.POST, request.FILES, instance=pict, label_suffix='')
+
+		if form_img.is_valid():
+			new_img = form_img.save(commit=False)
+			new_img.author = author
+			new_img.save()
+
+			for coprofile in coprofiles:
+				test_str = 'coprofile-check-' + str(coprofile.pk)
+				if test_str in request.POST:
+					if not CoPicturee.objects.filter(picture = new_img, coauthor = coprofile):
+						CoPicturee.objects.create(picture = new_img, coauthor = coprofile)
+				else:
+					CoPicturee.objects.filter(picture = new_img, coauthor = coprofile).delete()
+
+
+			return redirect('view_contestant', pk = author.profile.pk)
+
+		args = {
+			'form': form_img,
+		}
+		return render(request, 'pictures/edit_image.html', args)	
 	
+	form_img = PictureEditForm(instance=pict, label_suffix='')
+	copicture = list(CoPicturee.objects.filter(picture = pict).values_list('coauthor', flat=True))
+	for coprofile in coprofiles:
+		copictures_list[coprofile.pk] = coprofile.pk in copicture
+
+	args = {
+		'form': form_img,
+		'pict': pict,
+		'coprofiles': coprofiles,
+		'copictures_list': copictures_list
+	}
+	return render(request, 'pictures/edit_image.html', args)
+
+
 # --------------------------------
 #           Для ajax'а
 # --------------------------------
@@ -146,7 +259,7 @@ def ajax_del_image(request):
 	image_pk = request.GET['image']
 	picture = Picture.objects.get(pk=image_pk)
 
-	if picture.author != request.user:
+	if not request.user.profile.admin_access and picture.author != request.user:
 		return HttpResponse(False)
 
 	picture.delete()
