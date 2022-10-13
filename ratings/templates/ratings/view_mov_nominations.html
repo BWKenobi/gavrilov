@@ -27,24 +27,23 @@
 
 			<div class="tab-content col-md-12 col-lg-12">
 				<div class="tab-pane active" id="type_1" role="tab-panel">
+					<h6>Очное участие</h6>
 					<table class="table">
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-5 align-middle">ID</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for key, val in sorting_1 %}
-							{% with movie=movies_list_1|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.pk %}">
+							{% for key, val in sorting_1_1 %}
+							{% with movie=movies_list_1_1|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.profile.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
-									<th scope="row" class="align-middle table_click">{{ movie.author.id }}</th>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
 									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
@@ -58,30 +57,63 @@
 
 					<div class="row col-md-12 col-lg-12 ">
 						<div class="col-md-12 text-right pb-3">
-							<input type="submit" value="Выгрузить список" name="type_1">
+							<input type="submit" value="Выгрузить список" name="type_1_1">
+						</div>
+					</div>
+
+					<h6>Заочное участие</h6>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_1_2 %}
+							{% with movie=movies_list_1_2|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.profile.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<td class="align-middle table_click">{{ movie.name }}</td>
+									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
+									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_1_2">
 						</div>
 					</div>
 				</div>
 
 				<div class="tab-pane" id="type_2" role="tab-panel">
+					<h6>Очное участие</h6>
 					<table class="table">
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-5 align-middle">ID</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for key, val in sorting_2 %}
-							{% with movie=movies_list_2|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.pk %}">
+							{% for key, val in sorting_2_1 %}
+							{% with movie=movies_list_2_1|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.profile.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
-									<th scope="row" class="align-middle table_click">{{ movie.author.id }}</th>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
 									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
@@ -95,30 +127,63 @@
 
 					<div class="row col-md-12 col-lg-12 ">
 						<div class="col-md-12 text-right pb-3">
-							<input type="submit" value="Выгрузить список" name="type_2">
+							<input type="submit" value="Выгрузить список" name="type_2_1">
+						</div>
+					</div>
+
+					<h6>Заочное участие</h6>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_2_2 %}
+							{% with movie=movies_list_2_2|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.profile.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<td class="align-middle table_click">{{ movie.name }}</td>
+									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
+									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_2_2">
 						</div>
 					</div>
 				</div>
 
 				<div class="tab-pane" id="type_3" role="tab-panel">
+					<h6>Очное участие</h6>
 					<table class="table">
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-5 align-middle">ID</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for key, val in sorting_3 %}
-							{% with movie=movies_list_3|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.pk %}">
+							{% for key, val in sorting_3_1 %}
+							{% with movie=movies_list_3_1|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.profile.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
-									<th scope="row" class="align-middle table_click">{{ movie.author.id }}</th>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
 									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
@@ -132,30 +197,63 @@
 
 					<div class="row col-md-12 col-lg-12 ">
 						<div class="col-md-12 text-right pb-3">
-							<input type="submit" value="Выгрузить список" name="type_3">
+							<input type="submit" value="Выгрузить список" name="type_3_1">
+						</div>
+					</div>
+
+					<h6>Заочное участие</h6>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_3_2 %}
+							{% with movie=movies_list_3_2|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.profile.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<td class="align-middle table_click">{{ movie.name }}</td>
+									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
+									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_3_2">
 						</div>
 					</div>
 				</div>
 
 				<div class="tab-pane" id="type_4" role="tab-panel">
+					<h6>Очное участие</h6>
 					<table class="table">
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-5 align-middle">ID</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for key, val in sorting_4 %}
-							{% with movie=movies_list_4|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.pk %}">
+							{% for key, val in sorting_4_1 %}
+							{% with movie=movies_list_4_1|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.profile.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
-									<th scope="row" class="align-middle table_click">{{ movie.author.id }}</th>
 									<td class="align-middle table_click">{{ movie.name }}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
 									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
@@ -169,7 +267,41 @@
 
 					<div class="row col-md-12 col-lg-12 ">
 						<div class="col-md-12 text-right pb-3">
-							<input type="submit" value="Выгрузить список" name="type_4">
+							<input type="submit" value="Выгрузить список" name="type_4_1">
+						</div>
+					</div>
+
+					<h6>Заочное участие</h6>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_4_2 %}
+							{% with movie=movies_list_4_2|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'view_contestant' pk=movie.author.profile.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<td class="align-middle table_click">{{ movie.name }}</td>
+									<td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
+									<td class="align-middle table_click">{% if movie.author.profile.surname_teacher %}<b><u>Преп.:</u></b> {{ movie.author.profile.get_teacher_full_name }}{% endif %} {% if movie.author.profile.surname_musician %}<b><u>Конц.:</u></b> {{ movie.author.profile.get_musician_full_name }}{% endif %}</td>
+									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_4_2">
 						</div>
 					</div>
 				</div>
