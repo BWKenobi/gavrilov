@@ -215,111 +215,126 @@ def view_art_nomination(request, pk):
 	sorting_3_2 = sorted(ratings_3_2.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_4_2 = sorted(ratings_4_2.items(), key=operator.itemgetter(1), reverse=True)
 
-	# if request.POST:
-	# 	filename = translit.slugify(str(nomination)) + ' ('
-	# 	if 'type_1' in request.POST:
-	# 		pictures_list = pictures_list_1
-	# 		sorting = sorting_1
-	# 		name = 'Студенты учреждений среднего профессионального образовани'
-	# 		filename += 'students_spo (DPI)'
-	# 	elif  'type_2' in request.POST:
-	# 		pictures_list = pictures_list_2
-	# 		sorting = sorting_2
-	# 		name = 'Студенты высших учебных заведений'
-	# 		filename += 'students_spo (DPI)'
-	# 	elif  'type_3' in request.POST:
-	# 		pictures_list = pictures_list_3
-	# 		sorting = sorting_3
-	# 		name = 'Преподаватели, руководители коллективов'
-	# 		filename += 'teachers (DPI)'
-	# 	else:
-	# 		pictures_list = pictures_list_4
-	# 		sorting = sorting_4
-	# 		name = 'Любительские коллективы'
-	# 		filename += 'groups (DPI)'
-	# 	filename += ')'
+	if request.POST:
+		filename = translit.slugify(str(nomination)) + ' ('
+		if 'type_1_1' in request.POST:
+			pictures_list = pictures_list_1_1
+			sorting = sorting_1_1
+			name = 'Студенты учреждений среднего профессионального образовани (очное участие)'
+			filename += 'students_spo_ochno (DPI)'
+		elif 'type_1_2' in request.POST:
+			pictures_list = pictures_list_1_2
+			sorting = sorting_1_2
+			name = 'Студенты учреждений среднего профессионального образовани (заочное участие)'
+			filename += 'students_spo_zaochno (DPI)'
+		elif  'type_2_1' in request.POST:
+			pictures_list = pictures_list_2_1
+			sorting = sorting_2_1
+			name = 'Студенты высших учебных заведений (очное участие)'
+			filename += 'students_vpo_ochno (DPI)'
+		elif  'type_2_2' in request.POST:
+			pictures_list = pictures_list_2_2
+			sorting = sorting_2_2
+			name = 'Студенты высших учебных заведений (заочное участие)'
+			filename += 'students_vpo_zaochno (DPI)'
+		elif  'type_3_1' in request.POST:
+			pictures_list = pictures_list_3_1
+			sorting = sorting_3_1
+			name = 'Преподаватели, руководители коллективов (очное участие)'
+			filename += 'teachers_ochno (DPI)'
+		elif  'type_3_2' in request.POST:
+			pictures_list = pictures_list_3_2
+			sorting = sorting_3_2
+			name = 'Преподаватели, руководители коллективов (заочное участие)'
+			filename += 'teachers_zaochno (DPI)'
+		elif  'type_4_1' in request.POST:
+			pictures_list = pictures_list_4_1
+			sorting = sorting_4_1
+			name = 'Любительские коллективы (очное участие)'
+			filename += 'groups_ochno (DPI)'
+		else:
+			pictures_list = pictures_list_4_2
+			sorting = sorting_4_2
+			name = 'Любительские коллективы (заочное участие)'
+			filename += 'groups_zaochno (DPI)'
+		filename += ')'
 
 
-	# 	dte = date.today()
-	# 	document = Document()
-	# 	section = document.sections[-1]
-	# 	new_width, new_height = section.page_height, section.page_width
-	# 	section.orientation = WD_ORIENT.PORTRAIT
-	# 	section.page_width = Mm(297)
-	# 	section.page_height = Mm(210)
-	# 	section.left_margin = Mm(30)
-	# 	section.right_margin = Mm(10)
-	# 	section.top_margin = Mm(10)
-	# 	section.bottom_margin = Mm(10)
-	# 	section.header_distance = Mm(10)
-	# 	section.footer_distance = Mm(10)
+		dte = date.today()
+		document = Document()
+		section = document.sections[-1]
+		new_width, new_height = section.page_height, section.page_width
+		section.orientation = WD_ORIENT.PORTRAIT
+		section.page_width = Mm(297)
+		section.page_height = Mm(210)
+		section.left_margin = Mm(30)
+		section.right_margin = Mm(10)
+		section.top_margin = Mm(10)
+		section.bottom_margin = Mm(10)
+		section.header_distance = Mm(10)
+		section.footer_distance = Mm(10)
 
-	# 	style = document.styles['Normal']
-	# 	font = style.font
-	# 	font.name = 'Times New Roman'
-	# 	font.size = Pt(12)
-
-
-	# 	document.add_paragraph(str(nomination) + ' (' + name + ')').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-	# 	p = document.add_paragraph()
-	# 	p.add_run(dte.strftime('%d.%b.%Y')).italic = True
-	# 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
-
-	# 	table = document.add_table(rows=1, cols=7)
-	# 	table.allow_autifit = False
-	# 	table.style = 'TableGrid'
-	# 	table.columns[0].width = Mm(10)
-	# 	table.columns[1].width = Mm(20)
-	# 	table.columns[2].width = Mm(50)
-	# 	table.columns[3].width = Mm(50)
-	# 	table.columns[4].width = Mm(50)
-	# 	table.columns[5].width = Mm(50)
-	# 	table.columns[6].width = Mm(17)
-
-	# 	hdr_cells = table.rows[0].cells
-	# 	hdr_cells[0].text = '№'
-	# 	hdr_cells[0].width = Mm(10)
-	# 	hdr_cells[1].text = 'Рег.номер'
-	# 	hdr_cells[1].width = Mm(20)
-	# 	hdr_cells[2].text = 'Название работы'
-	# 	hdr_cells[2].width = Mm(50)
-	# 	hdr_cells[3].text = 'Конкурсант'
-	# 	hdr_cells[3].width = Mm(50)
-	# 	hdr_cells[4].text = 'Преподаватель'
-	# 	hdr_cells[4].width = Mm(50)
-	# 	hdr_cells[5].text = 'Учреждение'
-	# 	hdr_cells[5].width = Mm(50)
-	# 	hdr_cells[6].text = 'Оценка'
-	# 	hdr_cells[6].width = Mm(17)
+		style = document.styles['Normal']
+		font = style.font
+		font.name = 'Times New Roman'
+		font.size = Pt(12)
 
 
-	# 	cnt = 1
-	# 	for key, val in sorting:
-	# 		picture = pictures_list[key]
+		document.add_paragraph(str(nomination) + ' (' + name + ')').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		p = document.add_paragraph()
+		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
-	# 		row_cells = table.add_row().cells
-	# 		row_cells[0].text = str(cnt)
-	# 		row_cells[0].width = Mm(10)
-	# 		row_cells[1].text = str(picture.author.id)
-	# 		row_cells[1].width = Mm(20)
-	# 		row_cells[2].text = picture.name
-	# 		row_cells[2].width = Mm(50)
-	# 		row_cells[3].text = picture.author.profile.get_full_name()
-	# 		row_cells[3].width = Mm(50)
-	# 		row_cells[4].text = picture.author.profile.get_teacher_full_name()
-	# 		row_cells[4].width = Mm(50)
-	# 		row_cells[5].text = picture.author.profile.institution
-	# 		row_cells[5].width = Mm(50)
-	# 		row_cells[6].text = str(val)
-	# 		row_cells[6].width = Mm(17)
+		table = document.add_table(rows=1, cols=6)
+		table.allow_autifit = False
+		table.style = 'TableGrid'
+		table.columns[0].width = Mm(10)
+		table.columns[1].width = Mm(60)
+		table.columns[2].width = Mm(60)
+		table.columns[3].width = Mm(50)
+		table.columns[4].width = Mm(50)
+		table.columns[5].width = Mm(17)
 
-	# 		cnt += 1
+		hdr_cells = table.rows[0].cells
+		hdr_cells[0].text = '№'
+		hdr_cells[0].width = Mm(10)
+		hdr_cells[1].text = 'Название работы'
+		hdr_cells[1].width = Mm(60)
+		hdr_cells[2].text = 'Конкурсант'
+		hdr_cells[2].width = Mm(60)
+		hdr_cells[3].text = 'Преподаватель'
+		hdr_cells[3].width = Mm(50)
+		hdr_cells[4].text = 'Учреждение'
+		hdr_cells[4].width = Mm(50)
+		hdr_cells[5].text = 'Оценка'
+		hdr_cells[5].width = Mm(17)
 
-	# 	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-	# 	response['Content-Disposition'] = 'attachment; filename=' + filename +' (' + dte.strftime('%d-%b-%Y') + ').docx'
-	# 	document.save(response)
 
-	# 	return response
+		cnt = 1
+		for key, val in sorting:
+			picture = pictures_list[key]
+
+			row_cells = table.add_row().cells
+			row_cells[0].text = str(cnt)
+			row_cells[0].width = Mm(10)
+			row_cells[1].text = picture.name
+			row_cells[1].width = Mm(60)
+			row_cells[2].text = picture.author.profile.get_full_name()
+			row_cells[2].width = Mm(60)
+			row_cells[3].text = ''
+			row_cells[3].width = Mm(50)
+			row_cells[4].text = picture.author.profile.institution
+			row_cells[4].width = Mm(50)
+			row_cells[5].text = str(val)
+			row_cells[5].width = Mm(17)
+
+			cnt += 1
+
+		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+		response['Content-Disposition'] = 'attachment; filename=' + filename +' (' + dte.strftime('%d-%b-%Y') + ').docx'
+		document.save(response)
+
+		return response
 
 	args = {
 		'nomination': nomination, 
@@ -517,117 +532,128 @@ def view_mov_nomination(request, pk):
 	sorting_3_2 = sorted(ratings_3_2.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_4_2 = sorted(ratings_4_2.items(), key=operator.itemgetter(1), reverse=True)
 
-	# if request.POST:
-	# 	filename = translit.slugify(str(nomination)) + ' ('
-	# 	if 'type_1' in request.POST:
-	# 		movies_list = movies_list_1
-	# 		sorting = sorting_1
-	# 		name = 'Студенты учреждений среднего профессионального образовани'
-	# 		filename += 'students_spo (vocal)'
-	# 	elif  'type_2' in request.POST:
-	# 		movies_list = movies_list_2
-	# 		sorting = sorting_2
-	# 		name = 'Студенты высших учебных заведений'
-	# 		filename += 'students_spo (vocal)'
-	# 	elif  'type_3' in request.POST:
-	# 		movies_list = movies_list_3
-	# 		sorting = sorting_3
-	# 		name = 'Преподаватели, руководители коллективов'
-	# 		filename += 'teachers (vocal)'
-	# 	else:
-	# 		movies_list = movies_list_4
-	# 		sorting = sorting_4
-	# 		name = 'Любительские коллективы'
-	# 		filename += 'groups (vocal)'
-	# 	filename += ')'
+	if request.POST:
+		filename = translit.slugify(str(nomination)) + ' ('
+		if 'type_1_1' in request.POST:
+			movies_list = movies_list_1_1
+			sorting = sorting_1_1
+			name = 'Студенты учреждений среднего профессионального образовани (очное участие)'
+			filename += 'students_spo_ochno (vocal)'
+		elif 'type_1_2' in request.POST:
+			movies_list = movies_list_1_2
+			sorting = sorting_1_2
+			name = 'Студенты учреждений среднего профессионального образовани (заочное участие)'
+			filename += 'students_spo_zaochno (vocal)'
+		elif  'type_2_1' in request.POST:
+			movies_list = movies_list_2_1
+			sorting = sorting_2_1
+			name = 'Студенты высших учебных заведений (очное участие)'
+			filename += 'students_vpo_ochno (vocal)'
+		elif  'type_2_2' in request.POST:
+			movies_list = movies_list_2_2
+			sorting = sorting_2_2
+			name = 'Студенты высших учебных заведений (заочное участие)'
+			filename += 'students_vpo_zaochno (vocal)'
+		elif  'type_3_1' in request.POST:
+			movies_list = movies_list_3_1
+			sorting = sorting_3_1
+			name = 'Преподаватели, руководители коллективов (очное участие)'
+			filename += 'teachers_ochno (vocal)'
+		elif  'type_3_2' in request.POST:
+			movies_list = movies_list_3_2
+			sorting = sorting_3_2
+			name = 'Преподаватели, руководители коллективов (заочное участие)'
+			filename += 'teachers_zaochno (vocal)'
+		elif  'type_4_1' in request.POST:
+			movies_list = movies_list_4_1
+			sorting = sorting_4_1
+			name = 'Любительские коллективы (очное участие)'
+			filename += 'groups_ochno (vocal)'
+		else:
+			movies_list = movies_list_4_2
+			sorting = sorting_4_2
+			name = 'Любительские коллективы (заочное участие)'
+			filename += 'groups_zaochno (vocal)'
+		filename += ')'
 
 
-	# 	dte = date.today()
-	# 	document = Document()
-	# 	section = document.sections[-1]
-	# 	new_width, new_height = section.page_height, section.page_width
-	# 	section.orientation = WD_ORIENT.PORTRAIT
-	# 	section.page_width = Mm(297)
-	# 	section.page_height = Mm(210)
-	# 	section.left_margin = Mm(30)
-	# 	section.right_margin = Mm(10)
-	# 	section.top_margin = Mm(10)
-	# 	section.bottom_margin = Mm(10)
-	# 	section.header_distance = Mm(10)
-	# 	section.footer_distance = Mm(10)
+		dte = date.today()
+		document = Document()
+		section = document.sections[-1]
+		new_width, new_height = section.page_height, section.page_width
+		section.orientation = WD_ORIENT.PORTRAIT
+		section.page_width = Mm(297)
+		section.page_height = Mm(210)
+		section.left_margin = Mm(30)
+		section.right_margin = Mm(10)
+		section.top_margin = Mm(10)
+		section.bottom_margin = Mm(10)
+		section.header_distance = Mm(10)
+		section.footer_distance = Mm(10)
 
-	# 	style = document.styles['Normal']
-	# 	font = style.font
-	# 	font.name = 'Times New Roman'
-	# 	font.size = Pt(12)
-
-
-	# 	document.add_paragraph(str(nomination) + ' (' + name + ')').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-	# 	p = document.add_paragraph()
-	# 	p.add_run(dte.strftime('%d.%b.%Y')).italic = True
-	# 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
-
-	# 	table = document.add_table(rows=1, cols=7)
-	# 	table.allow_autifit = False
-	# 	table.style = 'TableGrid'
-	# 	table.columns[0].width = Mm(10)
-	# 	table.columns[1].width = Mm(20)
-	# 	table.columns[2].width = Mm(50)
-	# 	table.columns[3].width = Mm(50)
-	# 	table.columns[4].width = Mm(50)
-	# 	table.columns[5].width = Mm(50)
-	# 	table.columns[6].width = Mm(17)
-
-	# 	hdr_cells = table.rows[0].cells
-	# 	hdr_cells[0].text = '№'
-	# 	hdr_cells[0].width = Mm(10)
-	# 	hdr_cells[1].text = 'Рег.номер'
-	# 	hdr_cells[1].width = Mm(20)
-	# 	hdr_cells[2].text = 'Название работы'
-	# 	hdr_cells[2].width = Mm(50)
-	# 	hdr_cells[3].text = 'Конкурсант(Коллектив)'
-	# 	hdr_cells[3].width = Mm(50)
-	# 	hdr_cells[4].text = 'Преподаватель/Концертмейстер'
-	# 	hdr_cells[4].width = Mm(50)
-	# 	hdr_cells[5].text = 'Учреждение'
-	# 	hdr_cells[5].width = Mm(50)
-	# 	hdr_cells[6].text = 'Оценка'
-	# 	hdr_cells[6].width = Mm(17)
+		style = document.styles['Normal']
+		font = style.font
+		font.name = 'Times New Roman'
+		font.size = Pt(12)
 
 
-	# 	cnt = 1
-	# 	for key, val in sorting:
-	# 		movie = movies_list[key]
+		document.add_paragraph(str(nomination) + ' (' + name + ')').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		p = document.add_paragraph()
+		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
-	# 		row_cells = table.add_row().cells
-	# 		row_cells[0].text = str(cnt)
-	# 		row_cells[0].width = Mm(10)
-	# 		row_cells[1].text = str(movie.author.id)
-	# 		row_cells[1].width = Mm(20)
-	# 		row_cells[2].text = movie.name
-	# 		row_cells[2].width = Mm(50)
-	# 		row_cells[3].text = movie.author.profile.get_full_name()
-	# 		if movie.author.profile.group:
-	# 			row_cells[3].text += ' (' + movie.author.profile.group + ')'
-	# 		row_cells[3].width = Mm(50)
-	# 		row_cells[4].text = ''
-	# 		if movie.author.profile.surname_teacher:
-	# 			row_cells[4].text += 'Преп.: ' + movie.author.profile.get_teacher_full_name()
-	# 		if movie.author.profile.surname_musician:
-	# 			row_cells[4].text += ' Конц.: ' + movie.author.profile.get_musician_full_name()
-	# 		row_cells[4].width = Mm(50)
-	# 		row_cells[5].text = movie.author.profile.institution
-	# 		row_cells[5].width = Mm(50)
-	# 		row_cells[6].text = str(val)
-	# 		row_cells[6].width = Mm(17)
+		table = document.add_table(rows=1, cols=6)
+		table.allow_autifit = False
+		table.style = 'TableGrid'
+		table.columns[0].width = Mm(10)
+		table.columns[1].width = Mm(60)
+		table.columns[2].width = Mm(60)
+		table.columns[3].width = Mm(50)
+		table.columns[4].width = Mm(50)
+		table.columns[5].width = Mm(17)
 
-	# 		cnt += 1
+		hdr_cells = table.rows[0].cells
+		hdr_cells[0].text = '№'
+		hdr_cells[0].width = Mm(10)
+		hdr_cells[1].text = 'Название работы'
+		hdr_cells[1].width = Mm(60)
+		hdr_cells[2].text = 'Конкурсант(Коллектив)'
+		hdr_cells[2].width = Mm(60)
+		hdr_cells[3].text = 'Преподаватель/Концертмейстер'
+		hdr_cells[3].width = Mm(50)
+		hdr_cells[4].text = 'Учреждение'
+		hdr_cells[4].width = Mm(50)
+		hdr_cells[5].text = 'Оценка'
+		hdr_cells[5].width = Mm(17)
 
-	# 	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-	# 	response['Content-Disposition'] = 'attachment; filename=' + filename +' (' + dte.strftime('%d-%b-%Y') + ').docx'
-	# 	document.save(response)
 
-	# 	return response
+		cnt = 1
+		for key, val in sorting:
+			movie = movies_list[key]
+
+			row_cells = table.add_row().cells
+			row_cells[0].text = str(cnt)
+			row_cells[0].width = Mm(10)
+			row_cells[1].text = movie.name
+			row_cells[1].width = Mm(60)
+			row_cells[2].text = movie.author.profile.get_full_name()
+			if movie.author.profile.group:
+				row_cells[2].text += ' (' + movie.author.profile.group + ')'
+			row_cells[2].width = Mm(60)
+			row_cells[3].text = ''
+			row_cells[3].width = Mm(50)
+			row_cells[4].text = movie.author.profile.institution
+			row_cells[4].width = Mm(50)
+			row_cells[5].text = str(val)
+			row_cells[5].width = Mm(17)
+
+			cnt += 1
+
+		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+		response['Content-Disposition'] = 'attachment; filename=' + filename +' (' + dte.strftime('%d-%b-%Y') + ').docx'
+		document.save(response)
+
+		return response
 
 	args = {
 		'nomination': nomination, 
