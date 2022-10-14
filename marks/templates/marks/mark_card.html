@@ -10,13 +10,12 @@
 			<p class="text-center mb-0">{{ movie.name }}</p>
 		</div>
 		<form action="" method="post" autocomplete="false" class="col-md-12"> {% csrf_token %}
-			<div class="row col-md-12">
-				<div class="row">
-					<div class="col-md-4 text-center"><b>{{ criteria1 }}</b></div>
-					<div class="col-md-4 text-center"><b>{{ criteria2 }}</b></div>
-					<div class="col-md-4 text-center"><b>{{ criteria3 }}</b></div>
-				</div>
-				<div class="row">
+			<div class="row">
+				<div class="col-md-4 text-center"><b>{{ criteria1 }}</b></div>
+				<div class="col-md-4 text-center"><b>{{ criteria2 }}</b></div>
+				<div class="col-md-4 text-center"><b>{{ criteria3 }}</b></div>
+			</div>
+			<div class="row">
 				<div class="col-md-4 text-center" data-criteria='1'>
 					<div class="row">
 						<div class="col-md-4">
@@ -142,135 +141,6 @@
 					</div>
 				</div>
 			</div>
-			</div>
-
-			<!--<div class="row col-md-12 mt-1 border-top border-info">	
-				<div class="col-md-4 text-center" data-criteria='4'>
-					<p><b>{{ criteria4 }}</b></p>
-					<div class="row">
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">2</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">3</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">4</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">5</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">6</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">7</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">8</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">9</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">10</button>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-4 text-center" data-criteria='5'>
-					<p><b>{{ criteria5 }}</b></p>
-					<div class="row">
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">2</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">3</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">4</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">5</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">6</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">7</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">8</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">9</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">10</button>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-4 text-center" data-criteria='6'>
-					<p><b>{{ criteria6 }}</b></p>
-					<div class="row">
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">2</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">3</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">4</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">5</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">6</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">7</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">8</button>
-						</div>
-						<div class="col-md-4">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">9</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">10</button>
-						</div>
-					</div>
-				</div>
-			</div>-->
 
 			<input type="text" value='{{pk}}' style="display: none;" name="pk">
 
