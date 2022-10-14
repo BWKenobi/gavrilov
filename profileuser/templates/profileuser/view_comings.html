@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<div class="row col-md-12 col-lg-12 mb-3">
+			<h4 class="display-5 text-center">Регистрация коллективов</h4>
+		</div>
+
+		<div class="mx-auto  col-md-12 col-lg-12 mb-5">
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col" class="table-cel-width-5 align-middle">№</th>
+						<th scope="col" class="table-cel-width-65 align-middle">Конкурсант (коллектив)</th>
+						<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+						<th scope="col" class="table-cel-width-10 align-middle text-center">Прибытие</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for profile in profiles %}
+						<tr class="">
+							<th scope="row" class="align-middle">{{ forloop.counter }}</th>
+							<td class="align-middle">{{ profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ profile.group }})</b>{% endif %}</td>
+							<td class="align-middle">{{ profile.institution }}</td>
+							<td class="align-middle text-center"><input type="checkbox" name="{{ profile.pk }}" {% if profile.has_come %}checked{% endif %}></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+		<div class="col-md-12 text-right pb-3">
+			<form action="" method="post"> {% csrf_token %}
+				<input type="submit" value="Выгрузить порядок выступлений">
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('input[type=checkbox]').change(function(){
+				url = "{% url 'profiles:ajax_change_come_flag' %}";
+				pk = $(this).attr('name');
+				if ($(this).is(':checked'))
+					checked = '1';
+				else
+					checked = '0';
+
+				$.ajax({
+					url: url,
+					data: {
+						'pk': pk,
+						'checked': checked
+					},
+					success: function(data){
+					}
+				})
+			});
+		});
+	</script>
+{% endblock %}

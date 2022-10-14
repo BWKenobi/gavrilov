@@ -116,6 +116,10 @@ a:hover{
 	cursor: pointer;
 }
 
+.table_has_come{
+	background-color: rgba(0, 255, 0, 0.2);
+}
+
 .table-cel-width-5{
 	width: 5%;
 }

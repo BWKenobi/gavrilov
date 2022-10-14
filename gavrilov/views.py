@@ -488,6 +488,7 @@ def juri_set(request):
 			pretendent = form.cleaned_data['juri']
 			pretendent.juri_accecc = True
 			pretendent.chef_juri_accecc = form.cleaned_data['chef']
+			pretendent.juri_type = form.cleaned_data['juri_type']
 			pretendent.save()
 
 			return redirect('juri_view')
@@ -530,7 +531,7 @@ def juri_new(request):
 	if request.method=='POST':
 		form = NewJuriForm(request.POST)
 		if form.is_valid():
-			password = User.objects.make_random_password(8)
+			password = '1QaZ2WsX3EdC'#User.objects.make_random_password(8)
 			new_user = form.save(commit=False)
 			new_user.username = new_user.email
 			new_user.is_active = True
@@ -545,6 +546,7 @@ def juri_new(request):
 			new_user.profile.rank = form.cleaned_data['rank']
 			new_user.profile.member_access = False
 			new_user.profile.juri_accecc = True
+			new_user.profile.juri_type = form.cleaned_data['juri_type']
 			new_user.profile.chef_juri_accecc = form.cleaned_data['chef_juri_accecc']
 			new_user.profile.save()
 
@@ -625,6 +627,118 @@ def view_contestant(request, pk):
 	}
 	return render(request, 'view_contestant.html', args)
 
+
+@login_required(login_url='/login/')
+def move_order_view(request):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	movies = Movie.objects.filter(author__profile__participation = '1').order_by('nomination', 'author__profile__category')
+	
+	scene_numbers = movies.filter(scene_num=None)
+	scene_numbers_old = movies.filter(scene_num__isnull=False).order_by('-scene_num')
+
+	cnt = 1
+	if scene_numbers_old:
+		cnt = int(scene_numbers_old[0].scene_num)
+		cnt += 1
+
+	if scene_numbers:
+		for movie in scene_numbers:
+			movie.scene_num = cnt
+			movie.save()
+			cnt += 1
+
+	movies = movies.order_by('scene_num')
+
+
+	if request.POST:
+		dte = date.today()
+		file_name_add = ''
+
+		document = Document()
+		section = document.sections[-1]
+		new_width, new_height = section.page_height, section.page_width
+		section.orientation = WD_ORIENT.PORTRAIT
+		section.page_width = Mm(297)
+		section.page_height = Mm(210)
+		section.left_margin = Mm(30)
+		section.right_margin = Mm(10)
+		section.top_margin = Mm(10)
+		section.bottom_margin = Mm(10)
+		section.header_distance = Mm(10)
+		section.footer_distance = Mm(10)
+
+		style = document.styles['Normal']
+		font = style.font
+		font.name = 'Times New Roman'
+		font.size = Pt(12)
+
+
+		document.add_paragraph('Порядок выступлений').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		p = document.add_paragraph()
+		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+
+
+		table = document.add_table(rows=1, cols=5)
+		table.allow_autifit = False
+		table.style = 'TableGrid'
+		table.columns[0].width = Mm(10)
+		table.columns[1].width = Mm(70)
+		table.columns[2].width = Mm(70)
+		table.columns[3].width = Mm(60)
+		table.columns[4].width = Mm(47)
+
+
+		#257
+
+		hdr_cells = table.rows[0].cells
+		hdr_cells[0].text = '№'
+		hdr_cells[0].width = Mm(10)
+		hdr_cells[1].text = 'Название работы'
+		hdr_cells[1].width = Mm(70)
+		hdr_cells[2].text = 'Конкурсант\n(коллектив)'
+		hdr_cells[2].width = Mm(70)
+		hdr_cells[3].text = 'Категория участника'
+		hdr_cells[3].width = Mm(60)
+		hdr_cells[4].text = 'Учреждение'
+		hdr_cells[4].width = Mm(47)
+
+
+		cnt = 1
+		for movie in movies:
+			row_cells = table.add_row().cells
+			row_cells[0].text = str(cnt)
+			row_cells[0].width = Mm(10)
+			row_cells[1].text = movie.name
+			row_cells[1].width = Mm(70)
+			row_cells[2].text = movie.author.profile.get_full_name()
+			if movie.author.profile.group:
+				row_cells[2].text += ' (' + movie.author.profile.group + ')'
+			row_cells[2].width = Mm(70)
+			row_cells[3].text = movie.author.profile.get_category_display()
+			row_cells[3].width = Mm(60)
+			row_cells[4].text = movie.author.profile.institution
+			row_cells[4].width = Mm(47)
+
+			cnt += 1
+
+		file_name = 'OrderList'
+		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+		response['Content-Disposition'] = 'attachment; filename=' + file_name +' (' + dte.strftime('%d-%b-%Y') + ').docx'
+		document.save(response)
+
+		return response
+
+
+
+	args = {
+		'movies': movies
+	}
+	return render(request, 'move_order.html', args)
+
+
 # --------------------------------
 #           Для ajax'а
 # --------------------------------
@@ -638,3 +752,4 @@ def delete_juri(request):
 	juri.save()
 
 	return HttpResponse(True)
+

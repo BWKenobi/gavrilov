@@ -1,5 +1,6 @@
 import os
 import datetime
+import json
 
 from datetime import date
 
@@ -274,5 +275,19 @@ def ajax_del_movie(request):
 		return HttpResponse(False)
 
 	movie.delete()
+
+	return HttpResponse(True)
+
+
+@login_required(login_url='/login/')
+def ajax_change_scene_movie(request):
+	data_list = json.loads(request.GET['data_list'])
+
+
+	
+	for key, val in data_list.items():
+		movie = Movie.objects.get(pk=key)
+		movie.scene_num = int(val)
+		movie.save()
 
 	return HttpResponse(True)

@@ -2,7 +2,7 @@
 {% load objects_extras %}
 {% url 'home' as home_url %}
 
-{% with '1.1' as version %}
+{% with '1.2' as version %}
 <!doctype html>
 <html lang="en">
     <head>
@@ -118,6 +118,12 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'move_order' %}">
+                                                    <span data-feather="minus"></span>
+                                                    Порядок выступлений
+                                                </a>
+                                            </li>
+                                            <li class="nav-item list-unstyled ">
                                                 <a class="nav-link" href="{% url 'statistic_contestant' %}">
                                                     <span data-feather="minus"></span>
                                                     Статистика конкурсантов (заочное)
@@ -133,6 +139,12 @@
                                                 <a class="nav-link" href="{% url 'statistic_invoices' %}">
                                                     <span data-feather="minus"></span>
                                                     Статистика по оплате
+                                                </a>
+                                            </li>
+                                            <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'profiles:view_comings' %}">
+                                                    <span data-feather="minus"></span>
+                                                    Регистарция
                                                 </a>
                                             </li>
                                         {% endif %}
@@ -173,10 +185,11 @@
                                 {% endif %}
 
                                 {% if request.user.profile.juri_accecc or request.user.profile.chef_juri_accecc %}
+                                    {% if request.user.profile.juri_type == '2' %}
                                     <li class="nav-item">
                                         <div class="nav-link">
                                             <span data-feather="award"></span>
-                                            Оценивание работ (ДПИ)
+                                            Оценивание заочных работ (ДПИ)
                                         </div>
                                     </li>
                                     <ul>
@@ -189,7 +202,24 @@
                                             </li>
                                         {% endfor %}
                                     </ul>
-
+                                    <li class="nav-item">
+                                        <div class="nav-link">
+                                            <span data-feather="award"></span>
+                                            Оценивание очных работ (ДПИ)
+                                        </div>
+                                    </li>
+                                    <ul>
+                                        {% for art in arts %}
+                                             <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'nominations:view_art_nomination' pk=art.pk tp=1 %}">
+                                                    <span data-feather="image"></span>
+                                                    <em><u>{{ art }}</u></em>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                    {% if request.user.profile.juri_type == '1' %}
                                     <li class="nav-item">
                                         <div class="nav-link">
                                             <span data-feather="award"></span>
@@ -197,6 +227,12 @@
                                         </div>
                                     </li>
                                     <ul>
+                                        <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'marks:mark_card' %}">
+                                                    <span data-feather="image"></span>
+                                                    <em><u>Очный этап</u></em>
+                                                </a>
+                                            </li>
                                         {% for vocal in vocals %}
                                              <li class="nav-item list-unstyled ">
                                                 <a class="nav-link" href="{% url 'nominations:view_movie_nomination' pk=vocal.pk %}">
@@ -206,6 +242,7 @@
                                             </li>
                                         {% endfor %}
                                     </ul>
+                                    {% endif %}
                                     <div class="border-top my-3"></div>
                                 {% endif %}
 
@@ -300,6 +337,7 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
             <script src="{% static 'js/dashboard.js' %}"></script>
             <script src="{% static 'js/scripts.js' %}?ver={{version}}"></script>
+            <script src="{% static 'js/Sortable.min.js' %}?ver={{version}}"></script>
         {% endblock %}
     </body>
 

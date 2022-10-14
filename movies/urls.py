@@ -1,6 +1,6 @@
 from django.urls import path
 from django.conf.urls import url
-from .views import view_movies, load_movie, load_movie_admin, edit_movie, edit_movie_admin, ajax_del_movie
+from .views import view_movies, load_movie, load_movie_admin, edit_movie, edit_movie_admin, ajax_del_movie, ajax_change_scene_movie
 
 urlpatterns = [
 	path('view_movies', view_movies, name = 'view_movies'),
@@ -14,5 +14,6 @@ urlpatterns = [
 
 urlpatterns += [
 	path('ajax/del-movie/', ajax_del_movie, name = 'ajax_del_movie'),
+	path('ajax/change-scene-movie/', ajax_change_scene_movie, name = 'ajax_change_scene_movie'),
 
 ]

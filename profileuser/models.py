@@ -32,6 +32,11 @@ class Profile(models.Model):
 		('1', 'Очное'),
 		('2', 'Заочное'),
 	)
+
+	JURI_TYPE = (
+		('1', 'Вокал'),
+		('2', 'ДПИ'),
+	)
 	
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
 	username = models.CharField("Username:", max_length=30, blank=True)
@@ -58,9 +63,13 @@ class Profile(models.Model):
 	admin_access= models.BooleanField("Права администратора", default=False)
 	moderator_access= models.BooleanField("Права модератора", default=False)
 	message_accecc = models.BooleanField("Права рассылки оповещений", default=False)
+	order_block = models.BooleanField("Запрет расстановки номеров", default=False)
 
 	juri_accecc = models.BooleanField("Член жюри", default=False)
 	chef_juri_accecc = models.BooleanField("Председатель жюри", default=False)
+	juri_type = models.CharField(verbose_name='Тип судейства', max_length=1, choices=JURI_TYPE, default='1')
+
+	has_come= models.BooleanField("Факт прибытия", default=False)
 
 
 	def __str__(self):

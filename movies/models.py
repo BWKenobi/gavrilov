@@ -21,7 +21,7 @@ class Movie(models.Model):
 	file = models.URLField(verbose_name='Ссылка на файл', max_length=250, blank=True, null=True)
 
 	youtube_flag = models.BooleanField("Признак YouTube", default=False)
-
+	scene_num = models.DecimalField(verbose_name="Порядковый номер выступления", decimal_places=0, max_digits=3, null=True, default=None, blank=True)
 
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 

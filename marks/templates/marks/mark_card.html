@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 mark-card">
+		{% if movie %}
+		<div class="mx-auto mb-1 col-md-12 col-lg-12 mb-5">
+			<p class="text-center mb-0">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</p>
+			<p class="text-center mb-0"><b>Категория участника: {{ movie.author.profile.get_category_display }}</b></p>
+			<p class="text-center mb-0">{{ movie.name }}</p>
+		</div>
+		<form action="" method="post" autocomplete="false" class="col-md-12"> {% csrf_token %}
+			<div class="row col-md-12">
+				<div class="col-md-4 text-center" data-criteria='1'>
+					<p><b>{{ criteria1 }}</b></p>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">2</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">3</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">4</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">5</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">6</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">7</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">8</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">9</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">10</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4 text-center" data-criteria='2'>
+					<p><b>{{ criteria2 }}</b></p>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">2</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">3</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">4</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">5</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">6</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">7</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">8</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">9</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">10</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4 text-center" data-criteria='3'>
+					<p><b>{{ criteria3 }}<br><br></b></p>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">2</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">3</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">4</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">5</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">6</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">7</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">8</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">9</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">10</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--<div class="row col-md-12 mt-1 border-top border-info">	
+				<div class="col-md-4 text-center" data-criteria='4'>
+					<p><b>{{ criteria4 }}</b></p>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">2</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">3</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">4</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">5</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">6</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">7</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">8</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">9</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">10</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4 text-center" data-criteria='5'>
+					<p><b>{{ criteria5 }}</b></p>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">2</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">3</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">4</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">5</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">6</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">7</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">8</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">9</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">10</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4 text-center" data-criteria='6'>
+					<p><b>{{ criteria6 }}</b></p>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">2</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">3</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">4</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">5</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">6</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">7</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">8</button>
+						</div>
+						<div class="col-md-4">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">9</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">10</button>
+						</div>
+					</div>
+				</div>
+			</div>-->
+
+			<input type="text" value='{{pk}}' style="display: none;" name="pk">
+
+			<div class="row mt-2 pt-2 border-top border-info">
+				<div class="col-md-6">
+					<button type="submit" class="btn btn-block mb-1 btn-success" name="rewerse">Назад</button>
+				</div>
+				<div class="col-md-6">
+					<button type="submit" class="btn btn-block mb-1 btn-primary" name="forward">Вперед</button>
+				</div>
+			</div>
+
+		</form>
+		{% endif %}
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			element = $('div[data-criteria=1]').find('button:contains("' + '{{ mark1 }}' + '")');
+			$(element).removeClass('btn-outline-secondary');
+			$(element).addClass('btn-danger');
+
+			element = $('div[data-criteria=2]').find('button:contains("' + '{{ mark2 }}' + '")');
+			$(element).removeClass('btn-outline-secondary');
+			$(element).addClass('btn-danger');
+
+			element = $('div[data-criteria=3]').find('button:contains("' + '{{ mark3 }}' + '")');
+			$(element).removeClass('btn-outline-secondary');
+			$(element).addClass('btn-danger');
+
+			element = $('div[data-criteria=4]').find('button:contains("' + '{{ mark4 }}' + '")');
+			$(element).removeClass('btn-outline-secondary');
+			$(element).addClass('btn-danger');
+
+			element = $('div[data-criteria=5]').find('button:contains("' + '{{ mark5 }}' + '")');
+			$(element).removeClass('btn-outline-secondary');
+			$(element).addClass('btn-danger');
+
+			element = $('div[data-criteria=6]').find('button:contains("' + '{{ mark6 }}' + '")');
+			$(element).removeClass('btn-outline-secondary');
+			$(element).addClass('btn-danger');
+		});
+
+		$(document).ready(function(){
+			$('button[type=button]').click(function(){
+				if ($(this).hasClass('btn-danger')){
+					$(this).removeClass('btn-danger');
+					$(this).addClass('btn-outline-secondary');
+				}else{
+					$(this).parent().parent().parent().find('button').removeClass('btn-danger');
+					$(this).parent().parent().parent().find('button').removeClass('btn-outline-secondary');
+					$(this).parent().parent().parent().find('button').addClass('btn-outline-secondary');
+					$(this).removeClass('btn-outline-secondary');
+					$(this).addClass('btn-danger');
+				}
+
+
+				url = "{% url 'marks:ajax_set_marks' %}";
+				mark1 = 0;
+				mark2 = 0;
+				mark3 = 0;
+				mark4 = 0;
+				mark5 = 0;
+				mark6 = 0;
+				pk = '{{ movie.pk }}';
+
+				element = $('div[data-criteria=1]').find('.btn-danger');
+				if (element.length>0)
+					mark1 = $(element).text();
+				element = $('div[data-criteria=2]').find('.btn-danger');
+				if (element.length>0)
+					mark2 = $(element).text();
+				element = $('div[data-criteria=3]').find('.btn-danger');
+				if (element.length>0)
+					mark3 = $(element).text();
+
+				$.ajax({
+					url: url,
+					data: {
+						'mark1': mark1,
+						'mark2': mark2,
+						'mark3': mark3,
+						'pk': pk
+					},
+					success: function(data){
+					}
+				});
+			});
+		});
+
+		
+	</script>
+{% endblock %}
+

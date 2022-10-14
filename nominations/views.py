@@ -19,12 +19,15 @@ from marks.forms import PictureMarkForm, MovieMarkForm
 
 
 @login_required(login_url='/login/')
-def view_art_nomination(request, pk):
+def view_art_nomination(request, pk, tp = None):
 	if not request.user.profile.juri_accecc and not request.user.profile.chef_juri_accecc:
 		return redirect('home')
 
 	nomination = ArtNomination.objects.get(pk=pk)
-	pictures = Picture.objects.filter(nomination=nomination)
+	if tp:
+		pictures = Picture.objects.filter(nomination=nomination, author__profile__participation = '1')
+	else:
+		pictures = Picture.objects.filter(nomination=nomination, author__profile__participation = '2')
 
 	if request.POST:
 		criterai_one = request.POST.getlist('criterai_one')
@@ -138,7 +141,8 @@ def view_art_nomination(request, pk):
 		'nomination': nomination, 
 		'pictures': pictures,
 		'nomination_pk': pk,
-		'forms': forms
+		'forms': forms,
+		'tp': tp
 	}
 	return render(request, 'nominations/view_art_nominations.html', args)
 
@@ -149,7 +153,7 @@ def view_movie_nomination(request, pk):
 		return redirect('home')
 
 	nomination = VocalNomination.objects.get(pk=pk)
-	movies = Movie.objects.filter(nomination=nomination)
+	movies = Movie.objects.filter(nomination=nomination, author__profile__participation = '2')
 
 	if request.POST:
 		criterai_one = request.POST.getlist('criterai_one')

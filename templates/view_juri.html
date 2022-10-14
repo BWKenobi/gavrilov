@@ -28,7 +28,7 @@
 			{% for chef_juri in chef_juris %}
 				<div class="row mx-auto mb-2 col-md-6 col-lg-6">
 					<div class="mx-auto col-md-8 col-lg-8">
-						{{ chef_juri.get_file_name }}
+						{{ chef_juri.get_file_name }} ({{ chef_juri.get_juri_type_display }})
 					</div>
 					<div class="col-md-2 text-center">
 						<a href="{% url 'juri_change' pk=chef_juri.pk %}" class="edit_juri">Изменить</a>
@@ -49,7 +49,7 @@
 			{% for juri in juris %}
 				<div class="row mx-auto mb-2 col-md-6 col-lg-6">
 					<div class="mx-auto col-md-8 col-lg-8">
-						{{ juri.get_file_name }}
+						{{ juri.get_file_name }} ({{ juri.get_juri_type_display }})
 					</div>
 					<div class="col-md-2 text-center">
 						<a href="{% url 'juri_change' pk=juri.pk %}" class="edit_juri">Изменить</a>

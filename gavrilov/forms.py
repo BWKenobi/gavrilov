@@ -148,36 +148,53 @@ class CustomSetPasswordForm(SetPasswordForm):
 
 
 class SetJuriForm(forms.Form):
+	CHOICES = (
+		('1', 'Вокал'),
+		('2', 'ДПИ'),
+	)
+
 	juri = forms.ModelChoiceField(queryset = Profile.objects.none(), label='Выберите члена жюри')
 	chef = forms.BooleanField(initial=False, required=False, label = 'Председатель жюри')
+	juri_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect, label = 'Тип судейства')
 
 	def __init__(self, *args, **kwargs):
 		pretendents = kwargs.pop('pretendents', None)
 		super(SetJuriForm, self).__init__(*args, **kwargs)
 		self.fields['juri'].queryset = pretendents
 		self.fields['juri'].widget.attrs.update({'class': 'form-control'})
-
+		#self.fields['juri_type'].widget.attrs.update({'class': 'form-check-inline'})
+		self.fields['juri_type'].initial='1'
 
 
 class ChangeJuriForm(forms.ModelForm):
 	class Meta:
 		model = Profile
-		fields = ('chef_juri_accecc',)
+		fields = ('chef_juri_accecc','juri_type',)
+
+		widgets = {
+			'juri_type': forms.RadioSelect,
+		}
 
 
 class NewJuriForm(forms.ModelForm):
+	CHOICES = (
+		('1', 'Вокал'),
+		('2', 'ДПИ'),
+	)
+
 	email = forms.EmailField(label = 'E-mail члена жюри*', widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	surname = forms.CharField(label = 'Фамилия члена жюри*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	name  = forms.CharField(label = 'Имя члена жюри*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	name2  = forms.CharField(label = 'Отчество члена жюри', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	institution = forms.CharField(label = 'Учреждение члена жюри*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
-	adress = forms.CharField(label = 'Адрес учреждения члена жюри*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	institution = forms.CharField(label = 'Учреждение члена жюри', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	adress = forms.CharField(label = 'Адрес учреждения члена жюри', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	rank = forms.CharField(label = 'Регалии члена жюри', widget=forms.Textarea	(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	chef_juri_accecc = forms.BooleanField(initial=False, required=False, label = 'Председатель жюри')
+	juri_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect, label = 'Тип судейства')
 
 	def __init__(self, *args, **kwargs):
 		super(NewJuriForm, self).__init__(*args, **kwargs)
-
+		self.fields['juri_type'].initial='1'
 
 	class Meta:
 		model = User

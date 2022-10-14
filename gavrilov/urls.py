@@ -9,7 +9,7 @@ from django.contrib.auth import views as auth_views
 
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 
-from .views import home_view, policy_view, juri_view, statistic_contestant_view, statistic_contestant_add_view, statistic_invoices_view, view_contestant
+from .views import home_view, policy_view, juri_view, statistic_contestant_view, statistic_contestant_add_view, statistic_invoices_view, view_contestant, move_order_view
 from .views import juri_set, juri_change, juri_new
 from .views import login_view, logout_view, register_view, change_password, activate
 from .views import delete_juri
@@ -25,6 +25,7 @@ urlpatterns = [
     path('statistic_contestant_add', statistic_contestant_add_view, name = 'statistic_contestant_add'),
     path('statistic_invoices', statistic_invoices_view, name = 'statistic_invoices'),
     path('view_contestant/<int:pk>/', view_contestant, name = 'view_contestant'),
+    path('move_order', move_order_view, name = 'move_order'),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 
@@ -53,6 +54,7 @@ urlpatterns += [
     path('protocols/', include(('protocols.urls', 'protocols'))),
     path('ratings/', include(('ratings.urls', 'ratings'))),
     path('statements/', include(('statements.urls', 'statements'))),
+    path('marks/', include(('marks.urls', 'marks'))),
     #path('certificates/', include(('certificates.urls', 'certificates'))),
 ]
 

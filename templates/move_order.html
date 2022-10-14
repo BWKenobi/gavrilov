@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+  <div class="row col-md-12 col-lg-12 ">
+    <div class="row col-md-12 col-lg-12 mb-3">
+      <h4 class="display-5 text-center">Порядок выступлений</h4>
+    </div>
+      
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col" class="table-cel-width-5 align-middle">№</th>
+            <th scope="col" class="table-cel-width-30 align-middle">Название работы</th>
+            <th scope="col" class="table-cel-width-30 align-middle">Конкурсант (коллектив)</th>
+            <th scope="col" class="table-cel-width-15 align-middle">Категория участника</th>
+            <th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+          </tr>
+        </thead>
+        <tbody {% if not request.user.profile.order_block %}id="order-list"{% endif %}>
+          {% for movie in movies %}
+            <tr class="{% if not request.user.profile.order_block %}table_hover{% endif %} {% if movie.author.profile.has_come %} table_has_come{% endif %}" pk-data="{{ movie.pk }}" scene-num="{{ movie.scene_num }}">
+              <th scope="row" class="align-middle table_click">{{ movie.scene_num }}</th>
+              <td class="align-middle table_click">{{ movie.name }}</td>
+              <td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
+              <td class="align-middle table_click">{{ movie.author.profile.get_category_display }}</td>
+              <td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="col-md-12 text-right pb-3">
+        <form action="" method="post"> {% csrf_token %}
+            <input type="submit" value="Выгрузить список" class="mr-5 btn btn-info">
+          </form>
+      </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+    $(document).ready(function(){
+      new Sortable(document.getElementById('order-list'),{
+        animation: 150,
+        ghostClass:'blue-background-class',
+        onUnchoose: function(){
+          count = 1;
+          data_list = {}
+
+          elements = $('.table_hover').each(function(){
+            $(this).attr('scene-num', count);
+            $(this).find('th').html(count);
+            data_list[$(this).attr('pk-data')] = $(this).attr('scene-num');
+            count ++;
+          });
+
+
+
+
+          url = "{% url 'movies:ajax_change_scene_movie' %}";
+          $.ajax({
+            url: url,
+            dataType: 'json',
+            data: {
+              'data_list': JSON.stringify(data_list)
+            },
+            success: function(data){
+            }
+          });
+
+        }
+      });
+    });
+  </script>
+{% endblock %}
