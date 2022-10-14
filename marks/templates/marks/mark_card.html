@@ -11,8 +11,12 @@
 		</div>
 		<form action="" method="post" autocomplete="false" class="col-md-12"> {% csrf_token %}
 			<div class="row col-md-12">
+				<div class="row">
+					<div class="col-md-4 text-center"><b>{{ criteria1 }}</b></div>
+					<div class="col-md-4 text-center"><b>{{ criteria2 }}</b></div>
+					<div class="col-md-4 text-center"><b>{{ criteria3 }}</b></div>
+				</div>
 				<div class="col-md-4 text-center" data-criteria='1'>
-					<p><b>{{ criteria1 }}</b></p>
 					<div class="row">
 						<div class="col-md-4">
 							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
@@ -54,7 +58,7 @@
 				</div>
 
 				<div class="col-md-4 text-center" data-criteria='2'>
-					<p><b>{{ criteria2 }}</b></p>
+					
 					<div class="row">
 						<div class="col-md-4">
 							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
@@ -96,7 +100,7 @@
 				</div>
 
 				<div class="col-md-4 text-center" data-criteria='3'>
-					<p><b>{{ criteria3 }}<br><br></b></p>
+					
 					<div class="row">
 						<div class="col-md-4">
 							<button type="button" class="btn btn-block mb-1 btn-outline-secondary">1</button>
