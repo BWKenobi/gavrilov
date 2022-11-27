@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<div class="mx-auto mb-2 col-md-12 col-lg-12">
+			<h4 class="display-5 text-center">Оценочные листы</b></h4>
+		</div>
+		<table class="table">
+			<tbody>
+				<thead>
+					<tr>
+						<th scope="col" class="table-cel-width-90 align-middle">Член жюри</th>
+						<th scope="col" class="table-cel-width-10 align-middle text-center"></th>
+					</tr>
+				</thead>
+				{% for jurie in juries %}
+					<tr class="" data-pk="{{ jurie.pk }}">
+						<td scope="row" class="align-middle">{{ jurie.profile.get_file_name }}</td>
+						<td class="align-middle"><a href="{% url 'ratings:get_check_list' pk=jurie.pk %}">скачать</a></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+		});
+	</script>
+{% endblock %}

@@ -12,6 +12,8 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 
+from django.contrib.auth.models import User
+
 from pytils import translit
 
 from docx import Document
@@ -23,6 +25,8 @@ from pictures.models import Picture, CoPicturee
 from movies.models import Movie, CoMovie
 from nominations.models import ArtNomination, VocalNomination
 from marks.models import PictureMark, MovieMark
+
+from profileuser.models import CoProfile
 
 from marks.forms import PictureMarkForm, MovieMarkForm
 
@@ -694,3 +698,352 @@ def view_mov_nomination(request, pk):
 		'comovies': comovies
 	}
 	return render(request, 'ratings/view_mov_nominations.html', args)
+
+
+
+@login_required(login_url='/login/')
+def view_protocols(request):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	juries = User.objects.filter(profile__juri_accecc = True)
+
+	args = {
+		'juries': juries, 
+	}
+	return render(request, 'ratings/view_protocols.html', args)
+
+
+@login_required(login_url='/login/')
+def get_check_list(request, pk):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+
+	CATEGORY_TYPES = {
+		'1': 'Студенты учреждений среднего профессионального образовани',
+		'2': 'Студенты высших учебных заведений',
+		'3': 'Преподаватели, руководители коллективов',
+		'4': 'Любительские коллективы',
+	}
+
+
+	user = User.objects.get(pk=pk)
+	juri_type = user.profile.juri_type
+
+	document = Document()
+	section = document.sections[-1]
+	new_width, new_height = section.page_height, section.page_width
+	section.orientation = WD_ORIENT.PORTRAIT
+	section.page_width = Mm(297)
+	section.page_height = Mm(210)
+	section.left_margin = Mm(10)
+	section.right_margin = Mm(10)
+	section.top_margin = Mm(10)
+	section.bottom_margin = Mm(10)
+	section.header_distance = Mm(10)
+	section.footer_distance = Mm(10)
+
+	style = document.styles['Normal']
+	font = style.font
+	font.name = 'Times New Roman'
+	font.size = Pt(8)
+
+	p = document.add_paragraph()
+	p.add_run('Оценочный лист Всероссийского фестиваля конкурса народного творчества «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2022г.').bold = True
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+	document.add_paragraph()
+
+	if juri_type == '1':
+		#Вокал
+		criteria1 = 'Сложность и трактовка музыкальных произведений'
+		criteria2 = 'Интонационная выразительность'
+		criteria3 = 'Артистизм'
+
+
+		filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист)')
+
+		nominations = VocalNomination.objects.all()
+
+		for nomination in nominations:
+
+			find_cnt = Movie.objects.filter(nomination=nomination).count()
+			if find_cnt:
+				document.add_paragraph()
+				p = document.add_paragraph()
+				p.add_run(nomination.name).bold = True
+				p.paragraph_format.space_after = 0
+
+				for cat_num in ['1','2','3','4']:
+					category = CATEGORY_TYPES[cat_num]
+
+
+					members = Movie.objects.filter(nomination=nomination, author__profile__category=cat_num)
+
+					if members:
+						p = document.add_paragraph()
+						p.paragraph_format.space_after = 0
+						p = document.add_paragraph(category)
+						p.paragraph_format.space_after = 0
+		
+						table = document.add_table(rows=2, cols=9)
+						table.allow_autifit = False
+						table.style = 'TableGrid'
+						table.columns[0].width = Mm(10)
+						table.columns[1].width = Mm(50)
+						table.columns[2].width = Mm(50)
+						table.columns[3].width = Mm(50)
+						table.columns[4].width = Mm(40)
+
+
+						table.columns[5].width = Mm(20)
+						table.columns[6].width = Mm(20)
+						table.columns[7].width = Mm(20)
+
+						table.columns[8].width = Mm(17)
+
+						new_cell = table.cell(0, 0).merge(table.cell(1, 0))
+						new_cell.text = '№'
+						new_cell = table.cell(0, 1).merge(table.cell(1, 1))
+						new_cell.text = 'Участник'
+						new_cell = table.cell(0, 2).merge(table.cell(1, 2))
+						new_cell.text = 'Учреждение'
+						new_cell = table.cell(0, 3).merge(table.cell(1, 3))
+						new_cell.text = 'Преподаватель'
+						new_cell = table.cell(0, 4).merge(table.cell(1, 4))
+						new_cell.text = 'Название'
+
+						
+						new_cell = table.cell(0, 5).merge(table.cell(0, 7))
+						new_cell.text = 'Оценка (макс. 10 баллов)'
+
+						table.cell(1, 5).text = criteria1
+						table.cell(1, 6).text = criteria2
+						table.cell(1, 7).text = criteria3
+
+						new_cell = table.cell(0, 8).merge(table.cell(1, 8))
+						new_cell.text = 'Всего'
+
+						cnt = 1
+						for member in members:
+							marks = MovieMark.objects.filter(work=member, expert=user)
+
+							row_cells = table.add_row().cells
+							row_cells[0].text = str(cnt)
+							row_cells[0].width = Mm(10)
+
+							row_cells[1].text = member.author.profile.get_file_name()
+							if member.author.profile.group:
+								row_cells[1].text += ' (' + member.author.profile.group + ')'
+							row_cells[1].width = Mm(50)
+
+
+							row_cells[2].text = member.author.profile.institution
+							row_cells[2].width = Mm(50)
+
+							row_cells[3].text = ''
+							teachers = CoProfile.objects.filter(main_user = member.author)
+							if teachers:
+								for teacher in teachers:
+									row_cells[3].text += teacher.get_profile_type_display() + ' ' + teacher.get_file_name() + '\n'
+							row_cells[3].width = Mm(50)
+
+							row_cells[4].text = member.name
+							row_cells[4].width = Mm(40)
+
+							
+							row_cells[5].text = ''
+							if marks:
+								row_cells[5].text = str(marks[0].criterai_one)
+							row_cells[5].width = Mm(20)
+
+							row_cells[6].text = ''
+							if marks:
+								row_cells[6].text = str(marks[0].criterai_two)
+							row_cells[6].width = Mm(20)
+
+							row_cells[7].text = ''
+							if marks:
+								row_cells[7].text = str(marks[0].criterai_three)
+							row_cells[7].width = Mm(20)
+
+
+							row_cells[8].text = ''
+							row_cells[8].width = Mm(17)
+
+							summa = 0
+							if marks:
+								if marks[0].criterai_one:
+									summa += marks[0].criterai_one
+								if marks[0].criterai_two:
+									summa += marks[0].criterai_two
+								if marks[0].criterai_three:
+									summa += marks[0].criterai_three
+							row_cells[8].text = str(summa)
+
+							cnt += 1
+
+
+	if juri_type == '2':
+		#Вокал
+		criteria1 = 'Соответствие названию, полнота раскрытия'
+		criteria2 = 'Техническое воспроизведение'
+		criteria3 = 'Авторское новаторство'
+		criteria4 = 'Эстетика подачи работы'
+		criteria5 = 'Визуальное восприятие'
+
+
+		filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист)')
+
+		nominations = ArtNomination.objects.all()
+
+		for nomination in nominations:
+
+			find_cnt = Picture.objects.filter(nomination=nomination).count()
+			if find_cnt:
+				document.add_paragraph()
+				p = document.add_paragraph()
+				p.add_run(nomination.name).bold = True
+				p.paragraph_format.space_after = 0
+
+				for cat_num in ['1','2','3','4']:
+					category = CATEGORY_TYPES[cat_num]
+
+
+					members = Picture.objects.filter(nomination=nomination, author__profile__category=cat_num)
+
+					if members:
+						p = document.add_paragraph()
+						p.paragraph_format.space_after = 0
+						p = document.add_paragraph(category)
+						p.paragraph_format.space_after = 0
+		
+						table = document.add_table(rows=2, cols=11)
+						table.allow_autifit = False
+						table.style = 'TableGrid'
+						table.columns[0].width = Mm(10)
+						table.columns[1].width = Mm(40)
+						table.columns[2].width = Mm(40)
+						table.columns[3].width = Mm(40)
+						table.columns[4].width = Mm(30)
+
+
+						table.columns[5].width = Mm(20)
+						table.columns[6].width = Mm(20)
+						table.columns[7].width = Mm(20)
+						table.columns[8].width = Mm(20)
+						table.columns[9].width = Mm(20)
+
+						table.columns[10].width = Mm(17)
+
+						new_cell = table.cell(0, 0).merge(table.cell(1, 0))
+						new_cell.text = '№'
+						new_cell = table.cell(0, 1).merge(table.cell(1, 1))
+						new_cell.text = 'Участник'
+						new_cell = table.cell(0, 2).merge(table.cell(1, 2))
+						new_cell.text = 'Учреждение'
+						new_cell = table.cell(0, 3).merge(table.cell(1, 3))
+						new_cell.text = 'Преподаватель'
+						new_cell = table.cell(0, 4).merge(table.cell(1, 4))
+						new_cell.text = 'Название'
+
+						
+						new_cell = table.cell(0, 5).merge(table.cell(0, 9))
+						new_cell.text = 'Оценка (макс. 10 баллов)'
+
+						table.cell(1, 5).text = criteria1
+						table.cell(1, 6).text = criteria2
+						table.cell(1, 7).text = criteria3
+						table.cell(1, 8).text = criteria4
+						table.cell(1, 9).text = criteria5
+
+						new_cell = table.cell(0, 10).merge(table.cell(1, 10))
+						new_cell.text = 'Всего'
+
+						cnt = 1
+						for member in members:
+							marks = MovieMark.objects.filter(work=member, expert=user)
+
+							row_cells = table.add_row().cells
+							row_cells[0].text = str(cnt)
+							row_cells[0].width = Mm(10)
+
+							row_cells[1].text = member.author.profile.get_file_name()
+							if member.author.profile.group:
+								row_cells[1].text += ' (' + member.author.profile.group + ')'
+							row_cells[1].width = Mm(40)
+
+
+							row_cells[2].text = member.author.profile.institution
+							row_cells[2].width = Mm(40)
+
+							row_cells[3].text = ''
+							teachers = CoProfile.objects.filter(main_user = member.author)
+							if teachers:
+								for teacher in teachers:
+									row_cells[3].text += teacher.get_profile_type_display() + ' ' + teacher.get_file_name() + '\n'
+							row_cells[3].width = Mm(40)
+
+							row_cells[4].text = member.name
+							row_cells[4].width = Mm(30)
+
+							
+							row_cells[5].text = ''
+							if marks:
+								row_cells[5].text = str(marks[0].criterai_one)
+							row_cells[5].width = Mm(20)
+
+							row_cells[6].text = ''
+							if marks:
+								row_cells[6].text = str(marks[0].criterai_two)
+							row_cells[6].width = Mm(20)
+
+							row_cells[7].text = ''
+							if marks:
+								row_cells[7].text = str(marks[0].criterai_three)
+							row_cells[7].width = Mm(20)
+
+							row_cells[8].text = ''
+							if marks:
+								row_cells[8].text = str(marks[0].criterai_four)
+							row_cells[8].width = Mm(20)
+
+							row_cells[9].text = ''
+							if marks:
+								row_cells[9].text = str(marks[0].criterai_five)
+							row_cells[9].width = Mm(20)
+
+
+							row_cells[10].text = ''
+							row_cells[10].width = Mm(17)
+
+							summa = 0
+							if marks:
+								if marks[0].criterai_one:
+									summa += marks[0].criterai_one
+								if marks[0].criterai_two:
+									summa += marks[0].criterai_two
+								if marks[0].criterai_three:
+									summa += marks[0].criterai_three
+								if marks[0].criterai_four:
+									summa += marks[0].criterai_four
+								if marks[0].criterai_five:
+									summa += marks[0].criterai_five
+							row_cells[10].text = str(summa)
+
+							cnt += 1
+
+	document.add_paragraph()
+	p = document.add_paragraph()
+	p.add_run('______________________ /'  + user.profile.get_file_name() + '/').bold = True
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+
+	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+	response['Content-Disposition'] = 'attachment; filename=' + filename + '.docx'
+	document.save(response)
+
+	return response
+
+
+
