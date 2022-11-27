@@ -827,7 +827,7 @@ def get_check_list(request, pk):
 
 						cnt = 1
 						for member in members:
-							marks = MovieMark.objects.filter(work=member, expert=user)
+							marks = PictureMark.objects.filter(work=member, expert=user)
 
 							row_cells = table.add_row().cells
 							row_cells[0].text = str(cnt)
