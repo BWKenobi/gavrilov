@@ -779,7 +779,7 @@ def get_check_list(request, pk):
 					category = CATEGORY_TYPES[cat_num]
 
 
-					members = Picture.objects.filter(nomination=nomination, author__profile__category=cat_num)
+					members = Movie.objects.filter(nomination=nomination, author__profile__category=cat_num)
 
 					if members:
 						p = document.add_paragraph()
@@ -827,7 +827,7 @@ def get_check_list(request, pk):
 
 						cnt = 1
 						for member in members:
-							marks = PictureMark.objects.filter(work=member, expert=user)
+							marks = MovieMark.objects.filter(work=member, expert=user)
 
 							row_cells = table.add_row().cells
 							row_cells[0].text = str(cnt)
@@ -963,7 +963,7 @@ def get_check_list(request, pk):
 
 						cnt = 1
 						for member in members:
-							marks = MovieMark.objects.filter(work=member, expert=user)
+							marks = PictureMark.objects.filter(work=member, expert=user)
 
 							row_cells = table.add_row().cells
 							row_cells[0].text = str(cnt)
