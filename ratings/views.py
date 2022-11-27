@@ -779,7 +779,7 @@ def get_check_list(request, pk):
 					category = CATEGORY_TYPES[cat_num]
 
 
-					members = Movie.objects.filter(nomination=nomination, author__profile__category=cat_num)
+					members = Picture.objects.filter(nomination=nomination, author__profile__category=cat_num)
 
 					if members:
 						p = document.add_paragraph()
