@@ -144,7 +144,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.timeweb.ru'
 EMAIL_HOST_USER = 'gavrilov@tdpi.ru'
-EMAIL_HOST_PASSWORD = '13DfvgbhboT'
+EMAIL_HOST_PASSWORD = 'NHgepT2hV7wJsVae'
 #EMAIL_PORT = 465
 #EMAIL_USE_SSL = True
 

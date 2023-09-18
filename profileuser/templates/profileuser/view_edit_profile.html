@@ -3,20 +3,101 @@
 
 {% block content %}
 <div class="row col-md-12 col-lg-12 ">
-		<div class="mx-auto mb-5 col-md-6 col-lg-6">
-			<h4 class="display-5 text-center">Личные данные</h4>
+	<div class="mx-auto mb-5 col-md-6 col-lg-6">
+		<h4 class="display-5 text-center">Личные данные</h4>
 
-			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
-				{{form.as_p}}
-				<div class="row align-middle">
-					<div class="col-md-6 text-left">
-						<input type="submit" value="Сохранить изменения" {% if register_block %}disabled{% endif %}>
-					</div>
-					<div class="col-md-6 text-right">
-						<input type="submit" value="Сменить пароль" name="passchange">
-					</div>
+		<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+			{{form.as_p}}
+			<div class="row align-middle">
+				<div class="col-md-6 text-left">
+					<input type="submit" value="Сохранить изменения" {% if register_block %}disabled{% endif %}>
 				</div>
-			</form>
+				<div class="col-md-6 text-right">
+					<input type="submit" value="Сменить пароль" name="passchange">
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Успешно</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Данные успешно сохранены.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+			</div>
 		</div>
 	</div>
+</div>
 {% endblock %}
+
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+    $(document).ready(function(){
+    	done_flag = "{{ done_flag }}";
+    	if (done_flag == 'True'){
+			$('#myModal').modal('show');
+    	}
+
+    	if ($('#id_less_institution').is(':checked')){
+    		$('#id_institution').parent().addClass('hidden');
+    		$('#id_institution_shot').parent().addClass('hidden');
+    		$('#id_adress').parent().addClass('hidden');
+
+    		$('#id_institution').val('');
+    		$('#id_institution_shot').val('');
+    		$('#id_institution_shot').val('');
+
+    		$('#id_institution').removeAttr('required');
+    		$('#id_institution_shot').removeAttr('required');
+    		$('#id_institution_shot').removeAttr('required');
+    	}else{
+    		$('#id_institution').parent().removeClass('hidden');
+    		$('#id_institution_shot').parent().removeClass('hidden');
+    		$('#id_adress').parent().removeClass('hidden');
+
+    		$('#id_institution').attr('required', 'required');
+    		$('#id_institution_shot').attr('required', 'required');
+    		$('#id_institution_shot').attr('required', 'required');
+    	}
+
+
+    	$('#id_less_institution').change(function(){
+    		if ($('#id_less_institution').is(':checked')){
+	    		$('#id_institution').parent().addClass('hidden');
+	    		$('#id_institution_shot').parent().addClass('hidden');
+	    		$('#id_adress').parent().addClass('hidden');
+
+	    		$('#id_institution').val('');
+	    		$('#id_institution_shot').val('');
+	    		$('#id_institution_shot').val('');
+
+	    		$('#id_institution').removeAttr('required');
+	    		$('#id_institution_shot').removeAttr('required');
+	    		$('#id_institution_shot').removeAttr('required');
+	    	}else{
+	    		$('#id_institution').parent().removeClass('hidden');
+	    		$('#id_institution_shot').parent().removeClass('hidden');
+	    		$('#id_adress').parent().removeClass('hidden');
+
+	    		$('#id_institution').attr('required', 'required');
+	    		$('#id_institution_shot').attr('required', 'required');
+	    		$('#id_institution_shot').attr('required', 'required');
+	    	}
+    	});
+
+    });
+  </script>
+{% endblock %}
+

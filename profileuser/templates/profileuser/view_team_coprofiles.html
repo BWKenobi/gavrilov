@@ -1,28 +1,27 @@
 {% extends 'base.html' %}
-{% load objects_extras %}
 {% load static %}
 
 {% block content %}
 	<div class="row col-md-12 col-lg-12 ">
 		<div class="mx-auto mb-2 col-md-12 col-lg-12">
-			<h4 class="display-5 text-center">Список квитанций</h4>
+			<h4 class="display-5 text-center">Список участников, коллективов и т.д.</h4>
 
 			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
 				<div class="row align-middle">
 					<div class="col-md-12 text-center">
-						<input type="submit" value="Добавить квитануию">
+						<input type="submit" value="Добавить">
 					</div>
 				</div>
 				<div class="row align-middle mt-5">
-					{% for invoice in invoices %}
+					{% for coprofile in coprofiles %}
 						<div class="col-md-8">
-							<b>Квитанция от: </b> {{ invoice.date }} <b>на сумму:</b> {{ invoice.summa }} руб.  
+							<b>{{ coprofile.get_full_name }} </b> ({{ coprofile.get_coprofile_type_display }})
 						</div>
 						<div class="col-md-2 text-center">
-							<a href="{{ invoice.file.url }}" target="_blank">Скачать</a>
+							<a href="{% url 'profiles:view_edit_team_coprofile' pk=coprofile.pk %}">Изменить</a>
 						</div>
 						<div class="col-md-2 text-center">
-							<a href="{{ invoice.pk }}" class="del_invoice">Удалить</a>
+							<a href="{{ coprofile.pk }}" class="del_coprofile">Удалить</a>
 						</div>
 						<div class="mx-auto col-md-12 col-lg-12">
 							<div class="border-top my-3"></div>
@@ -39,14 +38,14 @@
     {{ block.super }}
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.del_invoice').click(function(){
-				invoice_id = $(this).attr('href');
-				url = "{% url 'invoices:ajax_del_invoice' %}";
+			$('.del_coprofile').click(function(){
+				coprofile_pk = $(this).attr('href');
+				url = "{% url 'profiles:ajax_del_coprofile' %}";
 
 				$.ajax({
 					url: url,
 					data: {
-						'invoice': invoice_id
+						'coprofile': coprofile_pk
 					},
 					success: function(data){
 						document.location.reload();

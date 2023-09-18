@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row col-md-12 col-lg-12 ">
+		<div class="mx-auto mb-5 col-md-6 col-lg-6">
+			<h4 class="display-5 text-center">Редактировать  участника, коллектива и т.д.</h4>
+
+			<form action="" method="post" , autocomplete="false" enctype="multipart/form-data"> {% csrf_token %}
+				{{form.as_p}}
+				<div class="row align-middle">
+					<div class="col-md-12 text-center">
+						<input type="submit" value="Сохранить">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+    $(document).ready(function(){
+    	if ($('#id_coprofile_type').val() == '1'){
+    		$('#id_surname').parent().removeClass('hidden');
+    		$('#id_name').parent().removeClass('hidden');
+    		$('#id_name2').parent().removeClass('hidden');
+
+    		$('#id_surname').attr('required', 'required');
+    		$('#id_name').attr('required', 'required');
+
+    		$('#id_team').parent().addClass('hidden');
+    		$('#id_team').val('');
+    		$('#id_team').removeAttr('required');
+    	}else{
+    		$('#id_surname').parent().addClass('hidden');
+    		$('#id_name').parent().addClass('hidden');
+    		$('#id_name2').parent().addClass('hidden');
+
+    		$('#id_surname').removeAttr('required');
+    		$('#id_name').removeAttr('required');
+
+    		$('#id_surname').val('');
+    		$('#id_name').val('');
+    		$('#id_name2').val('');
+
+    		$('#id_team').parent().removeClass('hidden');
+    		$('#id_team').attr('required', 'required');
+    	}
+
+    	$('#id_coprofile_type').change(function(){
+    		if ($('#id_coprofile_type').val() == '1'){
+	    		$('#id_surname').parent().removeClass('hidden');
+	    		$('#id_name').parent().removeClass('hidden');
+	    		$('#id_name2').parent().removeClass('hidden');
+
+	    		$('#id_surname').attr('required', 'required');
+	    		$('#id_name').attr('required', 'required');
+
+	    		$('#id_team').parent().addClass('hidden');
+	    		$('#id_team').val('');
+	    		$('#id_team').removeAttr('required');
+	    	}else{
+	    		$('#id_surname').parent().addClass('hidden');
+	    		$('#id_name').parent().addClass('hidden');
+	    		$('#id_name2').parent().addClass('hidden');
+
+	    		$('#id_surname').removeAttr('required');
+	    		$('#id_name').removeAttr('required');
+
+	    		$('#id_surname').val('');
+	    		$('#id_name').val('');
+	    		$('#id_name2').val('');
+
+	    		$('#id_team').parent().removeClass('hidden');
+	    		$('#id_team').attr('required', 'required');
+	    	}
+    	});
+
+    });
+  </script>
+{% endblock %}

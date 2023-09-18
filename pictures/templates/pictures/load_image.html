@@ -3,17 +3,31 @@
 
 {% block content %}
 <div class="row col-md-12 col-lg-12 ">
-		<div class="mx-auto mb-5 col-md-6 col-lg-6">
+		<div class="mx-auto mb-5 col-md-12 col-lg-12">
 			<h4 class="display-5 text-center">Добавить работу</h4>
-			
+			<p class="text-center text-danger">Для добавления авторов/исполнителей воспользуйтесь соответсвующим пунктом в боковом меню.</p>
+
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
-				{{form.as_p}}
+				<div class="mx-auto col-md-6 col-lg-6">
+					{{form.as_p}}
+				</div>
 				<div class="mb-5">
-					{% if author.profile.participation == '2' %}
-					<img src="{% static 'img/blank_img.jpg' %}" class="rounded img-fluid" id="img_field">
-					{% endif %}
+					<div class="img_field">
+						<div class="mx-auto col-md-6 col-lg-6">
+							<img src="{% static 'img/blank_img.jpg' %}" class="rounded img-fluid mx-auto " id="img_field">
+						</div>
+
+						<div class="row mt-5 img_field_1_2">
+							<div class="mx-auto col-md-6 col-lg-6">
+								<img src="{% static 'img/blank_img.jpg' %}" class="rounded img-fluid mx-auto " id="img_field_1">
+							</div>
+							<div class="mx-auto col-md-6 col-lg-6">
+								<img src="{% static 'img/blank_img.jpg' %}" class="rounded img-fluid mx-auto " id="img_field_2">
+							</div>
+						</div>
+					</div>
 					<h5 class="text-center mt-5">Преподаватели/концертмейстеры и т.п.</h5>
-					<p class="text-center text-danger">Для добавления соисполнителей воспользуйтесь соответсвующим пунктом в боковом меню.</p>
+					<p class="text-center text-danger">Для добавления воспользуйтесь соответсвующим пунктом в боковом меню.</p>
 					{% for coprofile in coprofiles %}
 					<div class="row">
 						<div class="col-md-11 mb-3">{{ coprofile.get_file_name }} <em>({{ coprofile.get_profile_type_display }})</em></div>
@@ -31,11 +45,109 @@
 	</div>
 {% endblock %}
 
-{% block scripts %}
-    {{ block.super }}
 
-    <script type="text/javascript">
-		function readURL(input){
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+    $(document).ready(function(){
+    	if ($('#id_participation').val() == '2'){
+    		$('#id_file').parent().removeClass('hidden');
+    		$('#id_add_view_1').parent().removeClass('hidden');
+    		$('#id_add_view_2').parent().removeClass('hidden');
+    		$('#id_add_views').parent().removeClass('hidden');
+    		$('.img_field').removeClass('hidden');
+
+    		$('#id_file').attr('required', 'required');
+
+    	}else{
+    		$('#id_file').parent().addClass('hidden');
+    		$('#id_add_view_1').parent().addClass('hidden');
+    		$('#id_add_view_2').parent().addClass('hidden');
+    		$('#id_add_views').parent().addClass('hidden');
+    		$('.img_field').addClass('hidden');
+
+    		$('#id_file').removeAttr('required');
+
+    		$('#id_file').val('');
+    		$('#id_add_view_1').val('');
+    		$('#id_add_view_2').val('');
+
+    		$('#img_field').attr('src', "{% static 'img/blank_img.jpg' %}");
+    		$('#img_field_1').attr('src', "{% static 'img/blank_img.jpg' %}");
+    		$('#img_field_2').attr('src', "{% static 'img/blank_img.jpg' %}");
+
+    		$('#id_add_views').prop('checked', false);
+
+    		$('#id_file').removeAttr('required');
+    	}
+
+    	if ($('#id_add_views').is(':checked')){
+    		$('.img_field_1_2').removeClass('hidden');
+    		$('#id_add_view_1').parent().removeClass('hidden');
+    		$('#id_add_view_2').parent().removeClass('hidden');
+    	}else{
+    		$('.img_field_1_2').addClass('hidden');
+    		$('#id_add_view_1').parent().addClass('hidden');
+    		$('#id_add_view_2').parent().addClass('hidden');
+    	}
+
+    	$('#id_participation').change(function(){
+    		if ($('#id_participation').val() == '2'){
+	    		$('#id_file').parent().removeClass('hidden');
+	    		$('#id_add_view_1').parent().removeClass('hidden');
+	    		$('#id_add_view_2').parent().removeClass('hidden');
+	    		$('#id_add_views').parent().removeClass('hidden');
+	    		$('.img_field').removeClass('hidden');
+
+	    		$('#id_file').attr('required', 'required');
+	    	}else{
+	    		$('#id_file').parent().addClass('hidden');
+	    		$('#id_add_view_1').parent().addClass('hidden');
+	    		$('#id_add_view_2').parent().addClass('hidden');
+	    		$('#id_add_views').parent().addClass('hidden');
+	    		$('.img_field').addClass('hidden');
+
+	    		$('#id_file').removeAttr('required');
+
+	    		$('#id_team').attr('required', 'required');
+
+	    		$('#id_file').val('');
+	    		$('#id_add_view_1').val('');
+	    		$('#id_add_view_2').val('');
+
+	    		$('#img_field').attr('src', "{% static 'img/blank_img.jpg' %}");
+	    		$('#img_field_1').attr('src', "{% static 'img/blank_img.jpg' %}");
+	    		$('#img_field_2').attr('src', "{% static 'img/blank_img.jpg' %}");
+
+	    		$('#id_add_views').prop('checked', false);
+
+	    		$('#id_file').removeAttr('required');
+	    	}
+
+	    	if ($('#id_add_views').is(':checked')){
+	    		$('.img_field_1_2').removeClass('hidden');
+	    		$('#id_add_view_1').parent().removeClass('hidden');
+	    		$('#id_add_view_2').parent().removeClass('hidden');
+	    	}else{
+	    		$('.img_field_1_2').addClass('hidden');
+	    		$('#id_add_view_1').parent().addClass('hidden');
+	    		$('#id_add_view_2').parent().addClass('hidden');
+	    	}
+    	});
+
+    	$('#id_add_views').change(function(){
+			if ($('#id_add_views').is(':checked')){
+	    		$('.img_field_1_2').removeClass('hidden');
+	    		$('#id_add_view_1').parent().removeClass('hidden');
+    			$('#id_add_view_2').parent().removeClass('hidden');
+	    	}else{
+	    		$('.img_field_1_2').addClass('hidden');
+	    		$('#id_add_view_1').parent().addClass('hidden');
+    			$('#id_add_view_2').parent().addClass('hidden');
+	    	}
+    	});
+
+    	function readURL(input){
 			var reader = new FileReader();
 
 			reader.onload = function(e){
@@ -45,9 +157,37 @@
 			reader.readAsDataURL(input.files[0]);
 		}
 
+		function readURL1(input){
+			var reader = new FileReader();
+
+			reader.onload = function(e){
+				$('#img_field_1').attr('src', e.target.result);
+			}
+
+			reader.readAsDataURL(input.files[0]);
+		}
+
+		function readURL2(input){
+			var reader = new FileReader();
+
+			reader.onload = function(e){
+				$('#img_field_2').attr('src', e.target.result);
+			}
+
+			reader.readAsDataURL(input.files[0]);
+		}
+
 		$('#id_file').change(function(){
 			readURL(this);
 		});
+		$('#id_add_view_1').change(function(){
+			readURL1(this);
+		});
+		$('#id_add_view_2').change(function(){
+			readURL2(this);
+		});
 
-	</script>
+
+    });
+  </script>
 {% endblock %}

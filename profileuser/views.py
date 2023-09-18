@@ -19,7 +19,7 @@ from docx.shared import Mm, Pt
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage, send_mail
 
-from .forms import ProfileUdpateForm, CoProfileForm
+from .forms import ProfileUdpateForm, CoProfileForm, CoProfileTeamForm, CoProfileTeamEditForm
 
 from .models import Profile, CoProfile
 from movies.models import Movie
@@ -41,10 +41,15 @@ def view_edit_profile(request):
 				profile_form.save()	
 
 			
-			return redirect('home')
+			args ={
+				'form': form_profile,
+				'done_flag': True
+			}
+			return render(request, 'profileuser/view_edit_profile.html', args)
 
 		args ={
-			'form': form_profile, 
+			'form': form_profile,
+			'done_flag': False
 		}
 		return render(request, 'profileuser/view_edit_profile.html', args)
 
@@ -52,6 +57,7 @@ def view_edit_profile(request):
 
 	args = {
 		'form': form_profile, 
+		'done_flag': False
 	}
 	return render(request, 'profileuser/view_edit_profile.html', args)
 
@@ -64,7 +70,7 @@ def view_coprofiles(request):
 	if request.method=='POST':
 		return redirect('profiles:new_coprofile')
 
-	coprofiles = CoProfile.objects.filter(main_user = request.user).order_by('main_user')
+	coprofiles = CoProfile.objects.filter(main_user = request.user, self_flag = False, profile_type__in = ['1', '2', '3', '4', '5']).order_by('main_user')
 	
 	args = {
 		'coprofiles': coprofiles,
@@ -187,6 +193,139 @@ def view_edit_coprofile_admin(request, pk):
 		'form': form_coprofile, 
 	}
 	return render(request, 'profileuser/view_edit_coprofile.html', args)
+
+
+@login_required(login_url='/login/')
+def view_team_coprofiles(request):
+	if not request.user.profile.member_access:
+		return redirect('home')
+
+	if request.method=='POST':
+		return redirect('profiles:new_team_coprofile')
+
+	coprofiles = CoProfile.objects.filter(main_user = request.user, self_flag = False, profile_type = '0').order_by('main_user')
+
+	args = {
+		'coprofiles': coprofiles,
+	}
+	return render(request, 'profileuser/view_team_coprofiles.html', args)
+
+
+@login_required(login_url='/login/')
+def new_team_coprofile(request):
+	if not request.user.profile.member_access:
+		return redirect('home')
+
+	if request.method=='POST':
+		form_coprofile = CoProfileTeamForm(request.POST, label_suffix='')
+
+		if form_coprofile.is_valid():
+			coprofile = form_coprofile.save(commit=False)
+			coprofile.main_user = request.user
+			coprofile.save()
+
+			return redirect('profiles:view_team_coprofiles')
+
+		args ={
+			'form': form_coprofile,
+		}
+		return render(request, 'profileuser/new_team_coprofile.html', args)
+
+	form_coprofile = CoProfileTeamForm(label_suffix='')
+
+	args = {
+		'form': form_coprofile,
+	}
+	return render(request, 'profileuser/new_team_coprofile.html', args)
+
+
+@login_required(login_url='/login/')
+def new_team_coprofile_admin(request, pk):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	main_user = Profile.objects.get(pk = pk)
+	if request.method=='POST':
+		form_coprofile = CoProfileTeamForm(request.POST, label_suffix='')
+
+		if form_coprofile.is_valid():
+			coprofile = form_coprofile.save(commit=False)
+			coprofile.main_user = main_user.user
+			coprofile.save()
+
+			return redirect('view_contestant', pk = pk)
+
+		args ={
+			'form': form_coprofile,
+		}
+		return render(request, 'profileuser/new_team_coprofile.html', args)
+
+	form_coprofile = CoProfileTeamForm(label_suffix='')
+
+	args = {
+		'form': form_coprofile,
+	}
+	return render(request, 'profileuser/new_team_coprofile.html', args)
+
+
+@login_required(login_url='/login/')
+def view_edit_team_coprofile(request, pk):
+	if not request.user.profile.member_access:
+		return redirect('home')
+
+	coprofile = CoProfile.objects.get(pk = pk)
+
+	if request.method=='POST':
+		form_coprofile = CoProfileTeamEditForm(request.POST, instance=coprofile, label_suffix=':')
+
+		if form_coprofile.is_valid():
+			if form_coprofile.has_changed():
+				coprofile = form_coprofile.save(False)
+				coprofile.save()
+
+			return redirect('profiles:view_team_coprofiles')
+
+		args ={
+			'form': form_coprofile,
+		}
+		return render(request, 'profileuser/view_edit_team_coprofile.html', args)
+
+	form_coprofile = CoProfileTeamEditForm(instance=coprofile, label_suffix=':')
+
+	args = {
+		'form': form_coprofile,
+	}
+	return render(request, 'profileuser/view_edit_team_coprofile.html', args)
+
+
+@login_required(login_url='/login/')
+def view_edit_team_coprofile_admin(request, pk):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	coprofile = CoProfile.objects.get(pk = pk)
+
+	if request.method=='POST':
+		form_coprofile = CoProfileTeamEditForm(request.POST, instance=coprofile, label_suffix=':')
+
+		if form_coprofile.is_valid():
+			if form_coprofile.has_changed():
+				coprofile = form_coprofile.save(False)
+				coprofile.save()
+
+			return redirect('view_contestant', pk = coprofile.main_user.profile.pk)
+
+		args ={
+			'form': form_coprofile,
+		}
+		return render(request, 'profileuser/view_edit_team_coprofile.html', args)
+
+	form_coprofile = CoProfileTeamEditForm(instance=coprofile, label_suffix=':')
+
+	args = {
+		'form': form_coprofile,
+	}
+	return render(request, 'profileuser/view_edit_team_coprofile.html', args)
 
 
 @login_required(login_url='/login/')

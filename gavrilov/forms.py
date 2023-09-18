@@ -37,30 +37,40 @@ class UserLoginForm(forms.Form):
 
 class UserRegistrationForm(forms.ModelForm):
 	CHOICES = (
-		('1', 'Студенты учреждений среднего профессионального образовани'),
-		('2', 'Студенты высших учебных заведений'),
-		('3', 'Преподаватели, руководители коллективов'),
-		('4', 'Любительские коллективы'),
+		('1', 'Студенты (профи) высших учебных заведений'),
+		('2', 'Студенты (любители) высших учебных заведений'),
+		('3', 'Студенты (профи) учреждений среднего профессионального образовани'),
+		('4', 'Студенты (любители) учреждений среднего профессионального образовани'),
+		('5', 'Профи'),
+		('6', 'Любители'),
 	)
 
-	PARTICIPATION_TYPE = (
-		('1', 'Очное'),
-		('2', 'Заочное'),
+	PROFILE_TYPE = (
+		('0', 'участник'),
+		('1', 'руководитель'),
+		('2', 'преподаватель'),
+		('3', 'хормейстер'),
+		('4', 'концертмейстер'),
+		('5', 'хореограф'),
 	)
 
-	participation = forms.ChoiceField(choices=PARTICIPATION_TYPE,label = 'Тип участия*',  widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	email = forms.EmailField(label = 'Ваш e-mail*', widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
-	category = forms.ChoiceField(choices=CHOICES,label = 'Категория*',  widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	less_institution = forms.BooleanField(label = "Участие без представения учреждения", widget=forms.CheckboxInput(attrs={'class': 'form-controll', 'autocomplete':'false'}), required=False)
+	category = forms.ChoiceField(choices=CHOICES, label = 'Категория*',  widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
 	surname = forms.CharField(label = 'Ваша фамилия*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	name  = forms.CharField(label = 'Ваше имя*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	name2  = forms.CharField(label = 'Ваше отчество', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	phone  = forms.CharField(label = 'Ваш телефон', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	profile_type = forms.ChoiceField(choices=PROFILE_TYPE, label='Должность*', widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	phone  = forms.CharField(label = 'Ваш телефон*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
-	group = forms.CharField(label = 'Название коллектива', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	institution = forms.CharField(label = 'Полное назавние учреждения (в соответсие с ЕГЮРЛ)*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	institution_shot = forms.CharField(label = 'Сокращеное назавние учреждения*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	adress = forms.CharField(label = 'Адрес учреждения*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 
-	institution = forms.CharField(label = 'Учреждение', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	adress = forms.CharField(label = 'Адрес учреждения', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	add_team = forms.BooleanField(label = "Добавить коллектив", widget=forms.CheckboxInput(attrs={'class': 'form-controll', 'autocomplete':'false'}), required=False)
+	team = forms.CharField(label = 'Название коллектива*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+
 
 	password = forms.CharField(label = 'Задайте пароль*', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 

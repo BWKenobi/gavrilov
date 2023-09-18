@@ -10,8 +10,14 @@
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
 				<div class=" mb-5">
-					{% if request.user.profile.participation == '2' and pict.file %}
+					{% if pict.participation == '2' and pict.file %}
 					<img src="{{ pict.file.url }}" class="rounded img-fluid shadow" id="img_field">
+					{% endif %}
+					{% if pict.participation == '2' and pict.add_view_1 %}
+					<img src="{{ pict.add_view_1.url }}" class="rounded img-fluid shadow" id="img_field">
+					{% endif %}
+					{% if pict.participation == '2' and pict.add_view_2 %}
+					<img src="{{ pict.add_view_2.url }}" class="rounded img-fluid shadow" id="img_field">
 					{% endif %}
 					<h5 class="text-center mt-5">Преподаватели/концертмейстеры и т.п.</h5>
 					<p class="text-center text-danger">Для добавления соисполнителей воспользуйтесь соответсвующим пунктом в боковом меню.</p>

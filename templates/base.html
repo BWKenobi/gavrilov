@@ -2,7 +2,7 @@
 {% load objects_extras %}
 {% url 'home' as home_url %}
 
-{% with '1.2' as version %}
+{% with '2.0' as version %}
 <!doctype html>
 <html lang="en">
     <head>
@@ -18,7 +18,7 @@
         <!-- Bootstrap core CSS -->
         <link href="{% static 'css/bootstrap.css' %}?ver={{version}}" rel="stylesheet">
         <link href="{% static 'css/style.css' %}?ver={{version}}" rel="stylesheet">
-
+        <link href="{% static 'css/adaptive.css' %}?ver={{version}}" rel="stylesheet">
         <style>
             .bd-placeholder-img {
                 font-size: 1.125rem;
@@ -82,7 +82,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link {% if 'view_edit_profile' in request.path or 'passchange' in request.path %}active{% endif %}" href="{% url 'profiles:view_edit_profile' %}">
                                         <span data-feather="user"></span>
-                                        {{ user.profile.get_file_name }}{% if request.user.profile.member_access %} <b>({{ request.user.profile.get_participation_display }} участие)</b>{% endif %}<span class="sr-only"></span>
+                                        {{ user.profile.get_file_name }}<span class="sr-only"></span>
                                     </a>
                                 </li>
                                 {% if request.user.profile.member_access %}
@@ -90,6 +90,12 @@
                                         <a class="nav-link {% if 'view_coprofiles' in request.path or 'view_edit_coprofile' in request.path or 'new_coprofile' in request.path %}active{% endif %}" href="{% url 'profiles:view_coprofiles' %}">
                                             <span data-feather="users"></span>
                                             Преподаватели/концертмейстеры<span class="sr-only"></span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link {% if 'view_team_coprofiles' in request.path or 'view_edit_team_coprofile' in request.path or 'new_team_coprofile' in request.path %}active{% endif %}" href="{% url 'profiles:view_team_coprofiles' %}">
+                                            <span data-feather="command"></span>
+                                            Участники/коллективы<span class="sr-only"></span>
                                         </a>
                                     </li>
                                 {% endif %}
@@ -298,7 +304,7 @@
                                 {% endif %}
                             {% endif %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% static 'files/polozhenie-2022.pdf' %}" target="_blank">
+                                <a class="nav-link" href="{% static 'files/polozhenie-2023.pdf' %}" target="_blank">
                                     <span data-feather="book"></span>
                                     Положение
                                 </a>

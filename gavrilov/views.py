@@ -96,17 +96,25 @@ def register_view(request):
 			new_user.set_password(user_form.cleaned_data['password'])
 			new_user.save()
 
+			new_user.profile.less_institution = user_form.cleaned_data['less_institution']
 			new_user.profile.category = user_form.cleaned_data['category']
-			new_user.profile.participation = user_form.cleaned_data['participation']
+			new_user.profile.surname = user_form.cleaned_data['surname']
 			new_user.profile.name = user_form.cleaned_data['name']
 			new_user.profile.name2 = user_form.cleaned_data['name2']
-			new_user.profile.surname = user_form.cleaned_data['surname']
+			new_user.profile.profile_type = user_form.cleaned_data['profile_type']
 			new_user.profile.phone = user_form.cleaned_data['phone']
-			new_user.profile.group = user_form.cleaned_data['group']
 			new_user.profile.institution = user_form.cleaned_data['institution']
+			new_user.profile.institution_shot = user_form.cleaned_data['institution_shot']
 			new_user.profile.adress = user_form.cleaned_data['adress']
 			
 			new_user.profile.save()
+
+			if user_form.cleaned_data['add_team']:
+				CoProfile.objects.create(
+					main_user = new_user,
+					coprofile_type = '2',
+					team = user_form.cleaned_data['team']
+				)
 
 			current_site = get_current_site(request)
 			protocol = 'http'
@@ -115,10 +123,7 @@ def register_view(request):
 
 			mail_subject = 'Активация аккаунта'
 			to_email = new_user.email
-			#if '127.0.0.1' in current_site.domain:
 			uid = urlsafe_base64_encode(force_bytes(new_user.pk))
-			#else:
-			#	uid = urlsafe_base64_encode(force_bytes(new_user.pk)).decode()
 
 			token = accaunt_activation_token.make_token(new_user)
 

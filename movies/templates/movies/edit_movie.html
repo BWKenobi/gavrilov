@@ -17,17 +17,32 @@
 					<div class="col-md-1"><input type="checkbox" name="coprofile-check-{{ coprofile.pk }}" id="checked-{{ coprofile.pk }}" {% if comovies_list|lookup:coprofile.pk %}checked{% endif %}></div>
 				</div>
 				{% endfor %}
-				{% if request.user.profile.participation == '2' %}
-				<div class="text-center mb-5">
-					{% if movie.youtube_flag %}
-						<div class="embed-responsive embed-responsive-16by9">
-						 	<iframe class="embed-responsive-item" src="{{ movie.file }}"></iframe>
-						</div>
-					{% else %}
-						<h4 class="display-5 text-center"><a href="{{ movie.file }}" target="_blank">Просмотреть в новом окне</a></h4>
+				{% if movie.participation == '2' %}
+					<div class="row">
+						{% if movie.file_1 %}
+							<div class="text-center mb-5 col-md-6 mx-auto">
+								{% if movie.youtube_flag_1 %}
+									<div class="embed-responsive embed-responsive-16by9">
+									 	<iframe class="embed-responsive-item" src="{{ movie.file_1 }}"></iframe>
+									</div>
+								{% else %}
+									<h4 class="display-5 text-center"><a href="{{ movie.file_1 }}" target="_blank">Просмотреть в отдельном окне</a></h4>
+								{% endif %}
+							</div>
+						{% endif %}
+						{% if movie.file_2 %}
+							<div class="text-center mb-5 col-md-6 mx-auto">
+								{% if movie.youtube_flag_2 %}
+									<div class="embed-responsive embed-responsive-16by9">
+									 	<iframe class="embed-responsive-item" src="{{ movie.file_2 }}"></iframe>
+									</div>
+								{% else %}
+									<h4 class="display-5 text-center"><a href="{{ movie.file_2 }}" target="_blank">Просмотреть в отдельном окне</a></h4>
+								{% endif %}
+							</div>
+						{% endif %}
+					</div>
 					{% endif %}
-				</div>
-				{% endif %}
 				<div class="row align-middle">
 					<div class="col-md-12 text-center">
 						<input type="submit" value="Сохранить">
@@ -38,3 +53,13 @@
 	</div>
 {% endblock %}
 
+
+{% block scripts %}
+    {{ block.super }}
+
+    <script type="text/javascript">
+    	$('#id_author').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
+    	$('#id_descritpion_1').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
+    	$('#id_descritpion_2').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
+	</script>
+{% endblock %}

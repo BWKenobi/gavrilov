@@ -29,7 +29,7 @@
 				<div class="tab-pane {% if not master %}active{% endif %}" id="pictures" role="tab-panel">
 					<div class="mx-auto mb-5 col-md-12 col-lg-12">
 						{% for pict in pictures %}
-							{% if request.user.profile.participation == '2' %}
+							{% if pict.participation == '2' %}
 							<div class="text-center mb-5 col-md-8 mx-auto">
 								{% if pict.file %}
 								<img src="{{ pict.file.url }}" class="rounded img-fluid shadow" style="width: 100%;">
@@ -39,9 +39,11 @@
 							<div class="row align-middle">
 								<div class="col-md-4">
 									<b>Название:</b> {{ pict.name }}{% if pict.technique %}({{pict.technique}}){% endif %}
+									<br><b>Автор: </b>{{ pict.author }}
 									{% for copictures in copictures_list|lookup:pict.pk %}
 									<br>{{ copictures.coauthor.get_file_name }} <em>({{ copictures.coauthor.get_profile_type_display }})</em>
 									{% endfor %}
+									<br><b>Участие: </b>{{ pict.get_participation_display }}
 								</div>
 								<div class="col-md-4 text-center">
 									<b>Номинация:</b> {{ pict.nomination }}

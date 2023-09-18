@@ -5,12 +5,13 @@
 <div class="row col-md-12 col-lg-12 ">
 		<div class="mx-auto mb-5 col-md-6 col-lg-6">
 			<h4 class="display-5 text-center">Добавить исполнение</h4>
-			{% if request.user.profile.participation == '2' %}
-			<p class="text-center">Добавьте "публичную" ссылку на Ваш видеофайл (Яндекс-диск, облако-mail.ru  и т.п.)</p>
-				<p class="text-center text-danger"><b>Однако рекомендуем использовать YouTube для Вашего видеофайла. </b></p>
-			{% endif %}
+			<p class="text-center text-danger">Для добавления авторов/исполнителей воспользуйтесь соответсвующим пунктом в боковом меню.</p>
+
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
+				<p class="text-center movie-info">Добавьте "публичную" ссылку на Ваш видеофайл (Яндекс-диск, облако-mail.ru  и т.п.)</p>
+				<p class="text-center text-danger movie-info"><b>Однако рекомендуем использовать YouTube для Вашего видеофайла. </b></p>
+
 				<h5 class="text-center mt-5">Преподаватели/концертмейстеры и т.п.</h5>
 				<p class="text-center text-danger">Для добавления соисполнителей воспользуйтесь соответсвующим пунктом в боковом меню.</p>
 				{% for coprofile in coprofiles %}
@@ -33,20 +34,31 @@
     {{ block.super }}
 
     <script type="text/javascript">
-		function readURL(input){
-			var reader = new FileReader();
-
-			reader.onload = function(e){
-				$('#img_field').attr('src', e.target.result);
-			}
-
-			reader.readAsDataURL(input.files[0]);
-		}
-
-		$('#id_file').change(function(){
-			readURL(this);
-		});
+    	$('#id_author').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
+    	$('#id_descritpion_1').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
+    	$('#id_descritpion_2').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
 
 
+    	if ($('#id_participation').val() == '2'){
+    		$('#id_file_1').parent().removeClass('hidden');
+    		$('#id_file_2').parent().removeClass('hidden');
+    		$('.movie-info').removeClass('hidden');
+    	}else{
+    		$('#id_file_1').parent().addClass('hidden');
+    		$('#id_file_2').parent().addClass('hidden');
+    		$('.movie-info').addClass('hidden');
+    	}
+
+    	$('#id_participation').change(function(){
+    		if ($('#id_participation').val() == '2'){
+	    		$('#id_file_1').parent().removeClass('hidden');
+	    		$('#id_file_2').parent().removeClass('hidden');
+	    		$('.movie-info').removeClass('hidden');
+	    	}else{
+	    		$('#id_file_1').parent().addClass('hidden');
+	    		$('#id_file_2').parent().addClass('hidden');
+	    		$('.movie-info').addClass('hidden');
+	    	}
+    	});
 	</script>
 {% endblock %}

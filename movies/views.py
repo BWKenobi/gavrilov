@@ -13,14 +13,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
 
-from .forms import MovieUploadForm, MovieUploadNoneFileForm, MovieEditForm
+from .forms import MovieUploadForm, MovieEditForm
 from .models import Movie, CoMovie
 from profileuser.models import Profile, CoProfile
 
 
 @login_required(login_url='/login/')
 def view_movies(request):
-	movies = Movie.objects.filter(author=request.user)
+	movies = Movie.objects.filter(author__main_user=request.user)
 	comovies_list = {}
 
 
@@ -43,29 +43,35 @@ def load_movie(request):
 		return redirect('home')
 
 	author = request.user
-	coprofiles = CoProfile.objects.filter(main_user = author)
+	coprofiles = CoProfile.objects.filter(main_user = author, profile_type__in = ['1', '2', '3', '4', '5'])
 
 	if request.method=='POST':
-		if author.profile.participation == '2':
-			form_movie = MovieUploadForm(request.POST, label_suffix='')
-		else:
-			form_movie = MovieUploadNoneFileForm(request.POST, label_suffix='')
+		form_movie = MovieUploadForm(request.POST, author = author, label_suffix='')
 
 		if form_movie.is_valid():
 			new_movie = form_movie.save(commit=False)
-			new_movie.author = author
-			
-			if author.profile.participation == '2':
-				if 'youtu' in new_movie.file:
-					url = new_movie.file.split('=')
+
+			if new_movie.participation == '2':
+				if 'youtu' in new_movie.file_1:
+					url = new_movie.file_1.split('=')
 					if len(url)>1:
 						url = url[1].split('&')
-						new_movie.file = 'https://www.youtube.com/embed/' + url[0]
+						new_movie.file_1 = 'https://www.youtube.com/embed/' + url[0]
 					else:
-						url = new_movie.file.split('/')
-						new_movie.file = 'https://www.youtube.com/embed/' + url[len(url)-1]
-					new_movie.youtube_flag = True
+						url = new_movie.file_1.split('/')
+						new_movie.file_1 = 'https://www.youtube.com/embed/' + url[len(url)-1]
+					new_movie.youtube_flag_1 = True
 				
+				if 'youtu' in new_movie.file_2:
+					url = new_movie.file_2.split('=')
+					if len(url)>1:
+						url = url[1].split('&')
+						new_movie.file_2 = 'https://www.youtube.com/embed/' + url[0]
+					else:
+						url = new_movie.file_2.split('/')
+						new_movie.file_2 = 'https://www.youtube.com/embed/' + url[len(url)-1]
+					new_movie.youtube_flag_2 = True
+
 			new_movie.save()	
 
 			for coprofile in coprofiles:
@@ -86,10 +92,8 @@ def load_movie(request):
 		}
 		return render(request, 'movies/load_movie.html', args)	
 	
-	if author.profile.participation == '2':
-		form_movie = MovieUploadForm(label_suffix='')
-	else:
-		form_movie = MovieUploadNoneFileForm(label_suffix='')
+	form_movie = MovieUploadForm(author = author, label_suffix='')
+
 
 	args = {
 		'form': form_movie,
@@ -170,16 +174,15 @@ def edit_movie(request, pk):
 	author = request.user
 	comovies_list = {}
 
-	if movie.author != author:
+	if movie.author.main_user != author:
 		return redirect('home')
 
-	coprofiles = CoProfile.objects.filter(main_user = author)
+	coprofiles = CoProfile.objects.filter(main_user = author, profile_type__in = ['1', '2', '3', '4', '5'])
 
 	if request.method=='POST':
-		form_movie = MovieEditForm(request.POST, instance=movie, label_suffix='')
+		form_movie = MovieEditForm(request.POST, instance=movie, author = author, label_suffix='')
 		if form_movie.is_valid():
 			new_movie = form_movie.save(commit=False)
-			new_movie.author = author
 			new_movie.save()
 
 			for coprofile in coprofiles:
@@ -197,7 +200,7 @@ def edit_movie(request, pk):
 		}
 		return render(request, 'movies/edit_movie.html', args)	
 	
-	form_movie = MovieEditForm(instance=movie, label_suffix='')
+	form_movie = MovieEditForm(instance=movie, author = author, label_suffix='')
 	comovies = list(CoMovie.objects.filter(movie = movie).values_list('coauthor', flat=True))
 	for coprofile in coprofiles:
 		comovies_list[coprofile.pk] = coprofile.pk in comovies
@@ -271,7 +274,7 @@ def ajax_del_movie(request):
 	movie_pk = request.GET['movie']
 	movie = Movie.objects.get(pk=movie_pk)
 
-	if not request.user.profile.admin_access and movie.author != request.user:
+	if not request.user.profile.admin_access and movie.author.main_user != request.user:
 		return HttpResponse(False)
 
 	movie.delete()

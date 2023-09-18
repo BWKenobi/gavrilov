@@ -25,11 +25,22 @@ def make_picture_path(instance, filename):
 	
 
 class Picture(models.Model):
-	name = models.CharField(verbose_name="Название работы", max_length=100, blank=True)
-	author = models.ForeignKey(User, verbose_name='Автор работы', on_delete=models.CASCADE)
-	nomination = models.ForeignKey(ArtNomination, verbose_name='Номинация', on_delete=models.SET_NULL, blank=True, null=True, default=None)
+	PARTICIPATION_TYPE = (
+		('1', 'очное'),
+		('2', 'заочное'),
+	)
+
+	name = models.CharField(verbose_name="Название работы*", max_length=100, blank=True)
+	author = models.ForeignKey(CoProfile, verbose_name='Автор работы*', on_delete=models.CASCADE)
+	nomination = models.ForeignKey(ArtNomination, verbose_name='Номинация*', on_delete=models.SET_NULL, blank=True, null=True, default=None)
 	technique = models.CharField(verbose_name="Техника исполнения", max_length=50, blank=True)
-	file = models.ImageField(verbose_name='Изображение работы', blank=True, null=True, upload_to = make_picture_path)
+
+	participation = models.CharField(verbose_name='Тип участия*', max_length=1, choices=PARTICIPATION_TYPE, default='1')
+
+	file = models.ImageField(verbose_name='Изображение работы*', blank=True, null=True, upload_to = make_picture_path)
+	add_views = models.BooleanField("Дополнительные ракурсы", default=False)
+	add_view_1 = models.ImageField(verbose_name='Дополнительный вид', blank=True, null=True, upload_to = make_picture_path)
+	add_view_2 = models.ImageField(verbose_name='Дополнительный вид', blank=True, null=True, upload_to = make_picture_path)
 
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 
@@ -68,6 +79,14 @@ def profile_post_delete_handler(sender, **kwargs):
 		if os.path.isfile(picture.file.path):
 			os.remove(picture.file.path)
 
+	if picture.add_view_1:
+		if os.path.isfile(picture.add_view_1.path):
+			os.remove(picture.add_view_1.path)
+
+	if picture.add_view_2:
+		if os.path.isfile(picture.add_view_2.path):
+			os.remove(picture.add_view_2.path)
+
 
 @receiver(pre_save, sender = Picture)
 def profile_pre_save_handler(sender, **kwargs):
@@ -87,3 +106,24 @@ def profile_pre_save_handler(sender, **kwargs):
 	except Picture.DoesNotExist:
 		pass
 	
+	try:
+		old_file = Picture.objects.get(pk=picture.pk).add_view_1
+
+		if old_file:
+			new_file = picture.add_view_1
+			if not old_file==new_file:
+				if os.path.isfile(old_file.path):
+					os.remove(old_file.path)
+	except Picture.DoesNotExist:
+		pass
+
+	try:
+		old_file = Picture.objects.get(pk=picture.pk).add_view_2
+
+		if old_file:
+			new_file = picture.add_view_2
+			if not old_file==new_file:
+				if os.path.isfile(old_file.path):
+					os.remove(old_file.path)
+	except Picture.DoesNotExist:
+		pass
