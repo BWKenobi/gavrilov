@@ -52,25 +52,27 @@ def load_movie(request):
 			new_movie = form_movie.save(commit=False)
 
 			if new_movie.participation == '2':
-				if 'youtu' in new_movie.file_1:
-					url = new_movie.file_1.split('=')
-					if len(url)>1:
-						url = url[1].split('&')
-						new_movie.file_1 = 'https://www.youtube.com/embed/' + url[0]
-					else:
-						url = new_movie.file_1.split('/')
-						new_movie.file_1 = 'https://www.youtube.com/embed/' + url[len(url)-1]
-					new_movie.youtube_flag_1 = True
+				if new_movie.file_1:
+					if 'youtu' in new_movie.file_1:
+						url = new_movie.file_1.split('=')
+						if len(url)>1:
+							url = url[1].split('&')
+							new_movie.file_1 = 'https://www.youtube.com/embed/' + url[0]
+						else:
+							url = new_movie.file_1.split('/')
+							new_movie.file_1 = 'https://www.youtube.com/embed/' + url[len(url)-1]
+						new_movie.youtube_flag_1 = True
 				
-				if 'youtu' in new_movie.file_2:
-					url = new_movie.file_2.split('=')
-					if len(url)>1:
-						url = url[1].split('&')
-						new_movie.file_2 = 'https://www.youtube.com/embed/' + url[0]
-					else:
-						url = new_movie.file_2.split('/')
-						new_movie.file_2 = 'https://www.youtube.com/embed/' + url[len(url)-1]
-					new_movie.youtube_flag_2 = True
+				if new_movie.file_2:
+					if 'youtu' in new_movie.file_2:
+						url = new_movie.file_2.split('=')
+						if len(url)>1:
+							url = url[1].split('&')
+							new_movie.file_2 = 'https://www.youtube.com/embed/' + url[0]
+						else:
+							url = new_movie.file_2.split('/')
+							new_movie.file_2 = 'https://www.youtube.com/embed/' + url[len(url)-1]
+						new_movie.youtube_flag_2 = True
 
 			new_movie.save()	
 
