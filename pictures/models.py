@@ -57,6 +57,18 @@ class Picture(models.Model):
 	def __str__(self):
 		return self.name
 
+	def ages_prefix(self):
+		mod = self.ages % 10
+		mod_plus = (self.ages // 10) % 10
+		if mod_plus != 1:
+			if mod == 0:
+				return 'лет'
+			elif mod == 1:
+				return 'год'
+			elif mod < 5:
+				return 'года'
+		return 'лет'
+
 class CoPicturee(models.Model):
 	picture = models.ForeignKey(Picture, verbose_name='Произведение', on_delete=models.CASCADE)
 	coauthor = models.ForeignKey(CoProfile, verbose_name='Соисполнитель', on_delete=models.CASCADE)

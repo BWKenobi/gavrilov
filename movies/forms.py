@@ -8,8 +8,8 @@ from profileuser.models import CoProfile
 class MovieUploadForm(forms.ModelForm):
 	class Meta:
 		model = Movie
-		fields = ('participation', 'nomination', 'author', 'name_1', 'composer_1', 'poet_1', 'descritpion_1',\
-			'name_2', 'composer_2', 'poet_2', 'descritpion_2', 'file_1', 'file_2')
+		fields = ('participation', 'nomination', 'author', 'age', 'name_1', 'region_1', 'composer_1', 'poet_1',\
+			'name_2', 'region_2', 'composer_2', 'poet_2', 'file_1', 'file_2', 'descritpion')
 
 	def __init__(self, *args, **kwargs):
 		user = kwargs.pop('author', None)
@@ -32,8 +32,8 @@ class MovieUploadForm(forms.ModelForm):
 class MovieEditForm(forms.ModelForm):
 	class Meta:
 		model = Movie
-		fields = ('nomination', 'author', 'name_1', 'composer_1', 'poet_1', 'descritpion_1',\
-			'name_2', 'composer_2', 'poet_2', 'descritpion_2')
+		fields = ('nomination', 'author', 'age', 'name_1', 'region_1', 'composer_1', 'poet_1',\
+			'name_2', 'region_2', 'composer_2', 'poet_2', 'descritpion')
 
 	def __init__(self, *args, **kwargs):
 		user = kwargs.pop('author', None)

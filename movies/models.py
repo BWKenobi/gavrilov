@@ -18,19 +18,23 @@ class Movie(models.Model):
 	)
 
 	author = models.ForeignKey(CoProfile, verbose_name='Исполнитель*', on_delete=models.CASCADE)
+	age = models.CharField(verbose_name="Дата рождения исполнителя*", max_length=30, blank=True)
+
 	nomination = models.ForeignKey(VocalNomination, verbose_name='Номинация*', on_delete=models.SET_NULL, blank=True, null=True, default=None)
 
 	participation = models.CharField(verbose_name='Тип участия*', max_length=1, choices=PARTICIPATION_TYPE, default='1')
 
 	name_1 = models.CharField(verbose_name="Название первого произведения*", max_length=100, blank=True)
+	region_1 = models.CharField(verbose_name="Регион", max_length=100, blank=True)
 	composer_1 = models.CharField(verbose_name="Автор музыки", max_length=110, blank=True)
 	poet_1 = models.CharField(verbose_name="Автор слов", max_length=100, blank=True)
-	descritpion_1 = models.CharField(verbose_name="Описание", max_length=250, blank=True)
 
 	name_2 = models.CharField(verbose_name="Название второго произведения*", max_length=100, blank=True)
+	region_2 = models.CharField(verbose_name="Регион", max_length=100, blank=True)
 	composer_2 = models.CharField(verbose_name="Автор музыки", max_length=110, blank=True)
 	poet_2 = models.CharField(verbose_name="Автор слов", max_length=100, blank=True)
-	descritpion_2 = models.CharField(verbose_name="Описание", max_length=250, blank=True)
+
+	descritpion = models.CharField(verbose_name="Техничесие требования", max_length=250, blank=True)
 
 	file_1 = models.URLField(verbose_name='Ссылка на файл', max_length=250, blank=True, null=True)
 	file_2 = models.URLField(verbose_name='Ссылка на файл', max_length=250, blank=True, null=True)

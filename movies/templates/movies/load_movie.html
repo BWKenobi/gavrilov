@@ -34,9 +34,9 @@
     {{ block.super }}
 
     <script type="text/javascript">
-    	$('#id_author').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
-    	$('#id_descritpion_1').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
-    	$('#id_descritpion_2').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
+    	$('#id_age').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
+    	$('#id_poet_1').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
+    	$('#id_poet_2').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
 
 
     	if ($('#id_participation').val() == '2'){
@@ -49,6 +49,16 @@
     		$('.movie-info').addClass('hidden');
     	}
 
+    	ages = "{{ ages_pk }}".replace('[', '').replace(']', '').replace(' ', '').split(',');
+
+    	if (ages.includes($('#id_author').val())){
+    		$('#id_age').parent().removeClass('hidden');
+    		$('#id_age').attr('required', 'required');
+    	}else{
+    		$('#id_age').parent().addClass('hidden');
+    		$('#id_age').removeAttr('required');
+    	}
+
     	$('#id_participation').change(function(){
     		if ($('#id_participation').val() == '2'){
 	    		$('#id_file_1').parent().removeClass('hidden');
@@ -58,6 +68,18 @@
 	    		$('#id_file_1').parent().addClass('hidden');
 	    		$('#id_file_2').parent().addClass('hidden');
 	    		$('.movie-info').addClass('hidden');
+	    	}
+    	});
+
+    	$('#id_author').change(function(){
+    		ages = "{{ ages_pk }}".replace('[', '').replace(']', '').replace(' ', '').split(',');
+
+	    	if (ages.includes($('#id_author').val())){
+	    		$('#id_age').parent().removeClass('hidden');
+	    		$('#id_age').attr('required', 'required');
+	    	}else{
+	    		$('#id_age').parent().addClass('hidden');
+	    		$('#id_age').removeAttr('required');
 	    	}
     	});
 	</script>
