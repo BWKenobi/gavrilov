@@ -8,7 +8,7 @@ from profileuser.models import CoProfile
 class PictureUploadForm(forms.ModelForm):
 	class Meta:
 		model = Picture
-		fields = ('participation', 'author', 'name', 'technique', 'nomination', 'file', 'add_views', 'add_view_1', 'add_view_2')
+		fields = ('participation', 'author', 'ages', 'year', 'name', 'technique', 'nomination', 'file', 'add_views', 'add_view_1', 'add_view_2')
 
 	def __init__(self, *args, **kwargs):
 		user = kwargs.pop('author', None)
@@ -34,7 +34,7 @@ class PictureUploadForm(forms.ModelForm):
 class PictureEditForm(forms.ModelForm):
 	class Meta:
 		model = Picture
-		fields = ('author', 'name', 'technique', 'nomination')
+		fields = ('author', 'ages', 'year', 'name', 'technique', 'nomination')
 
 	def __init__(self, *args, **kwargs):
 		user = kwargs.pop('author', None)

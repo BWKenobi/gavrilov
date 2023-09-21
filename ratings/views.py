@@ -1,6 +1,7 @@
 import os
 import datetime
 import operator
+import locale
 
 from datetime import date
 
@@ -270,11 +271,13 @@ def view_art_nomination(request, pk):
 		filename += ')'
 
 
+		locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+
 		dte = date.today()
 		document = Document()
 		section = document.sections[-1]
 		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.PORTRAIT
+		section.orientation = WD_ORIENT.LANDSCAPE
 		section.page_width = Mm(297)
 		section.page_height = Mm(210)
 		section.left_margin = Mm(30)
@@ -292,7 +295,7 @@ def view_art_nomination(request, pk):
 
 		document.add_paragraph(str(nomination) + ' (' + name + ')').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		p = document.add_paragraph()
-		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+		p.add_run(dte.strftime('%d %B %Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
 		table = document.add_table(rows=1, cols=6)
@@ -343,7 +346,7 @@ def view_art_nomination(request, pk):
 			cnt += 1
 
 		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-		response['Content-Disposition'] = 'attachment; filename=' + filename +' (' + dte.strftime('%d-%b-%Y') + ').docx'
+		response['Content-Disposition'] = 'attachment; filename=' + filename +' (' + dte.strftime('%d-%m-%Y') + ').docx'
 		document.save(response)
 
 		return response
@@ -596,12 +599,13 @@ def view_mov_nomination(request, pk):
 			filename += 'groups_zaochno (vocal)'
 		filename += ')'
 
+		locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
 
 		dte = date.today()
 		document = Document()
 		section = document.sections[-1]
 		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.PORTRAIT
+		section.orientation = WD_ORIENT.LANDSCAPE
 		section.page_width = Mm(297)
 		section.page_height = Mm(210)
 		section.left_margin = Mm(30)
@@ -619,7 +623,7 @@ def view_mov_nomination(request, pk):
 
 		document.add_paragraph(str(nomination) + ' (' + name + ')').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		p = document.add_paragraph()
-		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+		p.add_run(dte.strftime('%d %B %Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
 		table = document.add_table(rows=1, cols=6)
@@ -672,7 +676,7 @@ def view_mov_nomination(request, pk):
 			cnt += 1
 
 		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-		response['Content-Disposition'] = 'attachment; filename=' + filename +' (' + dte.strftime('%d-%b-%Y') + ').docx'
+		response['Content-Disposition'] = 'attachment; filename=' + filename +' (' + dte.strftime('%d-%m-%Y') + ').docx'
 		document.save(response)
 
 		return response
@@ -734,7 +738,7 @@ def get_check_list(request, pk):
 	document = Document()
 	section = document.sections[-1]
 	new_width, new_height = section.page_height, section.page_width
-	section.orientation = WD_ORIENT.PORTRAIT
+	section.orientation = WD_ORIENT.LANDSCAPE
 	section.page_width = Mm(297)
 	section.page_height = Mm(210)
 	section.left_margin = Mm(10)

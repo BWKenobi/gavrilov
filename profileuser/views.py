@@ -1,5 +1,6 @@
 import os
 import datetime
+import locale
 
 from datetime import date
 
@@ -354,13 +355,15 @@ def view_comings(request):
 	movies = Movie.objects.filter(author__profile__participation = '1', author__profile__has_come = True).order_by('scene_num')
 
 	if request.POST:
+		locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+
 		dte = date.today()
 		file_name_add = ''
 
 		document = Document()
 		section = document.sections[-1]
 		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.PORTRAIT
+		section.orientation = WD_ORIENT.LANDSCAPE
 		section.page_width = Mm(297)
 		section.page_height = Mm(210)
 		section.left_margin = Mm(30)
@@ -378,7 +381,7 @@ def view_comings(request):
 
 		document.add_paragraph('Порядок выступлений').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		p = document.add_paragraph()
-		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+		p.add_run(dte.strftime('%d %B %Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
 
@@ -427,7 +430,7 @@ def view_comings(request):
 
 		file_name = 'OrderList (current)'
 		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-		response['Content-Disposition'] = 'attachment; filename=' + file_name +' (' + dte.strftime('%d-%b-%Y') + ').docx'
+		response['Content-Disposition'] = 'attachment; filename=' + file_name +' (' + dte.strftime('%d-%m-%Y') + ').docx'
 		document.save(response)
 
 		return response

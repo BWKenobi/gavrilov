@@ -292,7 +292,7 @@ def statistic_contestant_add_view(request):
 				file_name = 'vocal_far'
 
 			p = document.add_paragraph()
-			p.add_run(dte.strftime('%d.%B.%Y')).italic = True
+			p.add_run(dte.strftime('%d %B %Y')).italic = True
 			p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
 			for category in ['1', '2', '3', '4', '5', '6']:
@@ -395,9 +395,8 @@ def statistic_contestant_add_view(request):
 
 							document.add_paragraph()
 
-			print(file_name)
 			response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-			response['Content-Disposition'] = 'attachment; filename=' + file_name + ' (' + dte.strftime('%d-%B-%Y') + ').docx'
+			response['Content-Disposition'] = 'inline; filename=' + file_name + ' (' + dte.strftime('%d-%m-%Y') + ').docx'
 			document.save(response)
 
 			return response
@@ -536,7 +535,7 @@ def statistic_contestant_view(request, part = None):
 
 
 			response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-			response['Content-Disposition'] = 'attachment; filename=Institutions (' + dte.strftime('%d-%b-%Y') + ').docx'
+			response['Content-Disposition'] = 'attachment; filename=Institutions (' + dte.strftime('%d-%m-%Y') + ').docx'
 			document.save(response)
 
 			return response
@@ -571,11 +570,13 @@ def statistic_invoices_view(request):
 
 
 	if request.POST:
+		locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+
 		dte = date.today()
 		document = Document()
 		section = document.sections[-1]
 		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.PORTRAIT
+		section.orientation = WD_ORIENT.LANDSCAPE
 		section.page_width = Mm(297)
 		section.page_height = Mm(210)
 		section.left_margin = Mm(30)
@@ -642,7 +643,7 @@ def statistic_invoices_view(request):
 
 
 		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-		response['Content-Disposition'] = 'attachment; filename=InvoiceList (' + dte.strftime('%d-%b-%Y') + ').docx'
+		response['Content-Disposition'] = 'attachment; filename=InvoiceList (' + dte.strftime('%d-%m-%Y') + ').docx'
 		document.save(response)
 
 		return response
@@ -855,13 +856,15 @@ def move_order_view(request):
 
 
 	if request.POST:
+		locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+
 		dte = date.today()
 		file_name_add = ''
 
 		document = Document()
 		section = document.sections[-1]
 		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.PORTRAIT
+		section.orientation = WD_ORIENT.LANDSCAPE
 		section.page_width = Mm(297)
 		section.page_height = Mm(210)
 		section.left_margin = Mm(30)
@@ -879,7 +882,7 @@ def move_order_view(request):
 
 		document.add_paragraph('Порядок выступлений').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		p = document.add_paragraph()
-		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+		p.add_run(dte.strftime('%d %B %Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
 
@@ -928,7 +931,7 @@ def move_order_view(request):
 
 		file_name = 'OrderList'
 		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-		response['Content-Disposition'] = 'attachment; filename=' + file_name +' (' + dte.strftime('%d-%b-%Y') + ').docx'
+		response['Content-Disposition'] = 'attachment; filename=' + file_name +' (' + dte.strftime('%d-%m-%Y') + ').docx'
 		document.save(response)
 
 		return response
