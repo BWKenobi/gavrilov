@@ -123,6 +123,20 @@ class Profile(models.Model):
 		return self.name
 
 
+	def get_institute(self):
+		if self.less_institution:
+			return 'Не представляет учреждение'
+
+		return self.institution_shot
+
+
+	def get_institute_full(self):
+		if self.less_institution:
+			return 'Не представляет учреждение'
+
+		return self.institution
+
+
 class CoProfile(models.Model):
 	PROFILE_TYPE = (
 		('0', 'участник'),

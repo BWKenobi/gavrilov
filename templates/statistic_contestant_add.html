@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<div class=" mx-auto col-md-12 col-lg-12 ">
+			<h4 class="display-5 text-center">Список заявок</h4>
+			<form action="" method="post"> {% csrf_token %}
+				<div class="mx-auto my-5 col-md-12 col-lg-12">
+					<ul class="nav nav-tabs" id="myTab">
+						<li class="nav-item">
+							<a class="nav-link active" href="#type_1">ДПИ-очно ({{ near_pictures|length }})</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#type_2">ДПИ-заочно ({{ far_pictures|length }})</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#type_3">Вокал-очно ({{ near_moves|length }})</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#type_4">Вокал-заочно ({{ far_moves|length }})</a>
+						</li>
+					</ul>
+
+					<div class="tab-content">
+						<div class="tab-pane active" id="type_1" role="tab-panel">
+							<div id="accordion-1" class="mt-3">
+								<div class="row mb-3">
+									<div class="col-md-12 text-right">
+										<input type="submit" value="Выгрузить список" name="type_1">
+									</div>
+								</div>
+								{% for key, val in nomination_picture_list.items %}
+									{% if near_pictures_nominations|lookup:key %}
+										<h5 class="mt-5" style="color: #aa1116;">{{val}}</h5>
+										{% for member in near_pictures_nominations|lookup:key %}
+											<div class="card mb-3 shadow">
+												<div class="card-header" id="headingOne-{{ member.pk }}" data-toggle="collapse" data-target="#collapseOne-{{ member.pk }}" aria-expanded="false" aria-controls="collapseOne-{{ member.pk }}">
+													<h5 class="mb-3">
+														<b>{{ member.author.get_full_name }}</b>
+													</h5>
+													<p class="mb-0">{{ member.name }}{% if member.technique %} - {{ member.technique }}{% endif %}</p>
+													<p class="text-info"><em><u>{{ member.nomination }}</u></em></p>
+													<p>{% if co_teachers|lookup:member.pk %}{% for teacher in co_teachers|lookup:member.pk %}{% if forloop.counter != 1 %}, {% endif %}{{  teacher.get_profile_type_display }} - {{ teacher.get_full_name }}{% endfor %}{% endif %}</p>
+												</div>
+
+												<div id="collapseOne-{{ member.pk }}" class="collapse" aria-labelledby="headingOne-{{ member.pk }}" data-parent="#accordion-1">
+													<div class="card-body">
+														<p><b>{{ member.author.main_user.profile.get_institute }}</b></p>
+														<p><b>Тип участника:</b> {{ member.author.main_user.profile.get_category_display }}</p>
+														<p><b>Администратор:</b> {{ member.author.main_user.profile.get_full_name }}</p>
+														<p><b>Телефон:</b> {{ member.author.main_user.profile.phone }}</p>
+														<p><b>E-mail:</b> {{ member.author.main_user.email }}</p>
+													</div>
+												</div>
+											</div>
+										{% endfor %}
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
+						<div class="tab-pane" id="type_2" role="tab-pane2">
+							<div id="accordion-2" class="mt-3">
+								<div class="row mb-3">
+									<div class="col-md-12 text-right">
+										<input type="submit" value="Выгрузить список" name="type_2">
+									</div>
+								</div>
+								{% for key, val in nomination_picture_list.items %}
+									{% if far_pictures_nominations|lookup:key %}
+										<h5 class="mt-5" style="color: #aa1116;">{{val}}</h5>
+										{% for member in far_pictures_nominations|lookup:key %}
+											<div class="card mb-3 shadow">
+												<div class="card-header" id="headingOne-{{ member.pk }}" data-toggle="collapse" data-target="#collapseOne-{{ member.pk }}" aria-expanded="false" aria-controls="collapseOne-{{ member.pk }}">
+													<h5 class="mb-3">
+														<b>{{ member.author.get_full_name }}</b>
+													</h5>
+													<p class="mb-0">{{ member.name }}{% if member.technique %} - {{ member.technique }}{% endif %}</p>
+													<p class="text-info"><em><u>{{ member.nomination }}</u></em></p>
+													<p>{% if co_teachers|lookup:member.pk %}{% for teacher in co_teachers|lookup:member.pk %}{% if forloop.counter != 1 %}, {% endif %}{{  teacher.get_profile_type_display }} - {{ teacher.get_full_name }}{% endfor %}{% endif %}</p>
+												</div>
+
+												<div id="collapseOne-{{ member.pk }}" class="collapse" aria-labelledby="headingOne-{{ member.pk }}" data-parent="#accordion-1">
+													<div class="card-body">
+														<p><b>{{ member.author.main_user.profile.get_institute }}</b></p>
+														<p><b>Тип участника:</b> {{ member.author.main_user.profile.get_category_display }}</p>
+														<p><b>Администратор:</b> {{ member.author.main_user.profile.get_full_name }}</p>
+														<p><b>Телефон:</b> {{ member.author.main_user.profile.phone }}</p>
+														<p><b>E-mail:</b> {{ member.author.main_user.email }}</p>
+														<div class="row">
+															{% if member.file %}
+																<div class="text-center mb-5 col-md-4 mx-auto">
+																	<img data-src="{{ member.file.url }}" class="rounded img-fluid shadow" style="width: 100%;">
+																</div>
+															{% endif %}
+															{% if member.add_view_1 %}
+																<div class="text-center mb-5 col-md-4 mx-auto">
+																	<img data-src="{{ member.add_view_1.url }}" class="rounded img-fluid shadow" style="width: 100%;">
+																</div>
+															{% endif %}
+															{% if member.add_view_2 %}
+																<div class="text-center mb-5 col-md-4 mx-auto">
+																	<img data-src="{{ member.add_view_2.url }}" class="rounded img-fluid shadow" style="width: 100%;">
+																</div>
+															{% endif %}
+														</div>
+													</div>
+												</div>
+											</div>
+										{% endfor %}
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
+						<div class="tab-pane" id="type_3" role="tab-pane3">
+							<div id="accordion-3" class="mt-3">
+								<div class="row mb-3">
+									<div class="col-md-12 text-right">
+										<input type="submit" value="Выгрузить список" name="type_3">
+									</div>
+								</div>
+								{% for key, val in nomination_move_list.items %}
+									{% if near_moves_nominations|lookup:key %}
+										<h5 class="mt-5" style="color: #aa1116;">{{val}}</h5>
+										{% for member in near_moves_nominations|lookup:key %}
+											<div class="card mb-3 shadow">
+												<div class="card-header" id="headingOne-{{ member.pk }}" data-toggle="collapse" data-target="#collapseOne-{{ member.pk }}" aria-expanded="false" aria-controls="collapseOne-{{ member.pk }}">
+													<h5 class="mb-3">
+														<b>{{ member.author.get_full_name }}</b>
+													</h5>
+													<p class="mb-0">{{ member.name_1 }}{% if member.composer_1 %} - муз. {{ member.composer_1 }}{% endif %}{% if member.poet_1 %}{% if member.composer_1 %}, {% endif %}сл. {{ member.poet_1 }}{% endif %}</p>
+													<p class="text-info"><em><u>{{ member.nomination }}</u></em></p>
+													<p>{% if co_teachers|lookup:member.pk %}{% for teacher in co_teachers|lookup:member.pk %}{% if forloop.counter != 1 %}, {% endif %}{{  teacher.get_profile_type_display }} - {{ teacher.get_full_name }}{% endfor %}{% endif %}</p>
+												</div>
+
+												<div id="collapseOne-{{ member.pk }}" class="collapse" aria-labelledby="headingOne-{{ member.pk }}" data-parent="#accordion-1">
+													<div class="card-body">
+														<p><b>{{ member.author.main_user.profile.get_institute }}</b></p>
+														<p><b>Тип участника:</b> {{ member.author.main_user.profile.get_category_display }}</p>
+														<p><b>Администратор:</b> {{ member.author.main_user.profile.get_full_name }}</p>
+														<p><b>Телефон:</b> {{ member.author.main_user.profile.phone }}</p>
+														<p><b>E-mail:</b> {{ member.author.main_user.email }}</p>
+													</div>
+												</div>
+											</div>
+										{% endfor %}
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
+						<div class="tab-pane" id="type_4" role="tab-pane4">
+							<div id="accordion-4" class="mt-3">
+								<div class="row mb-3">
+									<div class="col-md-12 text-right">
+										<input type="submit" value="Выгрузить список" name="type_4">
+									</div>
+								</div>
+								{% for key, val in nomination_move_list.items %}
+									{% if far_moves_nominations|lookup:key %}
+										<h5 class="mt-5" style="color: #aa1116;">{{val}}</h5>
+										{% for member in far_moves_nominations|lookup:key %}
+											<div class="card mb-3 shadow">
+												<div class="card-header" id="headingOne-{{ member.pk }}" data-toggle="collapse" data-target="#collapseOne-{{ member.pk }}" aria-expanded="false" aria-controls="collapseOne-{{ member.pk }}">
+													<h5 class="mb-3">
+														<b>{{ member.author.get_full_name }}</b>
+													</h5>
+													<p class="mb-0">{{ member.name_1 }}{% if member.composer_1 %} - муз. {{ member.composer_1 }}{% endif %}{% if member.poet_1 %}{% if member.composer_1 %}, {% endif %}сл. {{ member.poet_1 }}{% endif %}</p>
+													<p class="text-info"><em><u>{{ member.nomination }}</u></em></p>
+													<p>{% if co_teachers|lookup:member.pk %}{% for teacher in co_teachers|lookup:member.pk %}{% if forloop.counter != 1 %}, {% endif %}{{  teacher.get_profile_type_display }} - {{ teacher.get_full_name }}{% endfor %}{% endif %}</p>
+												</div>
+
+												<div id="collapseOne-{{ member.pk }}" class="collapse" aria-labelledby="headingOne-{{ member.pk }}" data-parent="#accordion-1">
+													<div class="card-body">
+														<p><b>{{ member.author.main_user.profile.get_institute }}</b></p>
+														<p><b>Тип участника:</b> {{ member.author.main_user.profile.get_category_display }}</p>
+														<p><b>Администратор:</b> {{ member.author.main_user.profile.get_full_name }}</p>
+														<p><b>Телефон:</b> {{ member.author.main_user.profile.phone }}</p>
+														<p><b>E-mail:</b> {{ member.author.main_user.email }}</p>
+														<div class="row">
+															{% if member.file_1 %}
+																<div class="text-center mb-5 col-md-6 mx-auto">
+																	{% if member.youtube_flag_1 %}
+																		<div class="embed-responsive embed-responsive-16by9">
+																		 	<iframe class="embed-responsive-item" src="{{ member.file_1 }}"></iframe>
+																		</div>
+																	{% else %}
+																		<h4 class="display-5 text-center"><a href="{{ member.file_1 }}" target="_blank">Просмотреть в отдельном окне</a></h4>
+																	{% endif %}
+																</div>
+															{% endif %}
+															{% if member.file_2 %}
+																<div class="text-center mb-5 col-md-6 mx-auto">
+																	{% if member.youtube_flag_2 %}
+																		<div class="embed-responsive embed-responsive-16by9">
+																		 	<iframe class="embed-responsive-item" src="{{ member.file_2 }}"></iframe>
+																		</div>
+																	{% else %}
+																		<h4 class="display-5 text-center"><a href="{{ member.file_2 }}" target="_blank">Просмотреть в отдельном окне</a></h4>
+																	{% endif %}
+																</div>
+															{% endif %}
+														</div>
+													</div>
+												</div>
+											</div>
+										{% endfor %}
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('img[data-src]').each(function(){
+				$(this).attr('src', $(this).attr('data-src'));
+				$(this).removeAttr('data-src');
+			});
+
+			$('#myTab a').on('click', function(e){
+				e.preventDefault();
+				$(this).tab('show')
+			});
+		});
+	</script>
+{% endblock %}

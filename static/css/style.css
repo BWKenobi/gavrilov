@@ -111,6 +111,10 @@ body {
 	padding-inline-start: 0px;
 }
 
+.card-header{
+	cursor: pointer;
+}
+
 a:hover{
 	color: #bbb !important;
 }

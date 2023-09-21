@@ -1,8 +1,10 @@
 import os
 import time
+import locale
+import json
+
 from django.db.models import Q
 from datetime import date
-import json
 from io import BytesIO
 from django.core.files import File
 from django.core.files.base import ContentFile
@@ -10,6 +12,7 @@ from django.core.files.base import ContentFile
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
+from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.shared import Mm, Pt
 
 from fpdf import FPDF
@@ -40,6 +43,7 @@ from movies.models import Movie, CoMovie
 from invoices.models import Invoice
 from protocols.models import Protocol
 from statements.models import Statement
+from nominations.models import ArtNomination, VocalNomination
 
 from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm
 from .forms import SetJuriForm, ChangeJuriForm, NewJuriForm
@@ -195,7 +199,228 @@ def change_password(request):
 
 @login_required(login_url='/login/')
 def statistic_contestant_add_view(request):
-	return statistic_contestant_view(request, part = 1)
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	nomination_picture_list = dict(ArtNomination.objects.all().values_list('id', 'name'))
+	nomination_move_list = dict(VocalNomination.objects.all().values_list('id', 'name'))
+
+
+	near_pictures = Picture.objects.filter(participation = '1').order_by('author__coprofile_type', 'author__team','author__surname', 'author__name', 'author__name2')
+	far_pictures = Picture.objects.filter(participation = '2').order_by('author__coprofile_type', 'author__team','author__surname', 'author__name', 'author__name2')
+	near_moves = Movie.objects.filter(participation = '1').order_by('author__coprofile_type', 'author__team','author__surname', 'author__name', 'author__name2')
+	far_moves = Movie.objects.filter(participation = '2').order_by('author__coprofile_type', 'author__team','author__surname', 'author__name', 'author__name2')
+
+	co_teachers = {}
+	for near_picture in near_pictures:
+		co_teachers_pk = list(CoPicturee.objects.filter(picture = near_picture).values_list('coauthor', flat=True))
+		co_teachers[near_picture.pk] = CoProfile.objects.filter(pk__in = co_teachers_pk)
+
+	for far_picture in far_pictures:
+		co_teachers_pk = list(CoPicturee.objects.filter(picture = far_picture).values_list('coauthor', flat=True))
+		co_teachers[far_picture.pk] = CoProfile.objects.filter(pk__in = co_teachers_pk)
+
+	for near_move in near_moves:
+		co_teachers_pk = list(CoMovie.objects.filter(movie = near_move).values_list('coauthor', flat=True))
+		co_teachers[near_move.pk] = CoProfile.objects.filter(pk__in = co_teachers_pk)
+
+	for far_move in far_moves:
+		co_teachers_pk = list(CoMovie.objects.filter(movie = far_move).values_list('coauthor', flat=True))
+		co_teachers[far_move.pk] = CoProfile.objects.filter(pk__in = co_teachers_pk)
+
+
+	near_pictures_nominations = {}
+	for key,val in nomination_picture_list.items():
+		near_pictures_nominations[key] = near_pictures.filter(nomination = key)
+
+	far_pictures_nominations = {}
+	for key,val in nomination_picture_list.items():
+		far_pictures_nominations[key] = far_pictures.filter(nomination = key)
+
+	near_moves_nominations = {}
+	for key,val in nomination_move_list.items():
+		near_moves_nominations[key] = near_moves.filter(nomination = key)
+
+	far_moves_nominations = {}
+	for key,val in nomination_move_list.items():
+		far_moves_nominations[key] = far_moves.filter(nomination = key)
+
+
+
+	if request.POST:
+		if 'type_1' in request.POST or 'type_2' in request.POST or 'type_3' in request.POST or 'type_4' in request.POST:
+			locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+
+			dte = date.today()
+			document = Document()
+			section = document.sections[-1]
+			new_width, new_height = section.page_height, section.page_width
+			section.orientation = WD_ORIENT.LANDSCAPE
+			section.page_width = Mm(297)
+			section.page_height = Mm(210)
+			section.left_margin = Mm(30)
+			section.right_margin = Mm(10)
+			section.top_margin = Mm(10)
+			section.bottom_margin = Mm(10)
+			section.header_distance = Mm(10)
+			section.footer_distance = Mm(10)
+
+			style = document.styles['Normal']
+			font = style.font
+			font.name = 'Times New Roman'
+			font.size = Pt(12)
+
+			if 'type_1' in request.POST:
+				document.add_paragraph('ДПИ (очное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+				array_mambers_list = near_pictures
+				nomination_list = nomination_picture_list
+				file_name = 'dpi_near'
+			elif 'type_2' in request.POST:
+				document.add_paragraph('ДПИ (заочное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+				array_mambers_list = far_pictures
+				nomination_list = nomination_picture_list
+				file_name = 'dpi_far'
+			elif 'type_3' in request.POST:
+				document.add_paragraph('Вокал (очное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+				array_mambers_list = near_moves
+				nomination_list = nomination_move_list
+				file_name = 'vocal_near'
+			else:
+				document.add_paragraph('Вокал (заочное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+				array_mambers_list = far_moves
+				nomination_list = nomination_move_list
+				file_name = 'vocal_far'
+
+			p = document.add_paragraph()
+			p.add_run(dte.strftime('%d.%B.%Y')).italic = True
+			p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+
+			for category in ['1', '2', '3', '4', '5', '6']:
+				if array_mambers_list.filter(author__main_user__profile__category= category).count():
+					p = document.add_paragraph()
+					p.add_run(dict(Profile.CATEGORY_TYPES)[category]).bold = True
+					p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+
+
+					for key, val in nomination_list.items():
+						array_mambers = array_mambers_list.filter(author__main_user__profile__category= category, nomination=key)
+
+						if array_mambers:
+							p = document.add_paragraph()
+							p.add_run(val).italic = True
+
+							table = document.add_table(rows=1, cols=5)
+							table.allow_autifit = False
+							table.style = 'Table Grid'
+							table.columns[0].width = Mm(10)
+							table.columns[1].width = Mm(77)
+							table.columns[2].width = Mm(50)
+							table.columns[3].width = Mm(50)
+							table.columns[4].width = Mm(70)
+
+
+
+							hdr_cells = table.rows[0].cells
+							hdr_cells[0].text = '№'
+							hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+							hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							hdr_cells[0].width = Mm(10)
+							hdr_cells[1].text = 'Конкурсант'
+							hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+							hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							hdr_cells[1].width = Mm(77)
+							hdr_cells[2].text = 'Название'
+							hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+							hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							hdr_cells[2].width = Mm(50)
+							hdr_cells[3].text = 'Преподаватель(и)'
+							hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+							hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							hdr_cells[3].width = Mm(50)
+							hdr_cells[4].text = 'Учреждение'
+							hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+							hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							hdr_cells[4].width = Mm(70)
+
+							cnt = 0
+							for member in array_mambers:
+								cnt += 1
+								row_cells = table.add_row().cells
+								row_cells[0].text = str(cnt)
+								row_cells[0].paragraphs[0].runs[0].font.bold = True
+								row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+								row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+								row_cells[0].width = Mm(10)
+
+								row_cells[1].text = member.author.get_full_name()
+								row_cells[1].width = Mm(77)
+
+								if 'type_1' in request.POST or 'type_2' in request.POST:
+									row_cells[2].text = member.name
+									if member.technique:
+										row_cells[2].text += ',\n' + member.technique
+								else:
+									row_cells[2].text = member.name_1
+									if member.composer_1:
+										row_cells[2].text += ',\n муз. ' + member.composer_1
+									if member.poet_1:
+										row_cells[2].text += ',\n сл. ' + member.poet_1
+
+									row_cells[2].text += '\n\n' + member.name_2
+									if member.composer_2:
+										row_cells[2].text += ',\n муз. ' + member.composer_2
+									if member.poet_2:
+										row_cells[2].text += ',\n сл. ' + member.poet_2
+
+								row_cells[2].width = Mm(50)
+
+								row_cells[3].text =  ''
+								if co_teachers[member.pk]:
+									teachers_flag = False
+									for co_teacher in co_teachers[member.pk]:
+										if teachers_flag:
+											row_cells[3].text += '\n'
+										row_cells[3].text += co_teacher.short_profile_type() + ' ' + co_teacher.get_file_name()
+										teachers_flag = True
+
+								row_cells[3].width = Mm(50)
+
+								row_cells[4].text = str(member.author.main_user.profile.get_institute_full())
+								row_cells[4].width = Mm(70)
+
+							document.add_paragraph()
+
+			print(file_name)
+			response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+			response['Content-Disposition'] = 'attachment; filename=' + file_name + ' (' + dte.strftime('%d-%B-%Y') + ').docx'
+			document.save(response)
+
+			return response
+
+
+	args = {
+		'near_pictures': near_pictures,
+		'far_pictures': far_pictures,
+		'near_moves': near_moves,
+		'far_moves': far_moves,
+
+		'nomination_picture_list': nomination_picture_list,
+		'nomination_move_list': nomination_move_list,
+
+		'near_pictures_nominations': near_pictures_nominations,
+		'far_pictures_nominations': far_pictures_nominations,
+		'near_moves_nominations': near_moves_nominations,
+		'far_moves_nominations': far_moves_nominations,
+
+		'co_teachers': co_teachers
+	}
+
+	return render(request, 'statistic_contestant_add.html', args)
 
 
 @login_required(login_url='/login/')
@@ -203,153 +428,125 @@ def statistic_contestant_view(request, part = None):
 	if not request.user.profile.admin_access:
 		return redirect('home')
 
-	name = 'Список конкурсантов (заочное участие)'
-	participation = '2'
-	file_name = 'List (far)'
-	if part:
-		name = 'Список конкурсантов (очное участие)'
-		participation = '1'
-		file_name = 'List (near)'
+	picture_list = {}
+	move_list = {}
 
-	users = User.objects.filter(is_active=True).exclude(username='admin')
+	users = User.objects.filter(is_active = True, profile__member_access = True).exclude(username = 'admin')
+	users_not_active = User.objects.filter(is_active = False, profile__member_access = True).exclude(username = 'admin')
 
-	contestants = Profile.objects.filter(user__in=users, member_access=True, participation = participation).order_by('surname', 'name', 'name2')
-	coprofile_list = {}
-	protocol_list = {}
-	statement_list = {}
-
-	pictures = Picture.objects.all()
-	movies = Movie.objects.all()
-	array_pictures = {}
-	array_movies = {}
-	for contestant in contestants:
-		picts = pictures.filter(author=contestant.user)
-		movs = movies.filter(author=contestant.user)
-		if picts:
-			array_pictures[contestant.id] = len(picts)
-		else:
-			array_pictures[contestant.id] = 0
-
-		if movs:
-			array_movies[contestant.id] = len(movs)
-		else:
-			array_movies[contestant.id] = 0
-
-		coprofile_list[contestant.pk] = CoProfile.objects.filter(main_user = contestant.user)
-		protocol_list[contestant.pk] = Protocol.objects.filter(owner = contestant.user)
-		statement_list[contestant.pk] = Statement.objects.filter(owner = contestant.user)
+	for user in users:
+		picture_list[user.pk] = Picture.objects.filter(author__main_user = user).order_by('participation', 'nomination', 'author__team', 'author__surname', 'author__name', 'author__name2')
+		move_list[user.pk] = Movie.objects.filter(author__main_user = user).order_by('participation', 'nomination', 'author__team', 'author__surname', 'author__name', 'author__name2')
 
 
 	if request.POST:
-		dte = date.today()
-		document = Document()
-		section = document.sections[-1]
-		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.PORTRAIT
-		section.page_width = Mm(297)
-		section.page_height = Mm(210)
-		section.left_margin = Mm(30)
-		section.right_margin = Mm(10)
-		section.top_margin = Mm(10)
-		section.bottom_margin = Mm(10)
-		section.header_distance = Mm(10)
-		section.footer_distance = Mm(10)
+		if 'type_1' in request.POST:
+			locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
 
-		style = document.styles['Normal']
-		font = style.font
-		font.name = 'Times New Roman'
-		font.size = Pt(12)
+			dte = date.today()
+			document = Document()
+			section = document.sections[-1]
+			new_width, new_height = section.page_height, section.page_width
+			section.orientation = WD_ORIENT.LANDSCAPE
+			section.page_width = Mm(297)
+			section.page_height = Mm(210)
+			section.left_margin = Mm(30)
+			section.right_margin = Mm(10)
+			section.top_margin = Mm(10)
+			section.bottom_margin = Mm(10)
+			section.header_distance = Mm(10)
+			section.footer_distance = Mm(10)
 
-
-		if part:
-			document.add_paragraph('Список участников конкурса (очное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-		else:
-			document.add_paragraph('Список участников конкурса (заочное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-		p = document.add_paragraph()
-		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
-		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
-
-		table = document.add_table(rows=1, cols=8)
-		table.allow_autifit = False
-		table.style = 'TableGrid'
-		table.columns[0].width = Mm(10)
-		table.columns[1].width = Mm(57)
-		table.columns[2].width = Mm(30)
-		table.columns[3].width = Mm(40)
-		table.columns[4].width = Mm(40)
-		table.columns[5].width = Mm(40)
-		table.columns[6].width = Mm(20)
-		table.columns[7].width = Mm(20)
-
-		hdr_cells = table.rows[0].cells
-		hdr_cells[0].text = '№'
-		hdr_cells[0].width = Mm(10)
-		hdr_cells[1].text = 'Конкурсант (ансамбль)'
-		hdr_cells[1].width = Mm(57)
-		hdr_cells[2].text = 'Email\nТелефон'
-		hdr_cells[2].width = Mm(30)
-		hdr_cells[3].text = 'Преподаватель/Концертмейстер'
-		hdr_cells[3].width = Mm(40)
-		hdr_cells[4].text = 'Учреждение'
-		hdr_cells[4].width = Mm(40)
-		hdr_cells[5].text = 'Категория'
-		hdr_cells[5].width = Mm(40)
-		hdr_cells[6].text = 'Кол-во работ (ДПИ)'
-		hdr_cells[6].width = Mm(20)
-		hdr_cells[7].text = 'Кол-во работ (вокал)'
-		hdr_cells[7].width = Mm(20)
-
-		count = 1
-		for contestant in contestants:
-			row_cells = table.add_row().cells
-			row_cells[0].text = str(count)
-			row_cells[0].width = Mm(10)
-			count += 1
-			row_cells[1].text = contestant.get_full_name()
-			if contestant.group:
-				row_cells[1].text += ' (' + contestant.group + ')'
-			row_cells[1].width = Mm(57)
-			row_cells[2].text = contestant.user.email
-			if contestant.phone:
-				row_cells[2].text += '\n' + contestant.phone
-			row_cells[2].width = Mm(30)
+			style = document.styles['Normal']
+			font = style.font
+			font.name = 'Times New Roman'
+			font.size = Pt(12)
 
 
-			coprofiles = CoProfile.objects.filter(main_user = contestant.user)
-			coprofile_str = ''
-			for coprofile in coprofiles:
-				coprofile_str += coprofile.get_full_name() + ' (' + coprofile.get_profile_type_display() + '); '
-			if coprofile_str:
-				coprofile_str += coprofile_str[:-2]
-			row_cells[3].text = coprofile_str
-			row_cells[3].width = Mm(40)
+			document.add_paragraph('Список учреждений').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			p = document.add_paragraph()
+			p.add_run(dte.strftime('%d %B %Y')).italic = True
+			p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+
+			table = document.add_table(rows=1, cols=5)
+			table.allow_autifit = False
+			table.style = 'Table Grid'
+			table.columns[0].width = Mm(10)
+			table.columns[1].width = Mm(130)
+			table.columns[2].width = Mm(77)
+			table.columns[3].width = Mm(20)
+			table.columns[4].width = Mm(20)
 
 
-			row_cells[4].text = contestant.institution
-			row_cells[4].width = Mm(40)
-			row_cells[5].text = contestant.get_category_display ()
-			row_cells[5].width = Mm(40)
-			row_cells[6].text = str(array_pictures[contestant.id])
-			row_cells[6].width = Mm(20)
-			row_cells[7].text = str(array_movies[contestant.id])
-			row_cells[7].width = Mm(20)
+			hdr_cells = table.rows[0].cells
+			hdr_cells[0].text = '№'
+			hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[0].width = Mm(10)
+			hdr_cells[1].text = 'Учреждение'
+			hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[1].width = Mm(130)
+			hdr_cells[2].text = 'Администратор/Email/Телефон'
+			hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[2].width = Mm(77)
+			hdr_cells[3].text = 'Кол-во работ вокал'
+			hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[3].width = Mm(20)
+			hdr_cells[4].text = 'Кол-во работ ДПИ'
+			hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[4].width = Mm(20)
 
 
+			cnt = 0
+			for user in users:
+				cnt += 1
+				row_cells = table.add_row().cells
+				row_cells[0].text = str(cnt)
+				row_cells[0].paragraphs[0].runs[0].font.bold = True
+				row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+				row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+				row_cells[0].width = Mm(10)
 
-		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-		response['Content-Disposition'] = 'attachment; filename=' + file_name + ' (' + dte.strftime('%d-%b-%Y') + ').docx'
-		document.save(response)
+				row_cells[1].text = user.profile.get_institute_full() + '\n(' + user.profile.get_category_display() + ')'
+				row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+				row_cells[1].width = Mm(130)
 
-		return response
+				row_cells[2].text = user.profile.get_full_name() + '\n' + user.email + '\n' + user.profile.phone
+				row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+				row_cells[2].width = Mm(77)
+
+				row_cells[3].text = str(move_list[user.pk].count())
+				row_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+				row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+				row_cells[3].width = Mm(20)
+
+				row_cells[4].text = str(picture_list[user.pk].count())
+				row_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+				row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+				row_cells[4].width = Mm(20)
+
+
+			response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+			response['Content-Disposition'] = 'attachment; filename=Institutions (' + dte.strftime('%d-%b-%Y') + ').docx'
+			document.save(response)
+
+			return response
+
 
 	args = {
-		'contestants': contestants,
-		'name': name,
-		'array_pictures': array_pictures,
-		'array_movies': array_movies,
-		'coprofile_list': coprofile_list,
-		'protocol_list': protocol_list,
-		'statement_list': statement_list
+		'users': users,
+		'users_not_active': users_not_active,
+		'picture_list': picture_list,
+		'move_list': move_list
 	}
 	return render(request, 'statistic_contestant.html', args)
 
@@ -758,3 +955,30 @@ def delete_juri(request):
 
 	return HttpResponse(True)
 
+
+def ajax_activate(request):
+	pk = int(request.GET['pk'])
+	user = User.objects.get(pk = pk)
+	user.is_active = True
+	user.save()
+
+
+	picture_list = {}
+	move_list = {}
+
+	users = User.objects.filter(is_active = True, profile__member_access = True).exclude(username = 'admin')
+	users_not_active = User.objects.filter(is_active = False, profile__member_access = True).exclude(username = 'admin')
+
+	for user in users:
+		picture_list[user.pk] = Picture.objects.filter(author__main_user = user).order_by('participation', 'nomination', 'author__team', 'author__surname', 'author__name', 'author__name2')
+		move_list[user.pk] = Movie.objects.filter(author__main_user = user).order_by('participation', 'nomination', 'author__team', 'author__surname', 'author__name', 'author__name2')
+
+	args = {
+		'users': users,
+		'users_not_active': users_not_active,
+		'picture_list': picture_list,
+		'move_list': move_list
+	}
+
+	data = render_to_string('view_profiles_refresh.html', args)
+	return HttpResponse(data)

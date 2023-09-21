@@ -4,52 +4,98 @@
 
 {% block content %}
 	<div class="row col-md-12 col-lg-12 ">
-		<h4 class="display-5 text-center">{{ name }}</h4>
-		<form action="" method="post"> {% csrf_token %}
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col" class="table-cel-width-5 align-middle">№</th>
-						<th scope="col" class="table-cel-width-15 align-middle">Конкурсант (коллектив)</th>
-						<th scope="col" class="table-cel-width-10 align-middle">Email<br>Телефон</th>
-						<th scope="col" class="table-cel-width-15 align-middle">Преподаватель<br>концертмейстер</th>
-						<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
-						<th scope="col" class="table-cel-width-15 align-middle">Категория</th>
-						<th scope="col" class="table-cel-width-5 align-middle text-center">Кол-во работ ДПИ</th>
-						<th scope="col" class="table-cel-width-5 align-middle text-center">Кол-во вокальных работ</th>
-						<th scope="col" class="table-cel-width-10 align-middle text-center">Файлы</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for contestant in contestants %}
-						<tr class="table_hover" child-href="{% url 'view_contestant' pk=contestant.pk %}">
-							<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
-							<td class="align-middle table_click">{{ contestant.get_full_name }}{% if contestant.group %} <b>({{ contestant.group }})</b>{% endif %}</td>
-							<th scope="row" class="align-middle table_click">{{ contestant.user.email }}{% if contestant.phone %}<br>{{ contestant.phone }}{% endif %}</th>
-							<td class="align-middle table_click">{% for coprofile in coprofile_list|lookup:contestant.pk %}<br>{{ coprofile.get_file_name }} <em>({{ coprofile.get_profile_type_display }})</em>{% endfor %}</td>
-							<td class="align-middle table_click">{% if contestant.institution %}{{ contestant.institution }}{% endif %}</td>
-							<td class="align-middle table_click">{{ contestant.get_category_display }}</td>
-							<td class="align-middle text-center table_click">{{ array_pictures|lookup:contestant.pk }}</td>
-							<td class="align-middle text-center table_click">{{ array_movies|lookup:contestant.pk }}</td>
-							<td>
-								{% for protocol in protocol_list|lookup:contestant.pk %}
-								<a href="{{ protocol.file.url }}" target="_blank">Протокол</a>
-								{% endfor %}
-								{% for statement in statement_list|lookup:contestant.pk %}
-								<a href="{{ statement.file.url }}" target="_blank">Заявка</a><br>
-								{% endfor %}
-							</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+		<div class=" mx-auto col-md-12 col-lg-12 ">
+			<h4 class="display-5 text-center">Список учреждений</h4>
+			<form action="" method="post"> {% csrf_token %}
+				<div class="mx-auto my-5 col-md-12 col-lg-12">
+					<ul class="nav nav-tabs" id="myTab">
+						<li class="nav-item">
+							<a class="nav-link active" href="#type_1">Активные (<span id="num-1">{{ users|length }}</span>)</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#type_2">Не активированные (<span id="num-2">{{ users_not_active|length }}</span>)</a>
+						</li>
+					</ul>
 
-			<div class="row col-md-12 col-lg-12 ">
-				<div class="col-md-12 text-right pb-3">
-					<input type="submit" value="Выгрузить список">
+					<div class="tab-content">
+						<div class="tab-pane active" id="type_1" role="tab-panel">
+							<div id="accordion-1" class="mt-3">
+								<div class="row mb-3">
+									<div class="col-md-12 text-right">
+										<input type="submit" value="Выгрузить список" name="type_1">
+									</div>
+								</div>
+								<div id="change-accordion-1">
+								{% for user in users %}
+									<div class="card mb-3 shadow">
+										<div class="card-header" id="headingOne-{{ user.pk }}" data-toggle="collapse" data-target="#collapseOne-{{ user.pk }}" aria-expanded="false" aria-controls="collapseOne-{{ user.pk }}">
+											<h5 class="mb-0">
+												<b>{{ user.profile.get_institute }}</b>
+											</h5>
+											<p><b>Тип участника:</b> {{ user.profile.get_category_display }}</p>
+											<p><b>Администратор:</b> {{ user.profile.get_full_name }} ({{ user.profile.get_profile_type_display }})</p>
+											<p><b>Телефон:</b> {{ user.profile.phone }}</p>
+											<p><b>E-mail:</b> {{ user.email }}</p>
+										</div>
+
+										<div id="collapseOne-{{ user.pk }}" class="collapse" aria-labelledby="headingOne-{{ user.pk }}" data-parent="#accordion-1">
+											<div class="card-body">
+												{% if picture_list|lookup:user.pk %}
+													<h5 class="text-primary">Конкурсно-выставочная программа</h5>
+													{% for member in picture_list|lookup:user.pk %}
+														<p><b>{{ member.nomination }} ({{ member.get_participation_display }}):</b> {{ member.author.get_full_name }}</p>
+													{% endfor %}
+												{% endif %}
+												{% if move_list|lookup:user.pk %}
+													<h5 class="text-primary">Конкурсно-вокальная программа</h5>
+													{% for member in move_list|lookup:user.pk %}
+														<p><b>{{ member.nomination }} ({{ member.get_participation_display }}):</b> {{ member.author.get_full_name }}</p>
+													{% endfor %}
+												{% endif %}
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="type_2" role="tab-panel">
+							<div id="accordion-2" class="mt-3">
+								{% for user in users_not_active %}
+									<div class="card mb-3 shadow">
+										<div class="card-header" id="headingOne-{{ user.pk }}" data-toggle="collapse" data-target="#collapseOne-{{ user.pk }}" aria-expanded="false" aria-controls="collapseOne-{{ user.pk }}">
+											<h5 class="mb-0">
+												<b>{{ user.profile.get_institute }}</b>
+											</h5>
+											<p><b>Тип участника:</b> {{ user.profile.get_category_display }}</p>
+											<p><b>Администратор:</b> {{ user.profile.get_full_name }} ({{ user.profile.get_profile_type_display }})</p>
+											<p><b>Телефон:</b> {{ user.profile.phone }}</p>
+											<p><b>E-mail:</b> {{ user.email }}</p>
+										</div>
+
+										<div id="collapseOne-{{ user.pk }}" class="collapse" aria-labelledby="headingOne-{{ user.pk }}" data-parent="#accordion-2">
+											<div class="card-body">
+												<div class="row align-middle">
+													<div class="col-md-12 text-right">
+														<input type="button" value="Активировать" name="{{ user.pk }}">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
 				</div>
-			</div>
-		</form>
+				<!--<div class="row col-md-12 col-lg-12 ">
+					<div class="col-md-12 text-right pb-3">
+						<input type="submit" value="Добавить" name="new">
+
+						<input type="submit" value="Выгрузить список">
+					</div>
+				</div>-->
+			</form>
+		</div>
 	</div>
 {% endblock %}
 
@@ -57,11 +103,34 @@
 	{{ block.super }}
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.table_click').click(function(){
-				url = $(this).parent().attr('child-href');
-				col = parseInt($(this).index());
-				if (col != 5)
-					document.location.href = url;
+			$('#myTab a').on('click', function(e){
+				e.preventDefault();
+				$(this).tab('show')
+			});
+
+			$('input[type=button]').click(function(){
+				pk = $(this).attr('name');
+
+				$(this).parent().parent().parent().parent().parent().remove();
+
+				num1 = parseInt($('#num-1').text());
+				num2 = parseInt($('#num-2').text());
+
+				$('#num-1').text(num1+1);
+				if (num2>0)
+					$('#num-2').text(num2-1);
+
+				url = "{% url 'ajax_activate' %}";
+
+				$.ajax({
+					url: url,
+					data: {
+						'pk': pk
+					},
+					success: function(data){
+						$('#change-accordion-1').html(data);
+					}
+				});
 			});
 		});
 	</script>

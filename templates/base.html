@@ -2,7 +2,7 @@
 {% load objects_extras %}
 {% url 'home' as home_url %}
 
-{% with '2.0' as version %}
+{% with '2.1' as version %}
 <!doctype html>
 <html lang="en">
     <head>
@@ -124,21 +124,15 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'move_order' %}">
-                                                    <span data-feather="minus"></span>
-                                                    Порядок выступлений
-                                                </a>
-                                            </li>
-                                            <li class="nav-item list-unstyled ">
                                                 <a class="nav-link" href="{% url 'statistic_contestant' %}">
                                                     <span data-feather="minus"></span>
-                                                    Статистика конкурсантов (заочное)
+                                                    Учреждения
                                                 </a>
                                             </li>
                                             <li class="nav-item list-unstyled ">
                                                 <a class="nav-link" href="{% url 'statistic_contestant_add' %}">
                                                     <span data-feather="minus"></span>
-                                                    Статистика конкурсантов (очное)
+                                                    Заявки
                                                 </a>
                                             </li>
                                             <li class="nav-item list-unstyled ">
@@ -147,12 +141,18 @@
                                                     Статистика по оплате
                                                 </a>
                                             </li>
-                                            <li class="nav-item list-unstyled ">
+                                           <!--  <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'move_order' %}">
+                                                    <span data-feather="minus"></span>
+                                                    Порядок выступлений
+                                                </a>
+                                            </li> -->
+                                            <!-- <li class="nav-item list-unstyled ">
                                                 <a class="nav-link" href="{% url 'profiles:view_comings' %}">
                                                     <span data-feather="minus"></span>
                                                     Регистарция
                                                 </a>
-                                            </li>
+                                            </li> -->
                                         {% endif %}
                                     </ul>
                                     <li class="nav-item">
