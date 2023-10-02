@@ -5,6 +5,9 @@
 <div class="row col-md-12 col-lg-12 ">
 		<div class="mx-auto mb-5 col-md-6 col-lg-6">
 			<h4 class="display-5 text-center">Добавить преподавателя/концертмейстера и т.д.</h4>
+			{% if username %}
+				<h5 class="display-5 text-center text-danger">{{ username }}</h5>
+			{% endif %}
 
 			<form action="" method="post" , autocomplete="false" enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}

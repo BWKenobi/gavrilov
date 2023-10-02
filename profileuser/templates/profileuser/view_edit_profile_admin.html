@@ -11,7 +11,9 @@
 			{{form.as_p}}
 			<div class="row text-center">
 				<div class="col-md-12 text-center">
-					<input type="submit" value="Сохранить изменения" {% if register_block %}disabled{% endif %}>
+					<input type="submit" value="Сохранить изменения">
+					<input class="mx-2" type="submit" value="Добавить участника" name="add-team">
+					<input type="submit" value="Добавить преподавателя" name="add-teacher">
 				</div>
 			</div>
 		</form>
@@ -37,7 +39,7 @@
 			{% for team in teams %}
 				<div class="row">
 					<div class="col-md-10">
-						<b>{{ team.get_full_name }} </b> ({{ team.get_profile_type_display }})
+						<b>{{ team.get_full_name }} </b> ({{ team.get_coprofile_type_display }})
 					</div>
 					<div class="col-md-2 text-center">
 						<a href="{% url 'profiles:view_edit_team_coprofile_admin' pk=team.pk %}">Изменить</a>

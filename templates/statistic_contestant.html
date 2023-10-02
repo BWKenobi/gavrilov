@@ -42,7 +42,9 @@
 											<div class="card-body">
 												<div class="row">
 													<div class="col-md-12 text-center">
-														<a class="" href="{% url 'profiles:view_edit_profile_admin' pk=user.pk %}" target="_blank">изменить</a>
+														<a class="mx-2" href="{% url 'profiles:view_edit_profile_admin' pk=user.pk %}" target="_blank">изменить</a>
+														<a class="mx-2" href="{% url 'pictures:load_image_admin' pk=user.pk %}" target="_blank">добавить ДПИ</a>
+														<a class="mx-2" href="{% url 'profiles:view_edit_profile_admin' pk=user.pk %}" target="_blank">добавить ВОКАЛ</a>
 													</div>
 												</div>
 

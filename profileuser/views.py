@@ -74,6 +74,10 @@ def view_edit_profile_admin(request, pk = None):
 	teams = CoProfile.objects.filter(main_user = user, self_flag = False, profile_type = '0').order_by('team', 'surname', 'name', 'name2')
 
 	if request.method=='POST':
+		if 'add-teacher' in request.POST:
+			return redirect('profiles:new_coprofile_admin', pk = pk)
+		if 'add-team' in request.POST:
+			return redirect('profiles:new_team_coprofile_admin', pk = pk)
 		form_profile = ProfileUdpateForm(request.POST, instance=user.profile, label_suffix=':')
 
 
@@ -162,19 +166,22 @@ def new_coprofile_admin(request, pk):
 	if not request.user.profile.admin_access:
 		return redirect('home')
 
-	main_user = Profile.objects.get(pk = pk)
+	main_user = User.objects.get(pk = pk)
+	username = main_user.profile.get_institute_zip()
+
 	if request.method=='POST':
 		form_coprofile = CoProfileForm(request.POST, label_suffix='')
 
 		if form_coprofile.is_valid():
 			coprofile = form_coprofile.save(commit=False)
-			coprofile.main_user = main_user.user
+			coprofile.main_user = main_user
 			coprofile.save()	
 
-			return redirect('view_contestant', pk = pk)
+			return redirect('profiles:view_edit_profile_admin', pk = pk)
 
 		args ={
 			'form': form_coprofile, 
+			'username': username
 		}
 		return render(request, 'profileuser/new_coprofile.html', args)
 
@@ -182,6 +189,7 @@ def new_coprofile_admin(request, pk):
 
 	args = {
 		'form': form_coprofile, 
+		'username': username
 	}
 	return render(request, 'profileuser/new_coprofile.html', args)
 
@@ -298,19 +306,22 @@ def new_team_coprofile_admin(request, pk):
 	if not request.user.profile.admin_access:
 		return redirect('home')
 
-	main_user = Profile.objects.get(pk = pk)
+	main_user = User.objects.get(pk = pk)
+	username = main_user.profile.get_institute_zip()
+
 	if request.method=='POST':
 		form_coprofile = CoProfileTeamForm(request.POST, label_suffix='')
 
 		if form_coprofile.is_valid():
 			coprofile = form_coprofile.save(commit=False)
-			coprofile.main_user = main_user.user
+			coprofile.main_user = main_user
 			coprofile.save()
 
-			return redirect('view_contestant', pk = pk)
+			return redirect('profiles:view_edit_profile_admin', pk = pk)
 
 		args ={
 			'form': form_coprofile,
+			'username': username
 		}
 		return render(request, 'profileuser/new_team_coprofile.html', args)
 
@@ -318,6 +329,7 @@ def new_team_coprofile_admin(request, pk):
 
 	args = {
 		'form': form_coprofile,
+		'username': username
 	}
 	return render(request, 'profileuser/new_team_coprofile.html', args)
 
