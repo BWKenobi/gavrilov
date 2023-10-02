@@ -137,6 +137,13 @@ class Profile(models.Model):
 		return self.institution
 
 
+	def get_institute_zip(self):
+		if self.less_institution:
+			return self.get_file_name()
+
+		return self.institution_shot
+
+
 class CoProfile(models.Model):
 	PROFILE_TYPE = (
 		('0', 'участник'),

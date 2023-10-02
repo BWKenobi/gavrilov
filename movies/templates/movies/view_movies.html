@@ -7,12 +7,17 @@
 		<form action="" method="post" enctype="multipart/form-data" autocomplete="false" class="col-md-12 col-lg-12"> {% csrf_token %}
 			<div class="mx-auto mb-12 col-md-12 col-lg-12">
 				<h4 class="display-5 text-center">Работы для конкурсно-вокальной программы</h4>
+				{% if user_name %}
+				<h5 class="display-5 text-center text-danger"><b>{{ user_name }}</b></h5>
+				{% endif %}
 
-				{% if not register_block %}
+				{% if not register_block or admin_flag %}
 					<div class="row align-middle">
 						<div class="col-md-12 text-center">
 							<input class="mx-5 btn btn-primary shadow" type="submit" value="Добавить работу" name="addpict">
-							<input class="mx-5 btn btn-info shadow" type="submit" value="Сформировать заявления">
+							{% if memeber_flag %}
+								<input class="mx-5 btn btn-info shadow" type="submit" value="Сформировать заявления">
+							{% endif %}
 						</div>
 					</div>
 				{% endif %}
@@ -67,15 +72,18 @@
 										<br>{{ comovies.coauthor.get_file_name }} <em>({{ comovies.coauthor.get_profile_type_display }})</em>
 									{% endfor %}
 									<br><b>Участие: </b>{{ movie.get_participation_display }}
+									{% if movie.descritpion %}
+										<br><b>Технические требования: </b>{{ movie.descritpion }}
+									{% endif %}
 								</div>
 								<div class="col-md-4 text-center">
 									<b>Номинация:</b> {{ movie.nomination }}
 								</div>
 								<div class="col-md-2 text-center">
-									{% if not register_block %}<a href="{% url 'movies:edit_movie' pk=movie.pk %}" class="edit_image">Изменить данные</a>{% endif %}
+									{% if not register_block or admin_flag %}{% if admin_flag %}<a href="{% url 'movies:edit_movie_admin' pk=movie.pk %}" class="edit_image">Изменить данные</a>{% else %}<a href="{% url 'movies:edit_movie' pk=movie.pk %}" class="edit_image">Изменить данные</a>{% endif %}{% endif %}
 								</div>
 								<div class="col-md-2 text-center">
-									{% if not register_block %}<a href="{{ movie.pk }}" class="del_movie">Удалить</a>{% endif %}
+									{% if not register_block and memeber_flag %}<a href="{{ movie.pk }}" class="del_movie">Удалить</a>{% endif %}
 								</div>
 							</div>
 							<hr>

@@ -231,7 +231,32 @@ def view_movies(request):
 
 	args = {
 		'movies': movies,
-		'comovies_list': comovies_list
+		'comovies_list': comovies_list,
+		'memeber_flag': True
+	}
+	return render(request, 'movies/view_movies.html', args)
+
+
+@login_required(login_url='/login/')
+def view_movies_admin(request, pk = None):
+	user = User.objects.get(pk = pk)
+	user_name = user.profile.get_institute_zip()
+
+	movies = Movie.objects.filter(author__main_user=user)
+	comovies_list = {}
+	for movie in movies:
+		comovies_list[movie.pk] = CoMovie.objects.filter(movie = movie)
+
+	if request.method=='POST':
+		if 'addpict' in request.POST:
+			return redirect('movies:load_movie_admin', pk = pk)
+
+
+	args = {
+		'movies': movies,
+		'comovies_list': comovies_list,
+		'user_name': user_name,
+		'admin_flag': True
 	}
 	return render(request, 'movies/view_movies.html', args)
 
@@ -244,6 +269,7 @@ def load_movie(request):
 	author = request.user
 	coprofiles = CoProfile.objects.filter(main_user = author, profile_type__in = ['1', '2', '3', '4', '5'])
 	ages_pk = list(CoProfile.objects.filter(main_user = request.user, profile_type = '0', coprofile_type = '1').values_list('pk', flat=True))
+
 	if request.method=='POST':
 		form_movie = MovieUploadForm(request.POST, author = author, label_suffix='')
 
@@ -311,31 +337,41 @@ def load_movie_admin(request, pk):
 	if not request.user.profile.admin_access:
 		return redirect('home')
 
-	author = Profile.objects.get(pk = pk).user
-	coprofiles = CoProfile.objects.filter(main_user = author)
+	author = User.objects.get(pk = pk)
+	user_name = author.profile.get_institute_zip()
 
+	coprofiles = CoProfile.objects.filter(main_user = author, profile_type__in = ['1', '2', '3', '4', '5'])
+	ages_pk = list(CoProfile.objects.filter(main_user = author, profile_type = '0', coprofile_type = '1').values_list('pk', flat=True))
 	if request.method=='POST':
-		if author.profile.participation == '2':
-			form_movie = MovieUploadForm(request.POST, label_suffix='')
-		else:
-			form_movie = MovieUploadNoneFileForm(request.POST, label_suffix='')
+		form_movie = MovieUploadForm(request.POST, author = author, label_suffix='')
 
 		if form_movie.is_valid():
 			new_movie = form_movie.save(commit=False)
-			new_movie.author = author
-			
-			if author.profile.participation == '2':
-				if 'youtu' in new_movie.file:
-					url = new_movie.file.split('=')
-					if len(url)>1:
-						url = url[1].split('&')
-						new_movie.file = 'https://www.youtube.com/embed/' + url[0]
-					else:
-						url = new_movie.file.split('/')
-						new_movie.file = 'https://www.youtube.com/embed/' + url[len(url)-1]
-					new_movie.youtube_flag = True
-				
-			new_movie.save()	
+
+			if new_movie.participation == '2':
+				if new_movie.file_1:
+					if 'youtu' in new_movie.file_1:
+						url = new_movie.file_1.split('=')
+						if len(url)>1:
+							url = url[1].split('&')
+							new_movie.file_1 = 'https://www.youtube.com/embed/' + url[0]
+						else:
+							url = new_movie.file_1.split('/')
+							new_movie.file_1 = 'https://www.youtube.com/embed/' + url[len(url)-1]
+						new_movie.youtube_flag_1 = True
+
+				if new_movie.file_2:
+					if 'youtu' in new_movie.file_2:
+						url = new_movie.file_2.split('=')
+						if len(url)>1:
+							url = url[1].split('&')
+							new_movie.file_2 = 'https://www.youtube.com/embed/' + url[0]
+						else:
+							url = new_movie.file_2.split('/')
+							new_movie.file_2 = 'https://www.youtube.com/embed/' + url[len(url)-1]
+						new_movie.youtube_flag_2 = True
+
+			new_movie.save()
 
 			for coprofile in coprofiles:
 				test_str = 'coprofile-check-' + str(coprofile.pk)
@@ -346,24 +382,26 @@ def load_movie_admin(request, pk):
 					CoMovie.objects.filter(movie = new_movie, coauthor = coprofile).delete()
 
 
-			return redirect('view_contestant', pk =author.profile.pk)
+			return redirect('movies:view_movies_admin', pk = pk)
 
 		args = {
 			'form': form_movie,
 			'coprofiles': coprofiles,
-			'author': author
+			'author': author,
+			'ages_pk': ages_pk,
+			'user_name': user_name
 		}
-		return render(request, 'movies/load_movie.html', args)	
-	
-	if author.profile.participation == '2':
-		form_movie = MovieUploadForm(label_suffix='')
-	else:
-		form_movie = MovieUploadNoneFileForm(label_suffix='')
+		return render(request, 'movies/load_movie.html', args)
+
+	form_movie = MovieUploadForm(author = author, label_suffix='')
+
 
 	args = {
 		'form': form_movie,
 		'coprofiles': coprofiles,
-		'author': author
+		'author': author,
+		'ages_pk': ages_pk,
+		'user_name': user_name
 	}
 	return render(request, 'movies/load_movie.html', args)
 
@@ -375,6 +413,8 @@ def edit_movie(request, pk):
 		
 	movie = Movie.objects.get(pk=pk)
 	author = request.user
+	participation = movie.participation
+
 	comovies_list = {}
 	ages_pk = list(CoProfile.objects.filter(main_user = request.user, profile_type = '0', coprofile_type = '1').values_list('pk', flat=True))
 
@@ -387,6 +427,30 @@ def edit_movie(request, pk):
 		form_movie = MovieEditForm(request.POST, instance=movie, author = author, label_suffix='')
 		if form_movie.is_valid():
 			new_movie = form_movie.save(commit=False)
+			if new_movie.file_1:
+				new_movie.youtube_flag_1 = False
+				if 'youtu' in new_movie.file_1:
+					url = new_movie.file_1.split('=')
+					if len(url)>1:
+						url = url[1].split('&')
+						new_movie.file_1 = 'https://www.youtube.com/embed/' + url[0]
+					else:
+						url = new_movie.file_1.split('/')
+						new_movie.file_1 = 'https://www.youtube.com/embed/' + url[len(url)-1]
+					new_movie.youtube_flag_1 = True
+
+			if new_movie.file_2:
+				new_movie.youtube_flag_2 = False
+				if 'youtu' in new_movie.file_2:
+					url = new_movie.file_2.split('=')
+					if len(url)>1:
+						url = url[1].split('&')
+						new_movie.file_2 = 'https://www.youtube.com/embed/' + url[0]
+					else:
+						url = new_movie.file_2.split('/')
+						new_movie.file_2 = 'https://www.youtube.com/embed/' + url[len(url)-1]
+					new_movie.youtube_flag_2 = True
+
 			new_movie.save()
 
 			for coprofile in coprofiles:
@@ -401,6 +465,11 @@ def edit_movie(request, pk):
 
 		args = {
 			'form': form_movie,
+			'movie': movie,
+			'coprofiles': coprofiles,
+			'comovies_list': comovies_list,
+			'ages_pk': ages_pk,
+			'participation': participation
 		}
 		return render(request, 'movies/edit_movie.html', args)	
 	
@@ -415,7 +484,8 @@ def edit_movie(request, pk):
 		'movie': movie,
 		'coprofiles': coprofiles,
 		'comovies_list': comovies_list,
-		'ages_pk': ages_pk
+		'ages_pk': ages_pk,
+		'participation': participation
 	}
 	return render(request, 'movies/edit_movie.html', args)
 
@@ -426,19 +496,46 @@ def edit_movie_admin(request, pk):
 		return redirect('home')
 		
 	movie = Movie.objects.get(pk=pk)
-	author = movie.author
-	comovies_list = {}
+	participation = movie.participation
+	author = movie.author.main_user
+	user_name = author.profile.get_institute_zip()
 
-	if movie.author != author:
+	comovies_list = {}
+	ages_pk = list(CoProfile.objects.filter(main_user = author, profile_type = '0', coprofile_type = '1').values_list('pk', flat=True))
+
+	if movie.author.main_user != author:
 		return redirect('home')
 
-	coprofiles = CoProfile.objects.filter(main_user = author)
+	coprofiles = CoProfile.objects.filter(main_user = author, profile_type__in = ['1', '2', '3', '4', '5'])
 
 	if request.method=='POST':
-		form_movie = MovieEditForm(request.POST, instance=movie, label_suffix='')
+		form_movie = MovieEditForm(request.POST, instance=movie, author = author, label_suffix='')
 		if form_movie.is_valid():
 			new_movie = form_movie.save(commit=False)
-			new_movie.author = author
+			if new_movie.file_1:
+				new_movie.youtube_flag_1 = False
+				if 'youtu' in new_movie.file_1:
+					url = new_movie.file_1.split('=')
+					if len(url)>1:
+						url = url[1].split('&')
+						new_movie.file_1 = 'https://www.youtube.com/embed/' + url[0]
+					else:
+						url = new_movie.file_1.split('/')
+						new_movie.file_1 = 'https://www.youtube.com/embed/' + url[len(url)-1]
+					new_movie.youtube_flag_1 = True
+
+			if new_movie.file_2:
+				new_movie.youtube_flag_2 = False
+				if 'youtu' in new_movie.file_2:
+					url = new_movie.file_2.split('=')
+					if len(url)>1:
+						url = url[1].split('&')
+						new_movie.file_2 = 'https://www.youtube.com/embed/' + url[0]
+					else:
+						url = new_movie.file_2.split('/')
+						new_movie.file_2 = 'https://www.youtube.com/embed/' + url[len(url)-1]
+					new_movie.youtube_flag_2 = True
+
 			new_movie.save()
 
 			for coprofile in coprofiles:
@@ -449,14 +546,20 @@ def edit_movie_admin(request, pk):
 				else:
 					CoMovie.objects.filter(movie = movie, coauthor = coprofile).delete()
 
-			return redirect('view_contestant', pk =author.profile.pk)
+			return redirect('movies:view_movies_admin', pk = author.pk)
 
 		args = {
 			'form': form_movie,
+			'movie': movie,
+			'coprofiles': coprofiles,
+			'comovies_list': comovies_list,
+			'ages_pk': ages_pk,
+			'participation': participation,
+			'user_name': user_name
 		}
-		return render(request, 'movies/edit_movie.html', args)	
-	
-	form_movie = MovieEditForm(instance=movie, label_suffix='')
+		return render(request, 'movies/edit_movie.html', args)
+
+	form_movie = MovieEditForm(instance=movie, author = author, label_suffix='')
 	comovies = list(CoMovie.objects.filter(movie = movie).values_list('coauthor', flat=True))
 	for coprofile in coprofiles:
 		comovies_list[coprofile.pk] = coprofile.pk in comovies
@@ -466,9 +569,13 @@ def edit_movie_admin(request, pk):
 		'form': form_movie,
 		'movie': movie,
 		'coprofiles': coprofiles,
-		'comovies_list': comovies_list
+		'comovies_list': comovies_list,
+		'ages_pk': ages_pk,
+		'participation': participation,
+		'user_name': user_name
 	}
 	return render(request, 'movies/edit_movie.html', args)
+
 
 
 # --------------------------------

@@ -9,7 +9,7 @@ from django.contrib.auth import views as auth_views
 
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 
-from .views import home_view, policy_view, juri_view, statistic_contestant_view, statistic_contestant_add_view, statistic_invoices_view, view_contestant, move_order_view
+from .views import home_view, policy_view, juri_view, get_contestant_zip_view, statistic_contestant_view, statistic_contestant_add_view, statistic_invoices_view, view_contestant, move_order_view
 from .views import juri_set, juri_change, juri_new
 from .views import login_view, logout_view, register_view, change_password, activate
 from .views import delete_juri, ajax_activate
@@ -21,6 +21,7 @@ urlpatterns = [
     path('', home_view, name = 'home'),
     path('policy', policy_view, name = 'policy'),
     path('juri', juri_view, name = 'juri_view'),
+    path('get_contestant_zip/<int:pk>/', get_contestant_zip_view, name = 'get_contestant_zip'),
     path('statistic_contestant', statistic_contestant_view, name = 'statistic_contestant'),
     path('statistic_contestant_add', statistic_contestant_add_view, name = 'statistic_contestant_add'),
     path('statistic_invoices', statistic_invoices_view, name = 'statistic_invoices'),
@@ -54,6 +55,7 @@ urlpatterns += [
     path('protocols/', include(('protocols.urls', 'protocols'))),
     path('ratings/', include(('ratings.urls', 'ratings'))),
     path('statements/', include(('statements.urls', 'statements'))),
+    path('personals/', include(('personals.urls', 'personals'))),
     path('marks/', include(('marks.urls', 'marks'))),
     #path('certificates/', include(('certificates.urls', 'certificates'))),
 ]

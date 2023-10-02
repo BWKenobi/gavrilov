@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'ratings',
     'years',
     'statements',
+    'personals',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +86,7 @@ DATABASES = {
     }
 }
 
+#FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 CACHES = {
     "default": {

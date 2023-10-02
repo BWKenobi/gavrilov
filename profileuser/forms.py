@@ -59,9 +59,11 @@ class CoProfileTeamEditForm(forms.ModelForm):
 		fields = ('coprofile_type', 'surname', 'name', 'name2', 'team',)
 
 	def __init__(self, *args, **kwargs):
+		admin_access = kwargs.pop('admin_access', None)
 		super().__init__(*args, **kwargs)
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
 			self.fields[field].required=False
 
-		self.fields['coprofile_type'].widget.attrs.update({'class': 'form-control', 'autocomplete':'false', 'disabled': 'disabled'})
+		if not admin_access:
+			self.fields['coprofile_type'].widget.attrs.update({'class': 'form-control', 'autocomplete':'false', 'disabled': 'disabled'})

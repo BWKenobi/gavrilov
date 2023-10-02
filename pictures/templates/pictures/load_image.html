@@ -5,7 +5,12 @@
 <div class="row col-md-12 col-lg-12 ">
 		<div class="mx-auto mb-5 col-md-12 col-lg-12">
 			<h4 class="display-5 text-center">Добавить работу</h4>
-			<p class="text-center text-danger">Для добавления авторов/исполнителей воспользуйтесь соответсвующим пунктом в боковом меню.</p>
+			{% if user_name %}
+				<h5 class="display-5 text-center text-danger"><b>{{ user_name }}</b></h5>
+			{% else %}
+				<p class="text-center text-danger">Для добавления авторов/исполнителей воспользуйтесь соответсвующим пунктом в боковом меню.</p>
+			{% endif %}
+
 
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				<div class="mx-auto col-md-6 col-lg-6">
@@ -27,7 +32,9 @@
 						</div>
 					</div>
 					<h5 class="text-center mt-5">Преподаватели/концертмейстеры и т.п.</h5>
-					<p class="text-center text-danger">Для добавления воспользуйтесь соответсвующим пунктом в боковом меню.</p>
+					{% if not user_name %}
+						<p class="text-center text-danger">Для добавления воспользуйтесь соответсвующим пунктом в боковом меню.</p>
+					{% endif %}
 					{% for coprofile in coprofiles %}
 					<div class="row">
 						<div class="col-md-11 mb-3">{{ coprofile.get_file_name }} <em>({{ coprofile.get_profile_type_display }})</em></div>

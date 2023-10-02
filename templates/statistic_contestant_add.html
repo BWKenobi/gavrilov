@@ -52,6 +52,13 @@
 														<p><b>Администратор:</b> {{ member.author.main_user.profile.get_full_name }}</p>
 														<p><b>Телефон:</b> {{ member.author.main_user.profile.phone }}</p>
 														<p><b>E-mail:</b> {{ member.author.main_user.email }}</p>
+
+														<div class="border-top mt-3"></div>
+														<div class="row">
+															<div class="col-md-12 text-center">
+																<a class="" href="{% url 'pictures:edit_image_admin' pk=member.pk %}" target="_blank">изменить</a>
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -105,6 +112,13 @@
 																</div>
 															{% endif %}
 														</div>
+
+														<div class="border-top mt-3"></div>
+														<div class="row">
+															<div class="col-md-12 text-center">
+																<a class="" href="{% url 'pictures:edit_image_admin' pk=member.pk %}" target="_blank">изменить</a>
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -129,7 +143,8 @@
 													<h5 class="mb-3">
 														<b>{{ member.author.get_full_name }}</b>
 													</h5>
-													<p class="mb-0">{{ member.name_1 }}{% if member.composer_1 %} - муз. {{ member.composer_1 }}{% endif %}{% if member.poet_1 %}{% if member.composer_1 %}, {% endif %}сл. {{ member.poet_1 }}{% endif %}</p>
+													<p class="mb-0">1. {{ member.name_1 }}{% if member.composer_1 %} - муз. {{ member.composer_1 }}{% endif %}{% if member.poet_1 %}{% if member.composer_1 %}, {% endif %}сл. {{ member.poet_1 }}{% endif %}</p>
+													<p class="mb-0">2. {{ member.name_2 }}{% if member.composer_2 %} - муз. {{ member.composer_2 }}{% endif %}{% if member.poet_2 %}{% if member.composer_2 %}, {% endif %}сл. {{ member.poet_2 }}{% endif %}</p>
 													<p class="text-info"><em><u>{{ member.nomination }}</u></em></p>
 													<p>{% if co_teachers|lookup:member.pk %}{% for teacher in co_teachers|lookup:member.pk %}{% if forloop.counter != 1 %}, {% endif %}{{  teacher.get_profile_type_display }} - {{ teacher.get_full_name }}{% endfor %}{% endif %}</p>
 												</div>
@@ -141,6 +156,15 @@
 														<p><b>Администратор:</b> {{ member.author.main_user.profile.get_full_name }}</p>
 														<p><b>Телефон:</b> {{ member.author.main_user.profile.phone }}</p>
 														<p><b>E-mail:</b> {{ member.author.main_user.email }}</p>
+														{% if member.descritpion %}
+															<p><b>Технические требования:</b> {{ member.descritpion }}</p>
+														{% endif %}
+														<div class="border-top mt-3"></div>
+														<div class="row">
+															<div class="col-md-12 text-center">
+																<a class="" href="{% url 'movies:edit_movie_admin' pk=member.pk %}" target="_blank">изменить</a>
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -165,7 +189,8 @@
 													<h5 class="mb-3">
 														<b>{{ member.author.get_full_name }}</b>
 													</h5>
-													<p class="mb-0">{{ member.name_1 }}{% if member.composer_1 %} - муз. {{ member.composer_1 }}{% endif %}{% if member.poet_1 %}{% if member.composer_1 %}, {% endif %}сл. {{ member.poet_1 }}{% endif %}</p>
+													<p class="mb-0">1. {{ member.name_1 }}{% if member.composer_1 %} - муз. {{ member.composer_1 }}{% endif %}{% if member.poet_1 %}{% if member.composer_1 %}, {% endif %}сл. {{ member.poet_1 }}{% endif %}</p>
+													<p class="mb-0">2. {{ member.name_2 }}{% if member.composer_2 %} - муз. {{ member.composer_2 }}{% endif %}{% if member.poet_2 %}{% if member.composer_2 %}, {% endif %}сл. {{ member.poet_2 }}{% endif %}</p>
 													<p class="text-info"><em><u>{{ member.nomination }}</u></em></p>
 													<p>{% if co_teachers|lookup:member.pk %}{% for teacher in co_teachers|lookup:member.pk %}{% if forloop.counter != 1 %}, {% endif %}{{  teacher.get_profile_type_display }} - {{ teacher.get_full_name }}{% endfor %}{% endif %}</p>
 												</div>
@@ -200,6 +225,12 @@
 																	{% endif %}
 																</div>
 															{% endif %}
+														</div>
+														<div class="border-top mt-3"></div>
+														<div class="row">
+															<div class="col-md-12 text-center">
+																<a class="" href="{% url 'movies:edit_movie_admin' pk=member.pk %}" target="_blank">изменить</a>
+															</div>
 														</div>
 													</div>
 												</div>

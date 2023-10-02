@@ -1,7 +1,11 @@
 import os
+import io
 import time
 import locale
 import json
+
+from zipfile import ZipFile
+from pytils import translit
 
 from django.db.models import Q
 from datetime import date
@@ -43,6 +47,7 @@ from movies.models import Movie, CoMovie
 from invoices.models import Invoice
 from protocols.models import Protocol
 from statements.models import Statement
+from personals.models import Personal
 from nominations.models import ArtNomination, VocalNomination
 
 from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm
@@ -309,14 +314,28 @@ def statistic_contestant_add_view(request):
 							p = document.add_paragraph()
 							p.add_run(val).italic = True
 
-							table = document.add_table(rows=1, cols=5)
-							table.allow_autifit = False
-							table.style = 'Table Grid'
-							table.columns[0].width = Mm(10)
-							table.columns[1].width = Mm(77)
-							table.columns[2].width = Mm(50)
-							table.columns[3].width = Mm(50)
-							table.columns[4].width = Mm(70)
+
+							if 'type_3' in request.POST:
+								width_list = [10, 47, 50, 50, 50, 50]
+								table = document.add_table(rows=1, cols=6)
+								table.allow_autifit = False
+								table.style = 'Table Grid'
+								table.columns[0].width = Mm(width_list[0])
+								table.columns[1].width = Mm(width_list[1])
+								table.columns[2].width = Mm(width_list[2])
+								table.columns[3].width = Mm(width_list[3])
+								table.columns[4].width = Mm(width_list[4])
+								table.columns[5].width = Mm(width_list[5])
+							else:
+								width_list = [10, 77, 50, 50, 70]
+								table = document.add_table(rows=1, cols=5)
+								table.allow_autifit = False
+								table.style = 'Table Grid'
+								table.columns[0].width = Mm(width_list[0])
+								table.columns[1].width = Mm(width_list[1])
+								table.columns[2].width = Mm(width_list[2])
+								table.columns[3].width = Mm(width_list[3])
+								table.columns[4].width = Mm(width_list[4])
 
 
 
@@ -325,27 +344,33 @@ def statistic_contestant_add_view(request):
 							hdr_cells[0].paragraphs[0].runs[0].font.bold = True
 							hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 							hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-							hdr_cells[0].width = Mm(10)
+							hdr_cells[0].width = Mm(width_list[0])
 							hdr_cells[1].text = 'Конкурсант'
 							hdr_cells[1].paragraphs[0].runs[0].font.bold = True
 							hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 							hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-							hdr_cells[1].width = Mm(77)
+							hdr_cells[1].width = Mm(width_list[1])
 							hdr_cells[2].text = 'Название'
 							hdr_cells[2].paragraphs[0].runs[0].font.bold = True
 							hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 							hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-							hdr_cells[2].width = Mm(50)
+							hdr_cells[2].width = Mm(width_list[2])
 							hdr_cells[3].text = 'Преподаватель(и)'
 							hdr_cells[3].paragraphs[0].runs[0].font.bold = True
 							hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 							hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-							hdr_cells[3].width = Mm(50)
+							hdr_cells[3].width = Mm(width_list[3])
 							hdr_cells[4].text = 'Учреждение'
 							hdr_cells[4].paragraphs[0].runs[0].font.bold = True
 							hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 							hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-							hdr_cells[4].width = Mm(70)
+							hdr_cells[4].width = Mm(width_list[4])
+							if 'type_3' in request.POST:
+								hdr_cells[5].text = 'Тех.требования'
+								hdr_cells[5].paragraphs[0].runs[0].font.bold = True
+								hdr_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+								hdr_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+								hdr_cells[5].width = Mm(width_list[5])
 
 							cnt = 0
 							for member in array_mambers:
@@ -355,10 +380,10 @@ def statistic_contestant_add_view(request):
 								row_cells[0].paragraphs[0].runs[0].font.bold = True
 								row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 								row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-								row_cells[0].width = Mm(10)
+								row_cells[0].width = Mm(width_list[0])
 
 								row_cells[1].text = member.author.get_full_name()
-								row_cells[1].width = Mm(77)
+								row_cells[1].width = Mm(width_list[1])
 
 								if 'type_1' in request.POST or 'type_2' in request.POST:
 									row_cells[2].text = member.name
@@ -377,7 +402,7 @@ def statistic_contestant_add_view(request):
 									if member.poet_2:
 										row_cells[2].text += ',\n сл. ' + member.poet_2
 
-								row_cells[2].width = Mm(50)
+								row_cells[2].width = Mm(width_list[2])
 
 								row_cells[3].text =  ''
 								if co_teachers[member.pk]:
@@ -388,10 +413,14 @@ def statistic_contestant_add_view(request):
 										row_cells[3].text += co_teacher.short_profile_type() + ' ' + co_teacher.get_file_name()
 										teachers_flag = True
 
-								row_cells[3].width = Mm(50)
+								row_cells[3].width = Mm(width_list[3])
 
 								row_cells[4].text = str(member.author.main_user.profile.get_institute_full())
-								row_cells[4].width = Mm(70)
+								row_cells[4].width = Mm(width_list[4])
+
+								if 'type_3' in request.POST:
+									row_cells[5].text = member.descritpion
+									row_cells[5].width = Mm(width_list[5])
 
 							document.add_paragraph()
 
@@ -429,6 +458,11 @@ def statistic_contestant_view(request, part = None):
 
 	picture_list = {}
 	move_list = {}
+	invoice_list = {}
+	protocol_list = {}
+	statement_list = {}
+	personal_list = {}
+	zip_list = {}
 
 	users = User.objects.filter(is_active = True, profile__member_access = True).exclude(username = 'admin')
 	users_not_active = User.objects.filter(is_active = False, profile__member_access = True).exclude(username = 'admin')
@@ -436,7 +470,15 @@ def statistic_contestant_view(request, part = None):
 	for user in users:
 		picture_list[user.pk] = Picture.objects.filter(author__main_user = user).order_by('participation', 'nomination', 'author__team', 'author__surname', 'author__name', 'author__name2')
 		move_list[user.pk] = Movie.objects.filter(author__main_user = user).order_by('participation', 'nomination', 'author__team', 'author__surname', 'author__name', 'author__name2')
+		invoice_list[user.pk] = Invoice.objects.filter(payer = user)
+		protocol_list[user.pk] = Protocol.objects.filter(owner = user)
+		statement_list[user.pk] = Statement.objects.filter(owner = user)
+		personal_list[user.pk] = Personal.objects.filter(owner = user)
 
+		if invoice_list[user.pk] or protocol_list[user.pk] or statement_list[user.pk] or personal_list[user.pk]:
+			zip_list[user.pk] = True
+		else:
+			zip_list[user.pk] = False
 
 	if request.POST:
 		if 'type_1' in request.POST:
@@ -545,7 +587,12 @@ def statistic_contestant_view(request, part = None):
 		'users': users,
 		'users_not_active': users_not_active,
 		'picture_list': picture_list,
-		'move_list': move_list
+		'move_list': move_list,
+		'invoice_list': invoice_list,
+		'protocol_list': protocol_list,
+		'statement_list': statement_list,
+		'personal_list': personal_list,
+		'zip_list': zip_list
 	}
 	return render(request, 'statistic_contestant.html', args)
 
@@ -942,6 +989,68 @@ def move_order_view(request):
 		'movies': movies
 	}
 	return render(request, 'move_order.html', args)
+
+
+
+@login_required(login_url='/login/')
+def get_contestant_zip_view(request, pk=None):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	user = User.objects.filter(pk = pk).first()
+	if not user:
+		return HttpResponse('Пользователь не найден')
+
+	invoice_list = Invoice.objects.filter(payer = user)
+	protocol_list = Protocol.objects.filter(owner = user)
+	statement_list = Statement.objects.filter(owner = user)
+	personal_list = Personal.objects.filter(owner = user)
+
+
+	f = io.BytesIO()
+	zip_title = translit.slugify(user.profile.get_institute_zip())+'.zip'
+	zip_arch = ZipFile( f, 'a' )
+
+	cnt = 1
+	for invoice in invoice_list:
+		docx_title = 'Квитанция ' + str(cnt)
+		filename, fileext = os.path.splitext(invoice.file.name)
+		doc = settings.MEDIA_ROOT + '/' + invoice.file.name
+		zip_arch.write(doc, docx_title + fileext)
+
+		cnt += 1
+
+	cnt = 1
+	for protocol in protocol_list:
+		docx_title = 'Протокол ' + str(cnt)
+		filename, fileext = os.path.splitext(protocol.file.name)
+		doc = settings.MEDIA_ROOT + '/' + protocol.file.name
+		zip_arch.write(doc, docx_title + fileext)
+
+		cnt += 1
+
+	cnt = 1
+	for statement in statement_list:
+		docx_title = 'Заявка ' + str(cnt)
+		filename, fileext = os.path.splitext(statement.file.name)
+		doc = settings.MEDIA_ROOT + '/' + statement.file.name
+		zip_arch.write(doc, docx_title + fileext)
+
+		cnt += 1
+
+	cnt = 1
+	for personal in personal_list:
+		docx_title = 'Согласие ' + str(cnt)
+		filename, fileext = os.path.splitext(personal.file.name)
+		doc = settings.MEDIA_ROOT + '/' + personal.file.name
+		zip_arch.write(doc, docx_title + fileext)
+
+		cnt += 1
+
+	zip_arch.close()
+	response = HttpResponse(f.getvalue(), content_type='application/zip')
+	response['Content-Disposition'] = 'attachment; filename=' + zip_title
+	return response
 
 
 # --------------------------------

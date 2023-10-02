@@ -6,21 +6,30 @@
 <div class="row col-md-12 col-lg-12 ">
 		<div class="mx-auto mb-5 col-md-6 col-lg-6">
 			<h4 class="display-5 text-center">Редактировать данные работы</h4>
-			
+			{% if user_name %}
+				<h5 class="display-5 text-center text-danger"><b>{{ user_name }}</b></h5>
+			{% endif %}
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
-				<div class=" mb-5">
-					{% if pict.participation == '2' and pict.file %}
-					<img src="{{ pict.file.url }}" class="rounded img-fluid shadow" id="img_field">
-					{% endif %}
-					{% if pict.participation == '2' and pict.add_view_1 %}
-					<img src="{{ pict.add_view_1.url }}" class="rounded img-fluid shadow" id="img_field">
-					{% endif %}
-					{% if pict.participation == '2' and pict.add_view_2 %}
-					<img src="{{ pict.add_view_2.url }}" class="rounded img-fluid shadow" id="img_field">
-					{% endif %}
+				<div class="mb-5">
+					<div class="img_field">
+						<div class="mx-auto col-md-6 col-lg-6">
+							<img src="{% if pict.file %}{{ pict.file.url }}{% else %}{% static 'img/blank_img.jpg' %}{% endif %}" class="rounded img-fluid mx-auto " id="img_field">
+						</div>
+
+						<div class="row mt-5 img_field_1_2">
+							<div class="mx-auto col-md-6 col-lg-6">
+								<img src="{% if pict.add_view_1 %}{{ pict.add_view_1.url }}{% else %}{% static 'img/blank_img.jpg' %}{% endif %}" class="rounded img-fluid mx-auto " id="img_field_1">
+							</div>
+							<div class="mx-auto col-md-6 col-lg-6">
+								<img src="{% if pict.add_view_2 %}{{ pict.add_view_2.url }}{% else %}{% static 'img/blank_img.jpg' %}{% endif %}" class="rounded img-fluid mx-auto " id="img_field_2">
+							</div>
+						</div>
+					</div>
 					<h5 class="text-center mt-5">Преподаватели/концертмейстеры и т.п.</h5>
-					<p class="text-center text-danger">Для добавления соисполнителей воспользуйтесь соответсвующим пунктом в боковом меню.</p>
+					{% if not user_name %}
+						<p class="text-center text-danger">Для добавления воспользуйтесь соответсвующим пунктом в боковом меню.</p>
+					{% endif %}
 					{% for coprofile in coprofiles %}
 					<div class="row">
 						<div class="col-md-11 mb-3">{{ coprofile.get_file_name }} <em>({{ coprofile.get_profile_type_display }})</em></div>
@@ -38,3 +47,108 @@
 	</div>
 {% endblock %}
 
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+    $(document).ready(function(){
+    	if ('{{ participation }}' == '2'){
+    		$('#id_file').parent().removeClass('hidden');
+    		$('#id_add_view_1').parent().removeClass('hidden');
+    		$('#id_add_view_2').parent().removeClass('hidden');
+    		$('#id_add_views').parent().removeClass('hidden');
+    		$('.img_field').removeClass('hidden');
+
+    	}else{
+    		$('#id_file').parent().addClass('hidden');
+    		$('#id_add_view_1').parent().addClass('hidden');
+    		$('#id_add_view_2').parent().addClass('hidden');
+    		$('#id_add_views').parent().addClass('hidden');
+    		$('.img_field').addClass('hidden');
+
+
+    		$('#id_file').val('');
+    		$('#id_add_view_1').val('');
+    		$('#id_add_view_2').val('');
+
+    		$('#img_field').attr('src', "{% static 'img/blank_img.jpg' %}");
+    		$('#img_field_1').attr('src', "{% static 'img/blank_img.jpg' %}");
+    		$('#img_field_2').attr('src', "{% static 'img/blank_img.jpg' %}");
+
+    		$('#id_add_views').prop('checked', false);
+
+    	}
+
+    	if ($('#id_add_views').is(':checked')){
+    		$('.img_field_1_2').removeClass('hidden');
+    		$('#id_add_view_1').parent().removeClass('hidden');
+    		$('#id_add_view_2').parent().removeClass('hidden');
+    	}else{
+    		$('.img_field_1_2').addClass('hidden');
+    		$('#id_add_view_1').parent().addClass('hidden');
+    		$('#id_add_view_2').parent().addClass('hidden');
+    	}
+
+
+    	$('#id_add_views').change(function(){
+			if ($('#id_add_views').is(':checked')){
+	    		$('.img_field_1_2').removeClass('hidden');
+	    		$('#id_add_view_1').parent().removeClass('hidden');
+    			$('#id_add_view_2').parent().removeClass('hidden');
+
+    			$('#add_view_1-clear_id').prop('checked', false);
+    			$('#add_view_2-clear_id').prop('checked', false);
+	    	}else{
+	    		$('.img_field_1_2').addClass('hidden');
+	    		$('#id_add_view_1').parent().addClass('hidden');
+    			$('#id_add_view_2').parent().addClass('hidden');
+
+    			$('#add_view_1-clear_id').prop('checked', true);
+    			$('#add_view_2-clear_id').prop('checked', true);
+	    	}
+    	});
+
+    	function readURL(input){
+			var reader = new FileReader();
+
+			reader.onload = function(e){
+				$('#img_field').attr('src', e.target.result);
+			}
+
+			reader.readAsDataURL(input.files[0]);
+		}
+
+		function readURL1(input){
+			var reader = new FileReader();
+
+			reader.onload = function(e){
+				$('#img_field_1').attr('src', e.target.result);
+			}
+
+			reader.readAsDataURL(input.files[0]);
+		}
+
+		function readURL2(input){
+			var reader = new FileReader();
+
+			reader.onload = function(e){
+				$('#img_field_2').attr('src', e.target.result);
+			}
+
+			reader.readAsDataURL(input.files[0]);
+		}
+
+		$('#id_file').change(function(){
+			readURL(this);
+		});
+		$('#id_add_view_1').change(function(){
+			readURL1(this);
+		});
+		$('#id_add_view_2').change(function(){
+			readURL2(this);
+		});
+
+
+    });
+  </script>
+{% endblock %}

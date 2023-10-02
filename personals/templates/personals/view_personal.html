@@ -4,24 +4,25 @@
 {% block content %}
 	<div class="row col-md-12 col-lg-12 ">
 		<div class="mx-auto mb-2 col-md-12 col-lg-12">
-			<h4 class="display-5 text-center">Список протоколов I тура</h4>
+			<h4 class="display-5 text-center">Список согласий на обработку персональных данных</h4>
 
 			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
 				<div class="row align-middle">
 					<div class="col-md-12 text-center">
-						<input type="submit" value="Добавить протокол" class="btn btn-warning border shadow-sm">
+						<input type="submit" value="Добавить согласие" class="btn btn-warning border shadow-sm">
+						<input type="button" value="Скачать бланк" class="btn btn-info border shadow-sm" id="get-blank">
 					</div>
 				</div>
 				<div class="row align-middle mt-5">
-					{% for protocol in protocols %}
+					{% for personal in personals %}
 						<div class="col-md-8">
-							<b>Протокол </b>(добавлен {{ protocol.registration_date }})
+							<b>Согласие от: </b> {{ personal.registration_date }}
 						</div>
 						<div class="col-md-2 text-center">
-							<a href="{{ protocol.file.url }}" target="_blank">Скачать</a>
+							<a href="{{ personal.file.url }}" target="_blank">Скачать</a>
 						</div>
 						<div class="col-md-2 text-center">
-							<a href="{{ protocol.pk }}" class="del_protocol">Удалить</a>
+							<a href="{{ personal.pk }}" class="del_protocol">Удалить</a>
 						</div>
 						<div class="mx-auto col-md-12 col-lg-12">
 							<div class="border-top my-3"></div>
@@ -39,19 +40,23 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('.del_protocol').click(function(){
-				protocol_pk = $(this).attr('href');
-				url = "{% url 'protocols:ajax_del_protocol' %}";
+				personal_pk = $(this).attr('href');
+				url = "{% url 'personals:ajax_del_personal' %}";
 
 				$.ajax({
 					url: url,
 					data: {
-						'protocol': protocol_pk
+						'personal': personal_pk
 					},
 					success: function(data){
 						document.location.reload();
 					}
 				});
 				return false;
+			});
+
+			$('#get-blank').click(function(){
+				window.open("{% static 'files/personal.doc' %}", '_blank').focus();
 			});
 		});
 	</script>

@@ -40,18 +40,71 @@
 
 										<div id="collapseOne-{{ user.pk }}" class="collapse" aria-labelledby="headingOne-{{ user.pk }}" data-parent="#accordion-1">
 											<div class="card-body">
+												<div class="row">
+													<div class="col-md-12 text-center">
+														<a class="" href="{% url 'profiles:view_edit_profile_admin' pk=user.pk %}" target="_blank">изменить</a>
+													</div>
+												</div>
+
+												<div class="border-top mt-3"></div>
+
+
 												{% if picture_list|lookup:user.pk %}
-													<h5 class="text-primary">Конкурсно-выставочная программа</h5>
+													<h5 class="text-primary">Конкурсно-выставочная программа <a href="{% url 'pictures:view_arts_admin' pk=user.pk %}" target="_blank"><u class="text-secondary">просмотреть</u></a></h5>
 													{% for member in picture_list|lookup:user.pk %}
 														<p><b>{{ member.nomination }} ({{ member.get_participation_display }}):</b> {{ member.author.get_full_name }}</p>
 													{% endfor %}
 												{% endif %}
 												{% if move_list|lookup:user.pk %}
-													<h5 class="text-primary">Конкурсно-вокальная программа</h5>
+													<h5 class="text-primary">Конкурсно-вокальная программа <a href="{% url 'movies:view_movies_admin' pk=user.pk %}" target="_blank"><u class="text-secondary">просмотреть</u></a></h5>
 													{% for member in move_list|lookup:user.pk %}
 														<p><b>{{ member.nomination }} ({{ member.get_participation_display }}):</b> {{ member.author.get_full_name }}</p>
 													{% endfor %}
 												{% endif %}
+												<div class="border-top mt-3"></div>
+												{% if invoice_list|lookup:user.pk %}
+													<h5 class="text-danger my-3">Квитанции об оплате</h5>
+													{% for invoice in invoice_list|lookup:user.pk %}
+														<div>
+															<b>Квитанция от: </b> {{ invoice.date }} <b>на сумму:</b> {{ invoice.summa }} руб. - <a href="{{ invoice.file.url }}" target="_blank">cкачать...</a>
+														</div>
+													{% endfor %}
+												{% endif %}
+												{% if protocol_list|lookup:user.pk %}
+													<h5 class="text-danger my-3">Протоколы I тура</h5>
+													{% for protocol in protocol_list|lookup:user.pk %}
+														<div>
+															<b>Протокол </b>(загружен {{ protocol.registration_date }}) - <a href="{{ protocol.file.url }}" target="_blank">cкачать...</a>
+														</div>
+													{% endfor %}
+												{% endif %}
+												{% if statement_list|lookup:user.pk %}
+													<h5 class="text-danger my-3">Заявки</h5>
+													{% for statement in statement_list|lookup:user.pk %}
+														<div>
+															<b>Заявка </b>(загружена {{ statement.registration_date }}) - <a href="{{ statement.file.url }}" target="_blank">cкачать...</a>
+														</div>
+													{% endfor %}
+												{% endif %}
+												{% if personal_list|lookup:user.pk %}
+													<h5 class="text-danger my-3">Согласия на обработку персональных данных</h5>
+													{% for personal in personal_list|lookup:user.pk %}
+														<div>
+															<b>Согласие </b>(загружено {{ personal.registration_date }}) - <a href="{{ personal.file.url }}" target="_blank">cкачать...</a>
+														</div>
+													{% endfor %}
+												{% endif %}
+
+												{% if zip_list|lookup:user.pk %}
+													<div class="border-top mt-3"></div>
+													<div class="row">
+														<div class="col-md-12 text-center">
+															<a class="" href="{% url 'get_contestant_zip' pk=user.pk %}" target="_blank">cкачать архив документов</a>
+														</div>
+													</div>
+												{% endif %}
+
+
 											</div>
 										</div>
 									</div>

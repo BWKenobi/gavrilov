@@ -261,9 +261,38 @@ def view_arts(request):
 
 	args = {
 		'pictures': pictures,
-		'copictures_list': copictures_list
+		'copictures_list': copictures_list,
+		'memeber_flag': True
 	}
 	return render(request, 'pictures/view_arts.html', args)
+
+
+
+@login_required(login_url='/login/')
+def view_arts_admin(request, pk):
+	user = User.objects.get(pk = pk)
+	user_name = user.profile.get_institute_zip()
+
+	pictures = Picture.objects.filter(author__main_user=user)
+	copictures_list = {}
+	for picture in pictures:
+		copictures_list[picture.pk] = CoPicturee.objects.filter(picture = picture)
+
+
+	if request.method=='POST':
+		if 'addpict' in request.POST:
+			return redirect('pictures:load_image_admin', pk = pk)
+
+
+	args = {
+		'pictures': pictures,
+		'copictures_list': copictures_list,
+		'user_name': user_name,
+		'admin_flag': True
+	}
+	return render(request, 'pictures/view_arts.html', args)
+
+
 
 
 @login_required(login_url='/login/')
@@ -311,25 +340,18 @@ def load_image_admin(request, pk):
 	if not request.user.profile.admin_access:
 		return redirect('home')
 
-	author = Profile.objects.get(pk = pk).user
-	coprofiles = CoProfile.objects.filter(main_user = author)
+	author = User.objects.get(pk = pk)
+	user_name = author.profile.get_institute_zip()
+
+	coprofiles = CoProfile.objects.filter(main_user = author, profile_type__in = ['1', '2', '3', '4', '5'])
 
 	if request.method=='POST':
-		
-		if author.profile.participation == '2':
-			form_img = PictureUploadForm(request.POST, request.FILES, label_suffix='')
-		else:
-			form_img = PictureUploadNoneFileForm(request.POST, label_suffix='')
+
+		form_img = PictureUploadForm(request.POST, request.FILES, author = author, label_suffix='')
 
 		if form_img.is_valid():
 			new_img = form_img.save(commit=False)
-			new_img.author = author
-			new_img.save()	
-			
-			if author.profile.participation == '2':
-				if 'file' in request.FILES:
-					new_img.file = request.FILES['file']
-					new_img.save()
+			new_img.save()
 
 			for coprofile in coprofiles:
 				test_str = 'coprofile-check-' + str(coprofile.pk)
@@ -339,25 +361,21 @@ def load_image_admin(request, pk):
 				else:
 					CoPicturee.objects.filter(picture = new_img, coauthor = coprofile).delete()
 
-			return redirect('view_contestant', pk = author.profile.pk)
+			return redirect('pictures:view_arts_admin', pk=pk)
 
 		args = {
 			'form': form_img,
 			'coprofiles': coprofiles,
-			'author': author
+			'user_name': user_name
 		}
-		return render(request, 'pictures/load_image.html', args)	
-	
-	if author.profile.participation == '2':
-		form_img = PictureUploadForm(label_suffix='')
-	else:
-		form_img = PictureUploadNoneFileForm(label_suffix='')
+		return render(request, 'pictures/load_image.html', args)
 
+	form_img = PictureUploadForm(author = author, label_suffix='')
 
 	args = {
 		'form': form_img,
 		'coprofiles': coprofiles,
-		'author': author
+		'user_name': user_name
 	}
 	return render(request, 'pictures/load_image.html', args)
 
@@ -368,7 +386,71 @@ def edit_image(request, pk):
 		return redirect('home')
 		
 	pict = Picture.objects.get(pk=pk)
+	participation = pict.participation
 	author = request.user
+	coprofiles = CoProfile.objects.filter(main_user = author, profile_type__in = ['1', '2', '3', '4', '5'])
+	copictures_list = {}
+
+	if pict.author.main_user != author:
+		return redirect('home')
+
+	if request.method=='POST':
+		form_img = PictureEditForm(request.POST, request.FILES, instance=pict, author = author, label_suffix='')
+
+		if form_img.is_valid():
+			new_img = form_img.save(commit=False)
+			new_img.save()
+
+			if not new_img.add_view_1 and not new_img.add_view_2:
+				new_img.add_views = False
+				new_img.save()
+
+			for coprofile in coprofiles:
+				test_str = 'coprofile-check-' + str(coprofile.pk)
+				if test_str in request.POST:
+					if not CoPicturee.objects.filter(picture = new_img, coauthor = coprofile):
+						CoPicturee.objects.create(picture = new_img, coauthor = coprofile)
+				else:
+					CoPicturee.objects.filter(picture = new_img, coauthor = coprofile).delete()
+
+
+			return redirect('pictures:view_arts')
+
+		args = {
+			'form': form_img,
+			'pict': pict,
+			'coprofiles': coprofiles,
+			'copictures_list': copictures_list,
+			'participation': participation
+		}
+		return render(request, 'pictures/edit_image.html', args)	
+	
+	form_img = PictureEditForm(instance=pict, author = author, label_suffix='')
+	copicture = list(CoPicturee.objects.filter(picture = pict).values_list('coauthor', flat=True))
+	for coprofile in coprofiles:
+		copictures_list[coprofile.pk] = coprofile.pk in copicture
+
+	args = {
+		'form': form_img,
+		'pict': pict,
+		'coprofiles': coprofiles,
+		'copictures_list': copictures_list,
+		'participation': participation
+	}
+	return render(request, 'pictures/edit_image.html', args)
+
+
+
+@login_required(login_url='/login/')
+def edit_image_admin(request, pk):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+		
+	pict = Picture.objects.get(pk=pk)
+	participation = pict.participation
+	author = pict.author.main_user
+	user_name = author.profile.get_institute_zip()
+
 	coprofiles = CoProfile.objects.filter(main_user = author, profile_type__in = ['1', '2', '3', '4', '5'])
 	copictures_list = {}
 
@@ -391,13 +473,18 @@ def edit_image(request, pk):
 					CoPicturee.objects.filter(picture = new_img, coauthor = coprofile).delete()
 
 
-			return redirect('pictures:view_arts')
+			return redirect('pictures:view_arts_admin', pk = author.pk)
 
 		args = {
 			'form': form_img,
+			'pict': pict,
+			'coprofiles': coprofiles,
+			'copictures_list': copictures_list,
+			'participation': participation,
+			'user_name': user_name
 		}
-		return render(request, 'pictures/edit_image.html', args)	
-	
+		return render(request, 'pictures/edit_image.html', args)
+
 	form_img = PictureEditForm(instance=pict, author = author, label_suffix='')
 	copicture = list(CoPicturee.objects.filter(picture = pict).values_list('coauthor', flat=True))
 	for coprofile in coprofiles:
@@ -407,61 +494,12 @@ def edit_image(request, pk):
 		'form': form_img,
 		'pict': pict,
 		'coprofiles': coprofiles,
-		'copictures_list': copictures_list
+		'copictures_list': copictures_list,
+		'participation': participation,
+		'user_name': user_name
 	}
 	return render(request, 'pictures/edit_image.html', args)
 
-
-
-@login_required(login_url='/login/')
-def edit_image_admin(request, pk):
-	if not request.user.profile.admin_access:
-		return redirect('home')
-		
-	pict = Picture.objects.get(pk=pk)
-	author = pict.author
-	coprofiles = CoProfile.objects.filter(main_user = author)
-	copictures_list = {}
-
-	if pict.author != author:
-		return redirect('home')
-
-	if request.method=='POST':
-		form_img = PictureEditForm(request.POST, request.FILES, instance=pict, label_suffix='')
-
-		if form_img.is_valid():
-			new_img = form_img.save(commit=False)
-			new_img.author = author
-			new_img.save()
-
-			for coprofile in coprofiles:
-				test_str = 'coprofile-check-' + str(coprofile.pk)
-				if test_str in request.POST:
-					if not CoPicturee.objects.filter(picture = new_img, coauthor = coprofile):
-						CoPicturee.objects.create(picture = new_img, coauthor = coprofile)
-				else:
-					CoPicturee.objects.filter(picture = new_img, coauthor = coprofile).delete()
-
-
-			return redirect('view_contestant', pk = author.profile.pk)
-
-		args = {
-			'form': form_img,
-		}
-		return render(request, 'pictures/edit_image.html', args)	
-	
-	form_img = PictureEditForm(instance=pict, label_suffix='')
-	copicture = list(CoPicturee.objects.filter(picture = pict).values_list('coauthor', flat=True))
-	for coprofile in coprofiles:
-		copictures_list[coprofile.pk] = coprofile.pk in copicture
-
-	args = {
-		'form': form_img,
-		'pict': pict,
-		'coprofiles': coprofiles,
-		'copictures_list': copictures_list
-	}
-	return render(request, 'pictures/edit_image.html', args)
 
 
 # --------------------------------

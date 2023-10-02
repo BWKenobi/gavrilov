@@ -6,7 +6,9 @@
 <div class="row col-md-12 col-lg-12 ">
 		<div class="mx-auto mb-5 col-md-8 col-lg-8">
 			<h4 class="display-5 text-center">Редактировать данные работы</h4>
-			
+			{% if user_name %}
+				<h5 class="display-5 text-center text-danger"><b>{{ user_name }}</b></h5>
+			{% endif %}
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
 				<h5 class="text-center mt-5">Преподаватели/концертмейстеры и т.п.</h5>
@@ -62,6 +64,15 @@
     	$('#id_poet_1').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
     	$('#id_poet_2').parent().after('<div class="mx-auto col-md-12 col-lg-12 mt-5"><div class="border-top my-3"></div></div>');
 
+    	if ('{{ participation }}' == '2'){
+    		$('#id_file_1').parent().removeClass('hidden');
+    		$('#id_file_2').parent().removeClass('hidden');
+    		$('.movie-info').removeClass('hidden');
+    	}else{
+    		$('#id_file_1').parent().addClass('hidden');
+    		$('#id_file_2').parent().addClass('hidden');
+    		$('.movie-info').addClass('hidden');
+    	}
 
     	ages = "{{ ages_pk }}".replace('[', '').replace(']', '').replace(' ', '').split(',');
 

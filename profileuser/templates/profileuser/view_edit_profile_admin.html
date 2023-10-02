@@ -5,18 +5,46 @@
 <div class="row col-md-12 col-lg-12 ">
 	<div class="mx-auto mb-5 col-md-6 col-lg-6">
 		<h4 class="display-5 text-center">Личные данные</h4>
+		<h5 class="display-5 text-center text-danger">{{ username }}</h5>
 
 		<form action="" method="post" , autocomplete="false"> {% csrf_token %}
 			{{form.as_p}}
-			<div class="row align-middle">
-				<div class="col-md-6 text-left">
+			<div class="row text-center">
+				<div class="col-md-12 text-center">
 					<input type="submit" value="Сохранить изменения" {% if register_block %}disabled{% endif %}>
-				</div>
-				<div class="col-md-6 text-right">
-					<input type="submit" value="Сменить пароль" name="passchange">
 				</div>
 			</div>
 		</form>
+
+		{% if coprofiles %}
+			<div class="border-top mt-3"></div>
+			<h5 class="display-5 text-center my-3">Преподаватели/концертмейстеры</h5>
+			{% for coprofile in coprofiles %}
+				<div class="row">
+					<div class="col-md-10">
+						<b>{{ coprofile.get_full_name }} </b> ({{ coprofile.get_profile_type_display }})
+					</div>
+					<div class="col-md-2 text-center">
+						<a href="{% url 'profiles:view_edit_coprofile_admin' pk=coprofile.pk %}">Изменить</a>
+					</div>
+				</div>
+			{% endfor %}
+		{% endif %}
+
+		{% if coprofiles %}
+			<div class="border-top mt-3"></div>
+			<h5 class="display-5 text-center my-3">Участники</h5>
+			{% for team in teams %}
+				<div class="row">
+					<div class="col-md-10">
+						<b>{{ team.get_full_name }} </b> ({{ team.get_profile_type_display }})
+					</div>
+					<div class="col-md-2 text-center">
+						<a href="{% url 'profiles:view_edit_team_coprofile_admin' pk=team.pk %}">Изменить</a>
+					</div>
+				</div>
+			{% endfor %}
+		{% endif %}
 	</div>
 </div>
 

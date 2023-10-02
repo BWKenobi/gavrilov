@@ -17,6 +17,8 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
 from docx.shared import Mm, Pt
 
+from django.contrib.auth.models import User
+
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage, send_mail
 
@@ -61,6 +63,54 @@ def view_edit_profile(request):
 		'done_flag': False
 	}
 	return render(request, 'profileuser/view_edit_profile.html', args)
+
+
+@login_required(login_url='/login/')
+def view_edit_profile_admin(request, pk = None):
+	user = User.objects.get(pk = pk)
+	username = user.profile.get_institute_zip()
+
+	coprofiles = CoProfile.objects.filter(main_user = user, self_flag = False, profile_type__in = ['1', '2', '3', '4', '5']).order_by('surname', 'name', 'name2')
+	teams = CoProfile.objects.filter(main_user = user, self_flag = False, profile_type = '0').order_by('team', 'surname', 'name', 'name2')
+
+	if request.method=='POST':
+		form_profile = ProfileUdpateForm(request.POST, instance=user.profile, label_suffix=':')
+
+
+		if form_profile.is_valid():
+			if form_profile.has_changed():
+				profile_form = form_profile.save(False)
+				profile_form.save()
+
+
+			args ={
+				'form': form_profile,
+				'done_flag': True,
+				'coprofiles': coprofiles,
+				'teams': teams,
+				'username': username
+			}
+			return render(request, 'profileuser/view_edit_profile_admin.html', args)
+
+		args ={
+			'form': form_profile,
+			'done_flag': False,
+			'coprofiles': coprofiles,
+			'teams': teams,
+			'username': username
+		}
+		return render(request, 'profileuser/view_edit_profile_admin.html', args)
+
+	form_profile = ProfileUdpateForm(instance=request.user.profile, label_suffix=':')
+
+	args = {
+		'form': form_profile,
+		'done_flag': False,
+		'coprofiles': coprofiles,
+		'teams': teams,
+		'username': username
+	}
+	return render(request, 'profileuser/view_edit_profile_admin.html', args)
 
 
 @login_required(login_url='/login/')
@@ -172,6 +222,7 @@ def view_edit_coprofile_admin(request, pk):
 		return redirect('home')
 
 	coprofile = CoProfile.objects.get(pk = pk)
+	username = coprofile.main_user.profile.get_institute_zip()
 
 	if request.method=='POST':
 		form_coprofile = CoProfileForm(request.POST, instance=coprofile, label_suffix=':')
@@ -181,10 +232,11 @@ def view_edit_coprofile_admin(request, pk):
 				coprofile = form_coprofile.save(False)
 				coprofile.save()	
 
-			return redirect('view_contestant', pk = coprofile.main_user.profile.pk)
+			return redirect('profiles:view_edit_profile_admin', pk = coprofile.main_user.profile.pk)
 
 		args ={
 			'form': form_coprofile, 
+			'username': username
 		}
 		return render(request, 'profileuser/view_edit_coprofile.html', args)
 
@@ -192,6 +244,7 @@ def view_edit_coprofile_admin(request, pk):
 
 	args = {
 		'form': form_coprofile, 
+		'username': username
 	}
 	return render(request, 'profileuser/view_edit_coprofile.html', args)
 
@@ -305,26 +358,29 @@ def view_edit_team_coprofile_admin(request, pk):
 		return redirect('home')
 
 	coprofile = CoProfile.objects.get(pk = pk)
+	username = coprofile.main_user.profile.get_institute_zip()
 
 	if request.method=='POST':
-		form_coprofile = CoProfileTeamEditForm(request.POST, instance=coprofile, label_suffix=':')
+		form_coprofile = CoProfileTeamEditForm(request.POST, admin_access = True, instance=coprofile, label_suffix=':')
 
 		if form_coprofile.is_valid():
 			if form_coprofile.has_changed():
 				coprofile = form_coprofile.save(False)
 				coprofile.save()
 
-			return redirect('view_contestant', pk = coprofile.main_user.profile.pk)
+			return redirect('profiles:view_edit_profile_admin', pk = coprofile.main_user.profile.pk)
 
 		args ={
 			'form': form_coprofile,
+			'username': username
 		}
 		return render(request, 'profileuser/view_edit_team_coprofile.html', args)
 
-	form_coprofile = CoProfileTeamEditForm(instance=coprofile, label_suffix=':')
+	form_coprofile = CoProfileTeamEditForm(admin_access = True, instance=coprofile, label_suffix=':')
 
 	args = {
 		'form': form_coprofile,
+		'username': username
 	}
 	return render(request, 'profileuser/view_edit_team_coprofile.html', args)
 

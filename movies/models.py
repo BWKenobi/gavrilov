@@ -34,7 +34,7 @@ class Movie(models.Model):
 	composer_2 = models.CharField(verbose_name="Автор музыки", max_length=110, blank=True)
 	poet_2 = models.CharField(verbose_name="Автор слов", max_length=100, blank=True)
 
-	descritpion = models.CharField(verbose_name="Техничесие требования", max_length=250, blank=True)
+	descritpion = models.CharField(verbose_name="Технические требования", max_length=250, blank=True)
 
 	file_1 = models.URLField(verbose_name='Ссылка на файл', max_length=250, blank=True, null=True)
 	file_2 = models.URLField(verbose_name='Ссылка на файл', max_length=250, blank=True, null=True)
