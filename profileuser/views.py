@@ -101,7 +101,7 @@ def view_edit_profile_admin(request, pk = None):
 		}
 		return render(request, 'profileuser/view_edit_profile_admin.html', args)
 
-	form_profile = ProfileUdpateForm(instance=request.user.profile, label_suffix=':')
+	form_profile = ProfileUdpateForm(instance=user.profile, label_suffix=':')
 
 	args = {
 		'form': form_profile,
