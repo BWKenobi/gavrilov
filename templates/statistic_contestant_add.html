@@ -146,7 +146,7 @@
 													<p class="mb-0">1. {{ member.name_1 }}{% if member.composer_1 %} - муз. {{ member.composer_1 }}{% endif %}{% if member.poet_1 %}{% if member.composer_1 %}, {% endif %}сл. {{ member.poet_1 }}{% endif %}</p>
 													<p class="mb-0">2. {{ member.name_2 }}{% if member.composer_2 %} - муз. {{ member.composer_2 }}{% endif %}{% if member.poet_2 %}{% if member.composer_2 %}, {% endif %}сл. {{ member.poet_2 }}{% endif %}</p>
 													<p class="text-info"><em><u>{{ member.nomination }}</u></em></p>
-													<p>{% if co_teachers|lookup:member.pk %}{% for teacher in co_teachers|lookup:member.pk %}{% if forloop.counter != 1 %}, {% endif %}{{  teacher.get_profile_type_display }} - {{ teacher.get_full_name }}{% endfor %}{% endif %}</p>
+													<p>{% if co_teachers_vocal|lookup:member.pk %}{% for teacher in co_teachers_vocal|lookup:member.pk %}{% if forloop.counter != 1 %}, {% endif %}{{  teacher.get_profile_type_display }} - {{ teacher.get_full_name }}{% endfor %}{% endif %}</p>
 												</div>
 
 												<div id="collapseOne-{{ member.pk }}" class="collapse" aria-labelledby="headingOne-{{ member.pk }}" data-parent="#accordion-1">
@@ -192,7 +192,7 @@
 													<p class="mb-0">1. {{ member.name_1 }}{% if member.composer_1 %} - муз. {{ member.composer_1 }}{% endif %}{% if member.poet_1 %}{% if member.composer_1 %}, {% endif %}сл. {{ member.poet_1 }}{% endif %}</p>
 													<p class="mb-0">2. {{ member.name_2 }}{% if member.composer_2 %} - муз. {{ member.composer_2 }}{% endif %}{% if member.poet_2 %}{% if member.composer_2 %}, {% endif %}сл. {{ member.poet_2 }}{% endif %}</p>
 													<p class="text-info"><em><u>{{ member.nomination }}</u></em></p>
-													<p>{% if co_teachers|lookup:member.pk %}{% for teacher in co_teachers|lookup:member.pk %}{% if forloop.counter != 1 %}, {% endif %}{{  teacher.get_profile_type_display }} - {{ teacher.get_full_name }}{% endfor %}{% endif %}</p>
+													<p>{% if co_teachers_vocal|lookup:member.pk %}{% for teacher in co_teachers_vocal|lookup:member.pk %}{% if forloop.counter != 1 %}, {% endif %}{{  teacher.get_profile_type_display }} - {{ teacher.get_full_name }}{% endfor %}{% endif %}</p>
 												</div>
 
 												<div id="collapseOne-{{ member.pk }}" class="collapse" aria-labelledby="headingOne-{{ member.pk }}" data-parent="#accordion-1">

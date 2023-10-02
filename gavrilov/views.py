@@ -217,6 +217,7 @@ def statistic_contestant_add_view(request):
 	far_moves = Movie.objects.filter(participation = '2').order_by('author__coprofile_type', 'author__team','author__surname', 'author__name', 'author__name2')
 
 	co_teachers = {}
+	co_teachers_vocal = {}
 	for near_picture in near_pictures:
 		co_teachers_pk = list(CoPicturee.objects.filter(picture = near_picture).values_list('coauthor', flat=True))
 		co_teachers[near_picture.pk] = CoProfile.objects.filter(pk__in = co_teachers_pk)
@@ -227,11 +228,11 @@ def statistic_contestant_add_view(request):
 
 	for near_move in near_moves:
 		co_teachers_pk = list(CoMovie.objects.filter(movie = near_move).values_list('coauthor', flat=True))
-		co_teachers[near_move.pk] = CoProfile.objects.filter(pk__in = co_teachers_pk)
+		co_teachers_vocal[near_move.pk] = CoProfile.objects.filter(pk__in = co_teachers_pk)
 
 	for far_move in far_moves:
 		co_teachers_pk = list(CoMovie.objects.filter(movie = far_move).values_list('coauthor', flat=True))
-		co_teachers[far_move.pk] = CoProfile.objects.filter(pk__in = co_teachers_pk)
+		co_teachers_vocal[far_move.pk] = CoProfile.objects.filter(pk__in = co_teachers_pk)
 
 
 	near_pictures_nominations = {}
@@ -445,7 +446,8 @@ def statistic_contestant_add_view(request):
 		'near_moves_nominations': near_moves_nominations,
 		'far_moves_nominations': far_moves_nominations,
 
-		'co_teachers': co_teachers
+		'co_teachers': co_teachers,
+		'co_teachers_vocal': co_teachers_vocal
 	}
 
 	return render(request, 'statistic_contestant_add.html', args)
