@@ -280,21 +280,25 @@ def statistic_contestant_add_view(request):
 				document.add_paragraph('ДПИ (очное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 				array_mambers_list = near_pictures
 				nomination_list = nomination_picture_list
+				co_teachers_docx = co_teachers
 				file_name = 'dpi_near'
 			elif 'type_2' in request.POST:
 				document.add_paragraph('ДПИ (заочное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 				array_mambers_list = far_pictures
 				nomination_list = nomination_picture_list
+				co_teachers_docx = co_teachers
 				file_name = 'dpi_far'
 			elif 'type_3' in request.POST:
 				document.add_paragraph('Вокал (очное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 				array_mambers_list = near_moves
 				nomination_list = nomination_move_list
+				co_teachers_docx = co_teachers_vocal
 				file_name = 'vocal_near'
 			else:
 				document.add_paragraph('Вокал (заочное участие)').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 				array_mambers_list = far_moves
 				nomination_list = nomination_move_list
+				co_teachers_docx = co_teachers_vocal
 				file_name = 'vocal_far'
 
 			p = document.add_paragraph()
@@ -406,9 +410,9 @@ def statistic_contestant_add_view(request):
 								row_cells[2].width = Mm(width_list[2])
 
 								row_cells[3].text =  ''
-								if co_teachers[member.pk]:
+								if co_teachers_docx[member.pk]:
 									teachers_flag = False
-									for co_teacher in co_teachers[member.pk]:
+									for co_teacher in co_teachers_docx[member.pk]:
 										if teachers_flag:
 											row_cells[3].text += '\n'
 										row_cells[3].text += co_teacher.short_profile_type() + ' ' + co_teacher.get_file_name()
