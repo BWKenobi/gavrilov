@@ -169,7 +169,7 @@ class CoProfile(models.Model):
 	name = models.CharField(verbose_name="Имя*", max_length=30, blank=True)
 	name2 = models.CharField(verbose_name="Отчество", max_length=30, blank=True)
 
-	team = models.CharField(verbose_name="Название коллектива*", max_length=30, blank=True)
+	team = models.CharField(verbose_name="Название коллектива*", max_length=511, blank=True)
 
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 
