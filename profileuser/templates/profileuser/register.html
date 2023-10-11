@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<div class="mx-auto mb-5 col-md-6 col-lg-6">
+			<h4 class="display-5 text-center">Регистрация участника конкурса администратором</h4>
+
+			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+
+				{{form.as_p}}
+				
+				<div class="row align-middle">
+					<div class=" col-md-12 col-lg-12 text-center">
+						<input type="submit" value="Зарегистрироваться">
+					</div>
+				</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+    $(document).ready(function(){
+    	if ($('#id_less_institution').is(':checked')){
+    		$('#id_institution').parent().addClass('hidden');
+    		$('#id_institution_shot').parent().addClass('hidden');
+    		$('#id_adress').parent().addClass('hidden');
+
+    		$('#id_institution').val('');
+    		$('#id_institution_shot').val('');
+    		$('#id_institution_shot').val('');
+
+    		$('#id_institution').removeAttr('required');
+    		$('#id_institution_shot').removeAttr('required');
+    		$('#id_institution_shot').removeAttr('required');
+    	}else{
+    		$('#id_institution').parent().removeClass('hidden');
+    		$('#id_institution_shot').parent().removeClass('hidden');
+    		$('#id_adress').parent().removeClass('hidden');
+
+    		$('#id_institution').attr('required', 'required');
+    		$('#id_institution_shot').attr('required', 'required');
+    		$('#id_institution_shot').attr('required', 'required');
+    	}
+
+    	if ($('#id_add_team').is(':checked')){
+    		$('#id_team').parent().removeClass('hidden');
+
+    		$('#id_team').attr('required', 'required');
+    	}else{
+    		$('#id_team').parent().addClass('hidden');
+
+    		$('#id_team').val('');
+
+    		$('#id_team').removeAttr('required');
+    	}
+
+    	$('#id_less_institution').change(function(){
+    		if ($('#id_less_institution').is(':checked')){
+	    		$('#id_institution').parent().addClass('hidden');
+	    		$('#id_institution_shot').parent().addClass('hidden');
+	    		$('#id_adress').parent().addClass('hidden');
+
+	    		$('#id_institution').val('');
+	    		$('#id_institution_shot').val('');
+	    		$('#id_institution_shot').val('');
+
+	    		$('#id_institution').removeAttr('required');
+	    		$('#id_institution_shot').removeAttr('required');
+	    		$('#id_institution_shot').removeAttr('required');
+	    	}else{
+	    		$('#id_institution').parent().removeClass('hidden');
+	    		$('#id_institution_shot').parent().removeClass('hidden');
+	    		$('#id_adress').parent().removeClass('hidden');
+
+	    		$('#id_institution').attr('required', 'required');
+	    		$('#id_institution_shot').attr('required', 'required');
+	    		$('#id_institution_shot').attr('required', 'required');
+	    	}
+    	});
+
+    	$('#id_add_team').change(function(){
+    		if ($('#id_add_team').is(':checked')){
+	    		$('#id_team').parent().removeClass('hidden');
+
+	    		$('#id_team').attr('required', 'required');
+	    	}else{
+	    		$('#id_team').parent().addClass('hidden');
+
+	    		$('#id_team').val('');
+
+	    		$('#id_team').removeAttr('required');
+	    	}
+    	});
+    });
+  </script>
+{% endblock %}

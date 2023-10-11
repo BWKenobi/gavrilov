@@ -12,6 +12,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 
+from django.contrib.sites.shortcuts import get_current_site
+
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
@@ -22,7 +24,7 @@ from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage, send_mail
 
-from .forms import ProfileUdpateForm, CoProfileForm, CoProfileTeamForm, CoProfileTeamEditForm
+from .forms import ProfileUdpateForm, CoProfileForm, CoProfileTeamForm, CoProfileTeamEditForm, UserRegistrationForm
 
 from .models import Profile, CoProfile
 from movies.models import Movie
@@ -63,6 +65,79 @@ def view_edit_profile(request):
 		'done_flag': False
 	}
 	return render(request, 'profileuser/view_edit_profile.html', args)
+
+
+@login_required(login_url='/login/')
+def view_new_admin_profile(request):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	if request.method=='POST':
+		user_form = UserRegistrationForm(request.POST)
+		if user_form.is_valid():
+			password = User.objects.make_random_password(8)
+			new_user = user_form.save(commit=False)
+			new_user.username = new_user.email
+			new_user.is_active = True
+			new_user.set_password(password)
+			new_user.save()
+
+			new_user.profile.less_institution = user_form.cleaned_data['less_institution']
+			new_user.profile.category = user_form.cleaned_data['category']
+			new_user.profile.surname = user_form.cleaned_data['surname']
+			new_user.profile.name = user_form.cleaned_data['name']
+			new_user.profile.name2 = user_form.cleaned_data['name2']
+			new_user.profile.profile_type = user_form.cleaned_data['profile_type']
+			new_user.profile.phone = user_form.cleaned_data['phone']
+			new_user.profile.institution = user_form.cleaned_data['institution']
+			new_user.profile.institution_shot = user_form.cleaned_data['institution_shot']
+			new_user.profile.adress = user_form.cleaned_data['adress']
+
+			new_user.profile.save()
+
+			if user_form.cleaned_data['add_team']:
+				CoProfile.objects.create(
+					main_user = new_user,
+					coprofile_type = '2',
+					team = user_form.cleaned_data['team']
+				)
+
+			protocol = 'http'
+			if request.is_secure():
+				protocol = 'https'
+			current_site = get_current_site(request)
+
+			mail_subject = 'Конкурс "Гавриловские гуляния"'
+			to_email = new_user.email
+			sex = new_user.profile.sex()
+			sex_valid = new_user.profile.sex_valid()
+			signature = 'С уважением,\r\nАдминистрация конкурса'
+			sign = signature.split('\r\n')
+
+			args = {
+				'sex': sex,
+				'sex_valid': sex_valid,
+				'name': new_user.profile.get_io_name(),
+				'protocol': protocol,
+				'domain': current_site.domain,
+				'signature': signature,
+				'sign': sign,
+				'email': to_email,
+				'password': password,
+			}
+
+			message = render_to_string('profileuser/new_profile_email.html', args)
+
+			message_html = render_to_string('profileuser/new_profile_email_html.html', args)
+
+			send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
+
+			return redirect('statistic_contestant')
+
+		return render(request, 'profileuser/register.html', {'form': user_form})
+
+	user_form = UserRegistrationForm()
+	return render(request, 'profileuser/register.html', {'form': user_form})
 
 
 @login_required(login_url='/login/')

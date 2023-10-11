@@ -588,6 +588,9 @@ def statistic_contestant_view(request, part = None):
 
 			return response
 
+		if 'type_2' in request.POST:
+			return redirect('profiles:view_new_admin_profile')
+
 
 	args = {
 		'users': users,
