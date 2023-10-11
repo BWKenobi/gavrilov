@@ -892,8 +892,20 @@ def move_order_view(request):
 	if not request.user.profile.admin_access:
 		return redirect('home')
 
-	movies = Movie.objects.filter(author__profile__participation = '1').order_by('nomination', 'author__profile__category')
-	
+
+	user_list = list(Movie.objects.filter(participation = '1').order_by('nomination').distinct().values_list('author__main_user', flat=True))
+	users = User.objects.filter(pk__in = user_list)
+
+	movie_list = {}
+	for user in users:
+		movie_list[user.pk] = Movie.objects.filter(participation = '1', author__main_user = user)
+
+	movies = Movie.objects.filter(participation = '1').order_by('nomination', 'author__main_user__profile__category')
+
+	co_movies = {}
+	for movie in movies:
+		co_movies[movie.pk] = CoMovie.objects.filter(movie = movie)
+
 	scene_numbers = movies.filter(scene_num=None)
 	scene_numbers_old = movies.filter(scene_num__isnull=False).order_by('-scene_num')
 
@@ -908,7 +920,7 @@ def move_order_view(request):
 			movie.save()
 			cnt += 1
 
-	movies = movies.order_by('scene_num')
+	movies = Movie.objects.filter(participation = '1').order_by('scene_num')
 
 
 	if request.POST:
@@ -956,14 +968,29 @@ def move_order_view(request):
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
+		hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[0].width = Mm(10)
-		hdr_cells[1].text = 'Название работы'
+		hdr_cells[1].text = 'Название'
+		hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[1].width = Mm(70)
 		hdr_cells[2].text = 'Конкурсант\n(коллектив)'
+		hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[2].width = Mm(70)
-		hdr_cells[3].text = 'Категория участника'
+		hdr_cells[3].text = 'Номинация'
+		hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[3].width = Mm(60)
 		hdr_cells[4].text = 'Учреждение'
+		hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[4].width = Mm(47)
 
 
@@ -971,16 +998,38 @@ def move_order_view(request):
 		for movie in movies:
 			row_cells = table.add_row().cells
 			row_cells[0].text = str(cnt)
+			row_cells[0].paragraphs[0].runs[0].font.bold = True
+			row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[0].width = Mm(10)
-			row_cells[1].text = movie.name
+
+			row_cells[1].text = movie.name_1
+			if movie.composer_1:
+				row_cells[1].text += ' муз. ' +  movie.composer_1
+			if  movie.poet_1:
+				row_cells[1].text += ' сл. ' +  movie.poet_1
+
+			row_cells[1].text += '\n' + movie.name_2
+			if movie.composer_2:
+				row_cells[1].text += ' муз. ' +  movie.composer_2
+			if  movie.poet_2:
+				row_cells[1].text += ' сл. ' +  movie.poet_2
+			row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[1].width = Mm(70)
-			row_cells[2].text = movie.author.profile.get_full_name()
-			if movie.author.profile.group:
-				row_cells[2].text += ' (' + movie.author.profile.group + ')'
+
+			row_cells[2].text = movie.author.get_full_name()
+			if co_movies[movie.pk]:
+				for co_movie in co_movies[movie.pk]:
+					row_cells[2].text += '\n' + co_movie.coauthor.short_profile_type() + ' ' + co_movie.coauthor.get_file_name()
+			row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[2].width = Mm(70)
-			row_cells[3].text = movie.author.profile.get_category_display()
+
+			row_cells[3].text = str(movie.nomination)
+			row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[3].width = Mm(60)
-			row_cells[4].text = movie.author.profile.institution
+
+			row_cells[4].text = movie.author.main_user.profile.get_institute()
+			row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[4].width = Mm(47)
 
 			cnt += 1
@@ -995,7 +1044,8 @@ def move_order_view(request):
 
 
 	args = {
-		'movies': movies
+		'movies': movies,
+		'co_movies': co_movies
 	}
 	return render(request, 'move_order.html', args)
 

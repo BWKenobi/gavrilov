@@ -142,18 +142,11 @@
                                                     Статистика по оплате
                                                 </a>
                                             </li>
-                                           <!--  <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'move_order' %}">
+                                           <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'move_order' %}" {% if 'move_order' in request.path %}active{% endif %}>
                                                     <span data-feather="minus"></span>
                                                     Порядок выступлений
                                                 </a>
-                                            </li> -->
-                                            <!-- <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'profiles:view_comings' %}">
-                                                    <span data-feather="minus"></span>
-                                                    Регистарция
-                                                </a>
-                                            </li> -->
                                         {% endif %}
                                     </ul>
                                     <li class="nav-item">
@@ -199,7 +192,7 @@
 
                                 {% if request.user.profile.register_accecc %}
                                     <li class="nav-item list-unstyled ">
-                                        <a class="nav-link {% if 'register' in request.path %}active{% endif %}" href="{% url 'profiles:view_comings' %}">
+                                        <a class="nav-link {% if 'view_comings' in request.path %}active{% endif %}" href="{% url 'profiles:view_comings' %}">
                                             <span data-feather="check-circle"></span>
                                             <em><u>Регистарция</u></em>
                                         </a>

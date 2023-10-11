@@ -17,6 +17,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
+from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.shared import Mm, Pt
 
 from django.contrib.auth.models import User
@@ -502,86 +503,107 @@ def view_comings(request):
 
 	movies = Movie.objects.filter(participation = '1', has_come = True).order_by('scene_num')
 
-	# if request.POST:
-	# 	locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+	if request.POST:
+		locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
 
-	# 	dte = date.today()
-	# 	file_name_add = ''
+		dte = date.today()
+		file_name_add = ''
 
-	# 	document = Document()
-	# 	section = document.sections[-1]
-	# 	new_width, new_height = section.page_height, section.page_width
-	# 	section.orientation = WD_ORIENT.LANDSCAPE
-	# 	section.page_width = Mm(297)
-	# 	section.page_height = Mm(210)
-	# 	section.left_margin = Mm(30)
-	# 	section.right_margin = Mm(10)
-	# 	section.top_margin = Mm(10)
-	# 	section.bottom_margin = Mm(10)
-	# 	section.header_distance = Mm(10)
-	# 	section.footer_distance = Mm(10)
+		document = Document()
+		section = document.sections[-1]
+		new_width, new_height = section.page_height, section.page_width
+		section.orientation = WD_ORIENT.LANDSCAPE
+		section.page_width = Mm(297)
+		section.page_height = Mm(210)
+		section.left_margin = Mm(30)
+		section.right_margin = Mm(10)
+		section.top_margin = Mm(10)
+		section.bottom_margin = Mm(10)
+		section.header_distance = Mm(10)
+		section.footer_distance = Mm(10)
 
-	# 	style = document.styles['Normal']
-	# 	font = style.font
-	# 	font.name = 'Times New Roman'
-	# 	font.size = Pt(12)
-
-
-	# 	document.add_paragraph('Порядок выступлений').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-	# 	p = document.add_paragraph()
-	# 	p.add_run(dte.strftime('%d %B %Y')).italic = True
-	# 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+		style = document.styles['Normal']
+		font = style.font
+		font.name = 'Times New Roman'
+		font.size = Pt(12)
 
 
-	# 	table = document.add_table(rows=1, cols=5)
-	# 	table.allow_autifit = False
-	# 	table.style = 'TableGrid'
-	# 	table.columns[0].width = Mm(10)
-	# 	table.columns[1].width = Mm(70)
-	# 	table.columns[2].width = Mm(70)
-	# 	table.columns[3].width = Mm(60)
-	# 	table.columns[4].width = Mm(47)
+		document.add_paragraph('Порядок выступлений').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		p = document.add_paragraph()
+		p.add_run(dte.strftime('%d %B %Y')).italic = True
+		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
 
-	# 	#257
-
-	# 	hdr_cells = table.rows[0].cells
-	# 	hdr_cells[0].text = '№'
-	# 	hdr_cells[0].width = Mm(10)
-	# 	hdr_cells[1].text = 'Название работы'
-	# 	hdr_cells[1].width = Mm(70)
-	# 	hdr_cells[2].text = 'Конкурсант\n(коллектив)'
-	# 	hdr_cells[2].width = Mm(70)
-	# 	hdr_cells[3].text = 'Категория участника'
-	# 	hdr_cells[3].width = Mm(60)
-	# 	hdr_cells[4].text = 'Учреждение'
-	# 	hdr_cells[4].width = Mm(47)
+		table = document.add_table(rows=1, cols=5)
+		table.allow_autifit = False
+		table.style = 'TableGrid'
+		table.columns[0].width = Mm(10)
+		table.columns[1].width = Mm(70)
+		table.columns[2].width = Mm(70)
+		table.columns[3].width = Mm(60)
+		table.columns[4].width = Mm(47)
 
 
-	# 	cnt = 1
-	# 	for movie in movies:
-	# 		row_cells = table.add_row().cells
-	# 		row_cells[0].text = str(cnt)
-	# 		row_cells[0].width = Mm(10)
-	# 		row_cells[1].text = movie.name
-	# 		row_cells[1].width = Mm(70)
-	# 		row_cells[2].text = movie.author.profile.get_full_name()
-	# 		if movie.author.profile.group:
-	# 			row_cells[2].text += ' (' + movie.author.profile.group + ')'
-	# 		row_cells[2].width = Mm(70)
-	# 		row_cells[3].text = movie.author.profile.get_category_display()
-	# 		row_cells[3].width = Mm(60)
-	# 		row_cells[4].text = movie.author.profile.institution
-	# 		row_cells[4].width = Mm(47)
+		#257
 
-	# 		cnt += 1
+		hdr_cells = table.rows[0].cells
+		hdr_cells[0].text = '№'
+		hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[0].width = Mm(10)
+		hdr_cells[1].text = 'Название'
+		hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[1].width = Mm(70)
+		hdr_cells[2].text = 'Конкурсант\n(коллектив)'
+		hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[2].width = Mm(70)
+		hdr_cells[3].text = 'Номинация'
+		hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[3].width = Mm(60)
+		hdr_cells[4].text = 'Учреждение'
+		hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[4].width = Mm(47)
 
-	# 	file_name = 'OrderList (current)'
-	# 	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-	# 	response['Content-Disposition'] = 'attachment; filename=' + file_name +' (' + dte.strftime('%d-%m-%Y') + ').docx'
-	# 	document.save(response)
 
-	# 	return response
+		cnt = 1
+		for movie in movies:
+			row_cells = table.add_row().cells
+			row_cells[0].text = str(cnt)
+			row_cells[0].paragraphs[0].runs[0].font.bold = True
+			row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			row_cells[0].width = Mm(10)
+			row_cells[1].text = str(movie)
+			row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			row_cells[1].width = Mm(70)
+			row_cells[2].text = movie.author.get_full_name()
+			row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			row_cells[2].width = Mm(70)
+			row_cells[3].text = str(movie.nomination)
+			row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			row_cells[3].width = Mm(60)
+			row_cells[4].text = movie.author.main_user.profile.get_institute_zip() + '\n'
+			row_cells[4].text += '(' + movie.author.main_user.profile.get_category_display() + ')'
+			row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			row_cells[4].width = Mm(47)
+
+			cnt += 1
+
+		file_name = 'OrderList (current)'
+		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+		response['Content-Disposition'] = 'attachment; filename=' + file_name +' (' + dte.strftime('%d-%m-%Y') + ').docx'
+		document.save(response)
+
+		return response
 
 
 

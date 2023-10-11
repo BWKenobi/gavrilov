@@ -7,34 +7,33 @@
     <div class="row col-md-12 col-lg-12 mb-3">
       <h4 class="display-5 text-center">Порядок выступлений</h4>
     </div>
-      
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col" class="table-cel-width-5 align-middle">№</th>
-            <th scope="col" class="table-cel-width-30 align-middle">Название работы</th>
-            <th scope="col" class="table-cel-width-30 align-middle">Конкурсант (коллектив)</th>
-            <th scope="col" class="table-cel-width-15 align-middle">Категория участника</th>
-            <th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
-          </tr>
-        </thead>
-        <tbody {% if not request.user.profile.order_block %}id="order-list"{% endif %}>
-          {% for movie in movies %}
-            <tr class="{% if not request.user.profile.order_block %}table_hover{% endif %} {% if movie.author.profile.has_come %} table_has_come{% endif %}" pk-data="{{ movie.pk }}" scene-num="{{ movie.scene_num }}">
-              <th scope="row" class="align-middle table_click">{{ movie.scene_num }}</th>
-              <td class="align-middle table_click">{{ movie.name }}</td>
-              <td class="align-middle table_click">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</td>
-              <td class="align-middle table_click">{{ movie.author.profile.get_category_display }}</td>
-              <td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
       <div class="col-md-12 text-right pb-3">
         <form action="" method="post"> {% csrf_token %}
             <input type="submit" value="Выгрузить список" class="mr-5 btn btn-info">
           </form>
       </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col" class="table-cel-width-5 align-middle">№</th>
+            <th scope="col" class="table-cel-width-30 align-middle">Название</th>
+            <th scope="col" class="table-cel-width-30 align-middle">Конкурсант (коллектив)</th>
+            <th scope="col" class="table-cel-width-15 align-middle">Номинация</th>
+            <th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
+          </tr>
+        </thead>
+        <tbody id="order-list">
+          {% for movie in movies %}
+            <tr class="table_hover {% if movie.has_come %} table_has_come{% endif %}" pk-data="{{ movie.pk }}" scene-num="{{ movie.scene_num }}">
+              <th scope="row" class="align-middle table_click">{{ movie.scene_num }}</th>
+              <td class="align-middle table_click"><b>{{ movie.name_1 }}</b>{% if movie.composer_1 %} муз. {{ movie.composer_1 }}{% endif %}{% if movie.poet_1 %} сл. {{ movie.poet_1 }}{% endif %}<br><b>{{ movie.name_2 }}</b>{% if movie.composer_2 %} муз. {{ movie.composer_2 }}{% endif %}{% if movie.poet_2 %} сл. {{ movie.poet_2 }}{% endif %}</td>
+              <td class="align-middle table_click">{{ movie.author.get_full_name }}{% if co_movies|lookup:movie.pk %}{% for co_movie in co_movies|lookup:movie.pk %}<br>{{ co_movie.coauthor.short_profile_type }} {{ co_movie.coauthor.get_file_name }}{% endfor %}{% endif %}</td>
+              <td class="align-middle table_click">{{ movie.nomination }}</td>
+              <td class="align-middle table_click">{{ movie.author.main_user.profile.get_institute }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
   </div>
 {% endblock %}
 
