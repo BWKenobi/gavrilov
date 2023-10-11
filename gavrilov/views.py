@@ -1028,7 +1028,7 @@ def move_order_view(request):
 			row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[3].width = Mm(60)
 
-			row_cells[4].text = movie.author.main_user.profile.get_institute()
+			row_cells[4].text = movie.author.main_user.profile.get_institute() + '\n' + movie.author.main_user.profile.short_category_type()
 			row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[4].width = Mm(47)
 

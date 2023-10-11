@@ -152,6 +152,19 @@ class Profile(models.Model):
 		return self.institution
 
 
+	def short_category_type(self):
+		CATEGORY_TYPES = {
+			'1': 'Студенты ВПО (профи)',
+			'2': 'Студенты ВПО (любители)',
+			'3': 'Студенты СПО (профи)',
+			'4': 'Студенты СПО (любители)',
+			'5': 'Профи',
+			'6': 'Любители'
+		}
+
+		return CATEGORY_TYPES[self.category]
+
+
 class CoProfile(models.Model):
 	PROFILE_TYPE = (
 		('0', 'участник'),
