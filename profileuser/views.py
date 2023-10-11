@@ -474,12 +474,17 @@ def view_edit_team_coprofile_admin(request, pk):
 
 @login_required(login_url='/login/')
 def view_comings(request):
-	if not request.user.profile.admin_access:
+	if not request.user.profile.register_accecc:
 		return redirect('home')
 
-	movies_list = list(Movie.objects.filter(author__profile__participation = '1').order_by('nomination').distinct().values_list('author', flat=True))
-	movies = Movie.objects.filter(author__profile__participation = '1').order_by('nomination', 'author__profile__category')
-	profiles = Profile.objects.filter(user__pk__in = movies_list)
+	user_list = list(Movie.objects.filter(participation = '1').order_by('nomination').distinct().values_list('author__main_user', flat=True))
+	users = User.objects.filter(pk__in = user_list)
+
+	movie_list = {}
+	for user in users:
+		movie_list[user.pk] = Movie.objects.filter(participation = '1', author__main_user = user)
+
+	movies = Movie.objects.filter(participation = '1').order_by('nomination', 'author__main_user__profile__category')
 	
 	scene_numbers = movies.filter(scene_num=None)
 	scene_numbers_old = movies.filter(scene_num__isnull=False).order_by('-scene_num')
@@ -495,91 +500,94 @@ def view_comings(request):
 			movie.save()
 			cnt += 1
 
-	movies = Movie.objects.filter(author__profile__participation = '1', author__profile__has_come = True).order_by('scene_num')
+	movies = Movie.objects.filter(participation = '1', has_come = True).order_by('scene_num')
 
-	if request.POST:
-		locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+	# if request.POST:
+	# 	locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
 
-		dte = date.today()
-		file_name_add = ''
+	# 	dte = date.today()
+	# 	file_name_add = ''
 
-		document = Document()
-		section = document.sections[-1]
-		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.LANDSCAPE
-		section.page_width = Mm(297)
-		section.page_height = Mm(210)
-		section.left_margin = Mm(30)
-		section.right_margin = Mm(10)
-		section.top_margin = Mm(10)
-		section.bottom_margin = Mm(10)
-		section.header_distance = Mm(10)
-		section.footer_distance = Mm(10)
+	# 	document = Document()
+	# 	section = document.sections[-1]
+	# 	new_width, new_height = section.page_height, section.page_width
+	# 	section.orientation = WD_ORIENT.LANDSCAPE
+	# 	section.page_width = Mm(297)
+	# 	section.page_height = Mm(210)
+	# 	section.left_margin = Mm(30)
+	# 	section.right_margin = Mm(10)
+	# 	section.top_margin = Mm(10)
+	# 	section.bottom_margin = Mm(10)
+	# 	section.header_distance = Mm(10)
+	# 	section.footer_distance = Mm(10)
 
-		style = document.styles['Normal']
-		font = style.font
-		font.name = 'Times New Roman'
-		font.size = Pt(12)
-
-
-		document.add_paragraph('Порядок выступлений').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-		p = document.add_paragraph()
-		p.add_run(dte.strftime('%d %B %Y')).italic = True
-		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+	# 	style = document.styles['Normal']
+	# 	font = style.font
+	# 	font.name = 'Times New Roman'
+	# 	font.size = Pt(12)
 
 
-		table = document.add_table(rows=1, cols=5)
-		table.allow_autifit = False
-		table.style = 'TableGrid'
-		table.columns[0].width = Mm(10)
-		table.columns[1].width = Mm(70)
-		table.columns[2].width = Mm(70)
-		table.columns[3].width = Mm(60)
-		table.columns[4].width = Mm(47)
+	# 	document.add_paragraph('Порядок выступлений').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	# 	p = document.add_paragraph()
+	# 	p.add_run(dte.strftime('%d %B %Y')).italic = True
+	# 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
 
-		#257
-
-		hdr_cells = table.rows[0].cells
-		hdr_cells[0].text = '№'
-		hdr_cells[0].width = Mm(10)
-		hdr_cells[1].text = 'Название работы'
-		hdr_cells[1].width = Mm(70)
-		hdr_cells[2].text = 'Конкурсант\n(коллектив)'
-		hdr_cells[2].width = Mm(70)
-		hdr_cells[3].text = 'Категория участника'
-		hdr_cells[3].width = Mm(60)
-		hdr_cells[4].text = 'Учреждение'
-		hdr_cells[4].width = Mm(47)
+	# 	table = document.add_table(rows=1, cols=5)
+	# 	table.allow_autifit = False
+	# 	table.style = 'TableGrid'
+	# 	table.columns[0].width = Mm(10)
+	# 	table.columns[1].width = Mm(70)
+	# 	table.columns[2].width = Mm(70)
+	# 	table.columns[3].width = Mm(60)
+	# 	table.columns[4].width = Mm(47)
 
 
-		cnt = 1
-		for movie in movies:
-			row_cells = table.add_row().cells
-			row_cells[0].text = str(cnt)
-			row_cells[0].width = Mm(10)
-			row_cells[1].text = movie.name
-			row_cells[1].width = Mm(70)
-			row_cells[2].text = movie.author.profile.get_full_name()
-			if movie.author.profile.group:
-				row_cells[2].text += ' (' + movie.author.profile.group + ')'
-			row_cells[2].width = Mm(70)
-			row_cells[3].text = movie.author.profile.get_category_display()
-			row_cells[3].width = Mm(60)
-			row_cells[4].text = movie.author.profile.institution
-			row_cells[4].width = Mm(47)
+	# 	#257
 
-			cnt += 1
+	# 	hdr_cells = table.rows[0].cells
+	# 	hdr_cells[0].text = '№'
+	# 	hdr_cells[0].width = Mm(10)
+	# 	hdr_cells[1].text = 'Название работы'
+	# 	hdr_cells[1].width = Mm(70)
+	# 	hdr_cells[2].text = 'Конкурсант\n(коллектив)'
+	# 	hdr_cells[2].width = Mm(70)
+	# 	hdr_cells[3].text = 'Категория участника'
+	# 	hdr_cells[3].width = Mm(60)
+	# 	hdr_cells[4].text = 'Учреждение'
+	# 	hdr_cells[4].width = Mm(47)
 
-		file_name = 'OrderList (current)'
-		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-		response['Content-Disposition'] = 'attachment; filename=' + file_name +' (' + dte.strftime('%d-%m-%Y') + ').docx'
-		document.save(response)
 
-		return response
+	# 	cnt = 1
+	# 	for movie in movies:
+	# 		row_cells = table.add_row().cells
+	# 		row_cells[0].text = str(cnt)
+	# 		row_cells[0].width = Mm(10)
+	# 		row_cells[1].text = movie.name
+	# 		row_cells[1].width = Mm(70)
+	# 		row_cells[2].text = movie.author.profile.get_full_name()
+	# 		if movie.author.profile.group:
+	# 			row_cells[2].text += ' (' + movie.author.profile.group + ')'
+	# 		row_cells[2].width = Mm(70)
+	# 		row_cells[3].text = movie.author.profile.get_category_display()
+	# 		row_cells[3].width = Mm(60)
+	# 		row_cells[4].text = movie.author.profile.institution
+	# 		row_cells[4].width = Mm(47)
+
+	# 		cnt += 1
+
+	# 	file_name = 'OrderList (current)'
+	# 	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+	# 	response['Content-Disposition'] = 'attachment; filename=' + file_name +' (' + dte.strftime('%d-%m-%Y') + ').docx'
+	# 	document.save(response)
+
+	# 	return response
+
+
 
 	args ={
-		'profiles': profiles, 
+		'users': users,
+		'movie_list': movie_list
 	}
 	return render(request, 'profileuser/view_comings.html', args)
 
@@ -604,11 +612,11 @@ def change_come_flag(request):
 	pk = request.GET['pk']
 	checked = request.GET['checked']
 
-	profile = Profile.objects.get(pk = pk)
+	movie = Movie.objects.get(pk = pk)
 	if checked == '1':
-		profile.has_come = True
+		movie.has_come = True
 	else:
-		profile.has_come = False
-	profile.save()
+		movie.has_come = False
+	movie.save()
 
 	return HttpResponse(True)

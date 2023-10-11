@@ -19,6 +19,7 @@
         <link href="{% static 'css/bootstrap.css' %}?ver={{version}}" rel="stylesheet">
         <link href="{% static 'css/style.css' %}?ver={{version}}" rel="stylesheet">
         <link href="{% static 'css/adaptive.css' %}?ver={{version}}" rel="stylesheet">
+        <link href="{% static 'css/toastr.min.css' %}?ver={{version}}" rel="stylesheet">
         <style>
             .bd-placeholder-img {
                 font-size: 1.125rem;
@@ -196,6 +197,16 @@
                                     <div class="border-top my-3"></div>
                                 {% endif %}
 
+                                {% if request.user.profile.register_accecc %}
+                                    <li class="nav-item list-unstyled ">
+                                        <a class="nav-link {% if 'register' in request.path %}active{% endif %}" href="{% url 'profiles:view_comings' %}">
+                                            <span data-feather="check-circle"></span>
+                                            <em><u>Регистарция</u></em>
+                                        </a>
+                                    </li>
+                                    <div class="border-top my-3"></div>
+                                {% endif %}
+
                                 {% if request.user.profile.juri_accecc or request.user.profile.chef_juri_accecc %}
                                     {% if request.user.profile.juri_type == '2' %}
                                     <li class="nav-item">
@@ -356,6 +367,7 @@
             <script src="{% static 'js/dashboard.js' %}"></script>
             <script src="{% static 'js/scripts.js' %}?ver={{version}}"></script>
             <script src="{% static 'js/Sortable.min.js' %}?ver={{version}}"></script>
+            <script src="{% static 'js/toastr.min.js' %}?ver={{version}}"></script>
         {% endblock %}
     </body>
 

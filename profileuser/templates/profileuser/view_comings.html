@@ -5,37 +5,36 @@
 {% block content %}
 	<div class="row col-md-12 col-lg-12 ">
 		<div class="row col-md-12 col-lg-12 mb-3">
-			<h4 class="display-5 text-center">Регистрация коллективов</h4>
+			<h4 class="display-5 text-center">Регистрация</h4>
 		</div>
-
-		<div class="mx-auto  col-md-12 col-lg-12 mb-5">
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col" class="table-cel-width-5 align-middle">№</th>
-						<th scope="col" class="table-cel-width-65 align-middle">Конкурсант (коллектив)</th>
-						<th scope="col" class="table-cel-width-20 align-middle">Учреждение</th>
-						<th scope="col" class="table-cel-width-10 align-middle text-center">Прибытие</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for profile in profiles %}
-						<tr class="">
-							<th scope="row" class="align-middle">{{ forloop.counter }}</th>
-							<td class="align-middle">{{ profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ profile.group }})</b>{% endif %}</td>
-							<td class="align-middle">{{ profile.institution }}</td>
-							<td class="align-middle text-center"><input type="checkbox" name="{{ profile.pk }}" {% if profile.has_come %}checked{% endif %}></td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-
 		<div class="col-md-12 text-right pb-3">
 			<form action="" method="post"> {% csrf_token %}
 				<input type="submit" value="Выгрузить порядок выступлений">
 			</form>
 		</div>
+		{% for user in users %}
+		<h5 class="text-danger"><b>{{ user.profile.get_institute_fullname }}</b></h5>
+			<div class="mx-auto  col-md-12 col-lg-12 mb-5">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col" class="table-cel-width-5 align-middle">№</th>
+							<th scope="col" class="table-cel-width-85 align-middle">Участник</th>
+							<th scope="col" class="table-cel-width-10 align-middle text-center">Прибытие</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for movie in movie_list|lookup:user.pk %}
+							<tr class="">
+								<th scope="row" class="align-middle">{{ forloop.counter }}</th>
+								<td class="align-middle"><b>{{ movie.author.get_full_name }}</b> ({{ movie }})</td>
+								<td class="align-middle text-center"><input class="form-control" type="checkbox" name="{{ movie.pk }}" {% if movie.has_come %}checked{% endif %}></td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endfor %}
 	</div>
 {% endblock %}
 
@@ -58,6 +57,24 @@
 						'checked': checked
 					},
 					success: function(data){
+						toastr.options = {
+						  "closeButton": false,
+						  "debug": false,
+						  "newestOnTop": false,
+						  "progressBar": false,
+						  "positionClass": "toast-bottom-right",
+						  "preventDuplicates": false,
+						  "onclick": null,
+						  "showDuration": "300",
+						  "hideDuration": "1000",
+						  "timeOut": "3000",
+						  "extendedTimeOut": "3000",
+						  "showEasing": "swing",
+						  "hideEasing": "linear",
+						  "showMethod": "fadeIn",
+						  "hideMethod": "fadeOut"
+						}
+						toastr["success"]("Статус обновлен!");
 					}
 				})
 			});

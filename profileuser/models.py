@@ -53,11 +53,13 @@ class Profile(models.Model):
 	member_access= models.BooleanField("Права участника", default=True)
 	admin_access= models.BooleanField("Права администратора", default=False)
 	message_accecc = models.BooleanField("Права рассылки оповещений", default=False)
+	register_accecc = models.BooleanField("Права встречающего", default=False)
+
 	juri_accecc = models.BooleanField("Член жюри", default=False)
 	chef_juri_accecc = models.BooleanField("Председатель жюри", default=False)
 	juri_type = models.CharField(verbose_name='Тип судейства', max_length=1, choices=JURI_TYPE, default='1')
 
-	has_come= models.BooleanField("Факт прибытия", default=False)
+	#has_come= models.BooleanField("Факт прибытия", default=False)
 
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 
@@ -142,6 +144,12 @@ class Profile(models.Model):
 			return self.get_file_name()
 
 		return self.institution_shot
+
+	def get_institute_fullname(self):
+		if self.less_institution:
+			return self.get_file_name()
+
+		return self.institution
 
 
 class CoProfile(models.Model):
