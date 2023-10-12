@@ -1008,12 +1008,17 @@ def move_order_view(request):
 				row_cells[1].text += ' муз. ' +  movie.composer_1
 			if  movie.poet_1:
 				row_cells[1].text += ' сл. ' +  movie.poet_1
+			if movie.region_1:
+				row_cells[1].text += '\n' + 'Регион: ' + movie.region_1
 
-			row_cells[1].text += '\n' + movie.name_2
+			row_cells[1].text += '\n\n' + movie.name_2
 			if movie.composer_2:
 				row_cells[1].text += ' муз. ' +  movie.composer_2
 			if  movie.poet_2:
 				row_cells[1].text += ' сл. ' +  movie.poet_2
+			if movie.region_2:
+				row_cells[1].text += '\n' + 'Регион: ' + movie.region_2
+
 			row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[1].width = Mm(70)
 
