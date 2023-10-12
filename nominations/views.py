@@ -19,15 +19,18 @@ from marks.forms import PictureMarkForm, MovieMarkForm
 
 
 @login_required(login_url='/login/')
-def view_art_nomination(request, pk, tp = None):
+def view_art_nomination(request, pk):
 	if not request.user.profile.juri_accecc and not request.user.profile.chef_juri_accecc:
 		return redirect('home')
 
 	nomination = ArtNomination.objects.get(pk=pk)
-	if tp:
-		pictures = Picture.objects.filter(nomination=nomination, author__profile__participation = '1')
-	else:
-		pictures = Picture.objects.filter(nomination=nomination, author__profile__participation = '2')
+	pictures = Picture.objects.filter(nomination=nomination, participation = '2')
+
+	criterai_one = 'Соответствие названию, полнота раскрытия'
+	criterai_two = 'Техническое воспроизведение'
+	criterai_three = 'Авторское новаторство'
+	criterai_four = 'Эстетика подачи работы'
+	criterai_five = 'Визуальное восприятие'
 
 	if request.POST:
 		criterai_one = request.POST.getlist('criterai_one')
@@ -129,9 +132,9 @@ def view_art_nomination(request, pk, tp = None):
 
 	forms = {}
 	for picture in pictures:
-		mark = PictureMark.objects.filter(expert=request.user, work=picture)
+		mark = PictureMark.objects.filter(expert=request.user, work=picture).first()
 		if mark:
-			form = PictureMarkForm(instance=mark[0], label_suffix='')
+			form = PictureMarkForm(instance=mark, label_suffix='')
 		else:
 			form = PictureMarkForm(label_suffix='')
 
@@ -141,8 +144,14 @@ def view_art_nomination(request, pk, tp = None):
 		'nomination': nomination, 
 		'pictures': pictures,
 		'nomination_pk': pk,
-		'forms': forms,
-		'tp': tp
+		'criterai_one': criterai_one,
+		'criterai_two': criterai_two,
+		'criterai_three': criterai_three,
+		'criterai_four': criterai_four,
+		'criterai_five': criterai_five,
+
+
+		'forms': forms
 	}
 	return render(request, 'nominations/view_art_nominations.html', args)
 

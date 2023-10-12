@@ -218,22 +218,6 @@
                                             </li>
                                         {% endfor %}
                                     </ul>
-                                    <li class="nav-item">
-                                        <div class="nav-link">
-                                            <span data-feather="award"></span>
-                                            Оценивание очных работ (ДПИ)
-                                        </div>
-                                    </li>
-                                    <ul>
-                                        {% for art in arts %}
-                                             <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'nominations:view_art_nomination' pk=art.pk tp=1 %}">
-                                                    <span data-feather="image"></span>
-                                                    <em><u>{{ art }}</u></em>
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
                                     {% endif %}
                                     {% if request.user.profile.juri_type == '1' %}
                                     <li class="nav-item">

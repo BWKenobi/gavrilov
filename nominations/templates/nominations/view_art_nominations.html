@@ -6,7 +6,7 @@
 	<div class="row col-md-12 col-lg-12 ">
 		<form action="" method="post" enctype="multipart/form-data" autocomplete="false" class="col-md-12 col-lg-12"> {% csrf_token %}
 			<div class="mx-auto mb-2 col-md-12 col-lg-12">
-				<h4 class="display-5 text-center">Номинация: <b>{{ nomination }}</b> ({% if tp %}очно{% else %}заочно{% endif %})</h4>
+				<h4 class="display-5 text-center">Номинация: <b>{{ nomination }}</b> (заочно)</h4>
 				<h5 class="text-center text-danger">После выставления оценок, нажмите кнопку <b>"Сохранить оценки работ"</b> внизу страницы</h5>
 				<h4 class="text-center text-danger"><b>Оценки от "0" до "10" без десятых.</b></h4>
 
@@ -25,21 +25,51 @@
 							{% for pict in pictures %}
 								<div class="mx-auto text-center">
 									<h3>{{ pict.name }}</h3>
+									{% if pict.technique %}<h5><b>Техника:</b> {{ pict.technique }}</h5>{% endif %}
+								</div>
+								<div class="row">
+									<div class="col-md-12 text-left">
+										<b>Категория:</b> {{ pict.author.main_user.profile.get_category_display }}
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<b>Год создания работы:</b> {{ pict.year }}
+									</div>
+								</div>
+								<div class="row  mb-5">
+									<div class="col-md-12">
+										<b>Возрас на момент создания:</b> {{ pict.ages }}
+									</div>
 								</div>
 
-								{% if pict.file %}
-								<div class="text-center mb-5 col-md-10 mx-auto">
-									<img src="{{ pict.file.url }}" class="rounded img-fluid shadow" style="max-height: 80vh;">
-								</div>
+								{% if not pict.add_view_1 and not pict.add_view_2 %}
+									{% if pict.file %}
+									<div class="text-center mb-5 col-md-10 mx-auto">
+										<img src="{{ pict.file.url }}" class="rounded img-fluid shadow" style="max-height: 80vh;">
+									</div>
+									{% endif %}
+								{% else %}
+									<div class="row">
+										{% if pict.file %}
+											<div class="text-center mb-5 col-md-4 mx-auto">
+												<img src="{{ pict.file.url }}" class="rounded img-fluid shadow" style="width: 100%;">
+											</div>
+										{% endif %}
+										{% if pict.add_view_1 %}
+											<div class="text-center mb-5 col-md-4 mx-auto">
+												<img src="{{ pict.add_view_1.url }}" class="rounded img-fluid shadow" style="width: 100%;">
+											</div>
+										{% endif %}
+										{% if pict.add_view_2 %}
+											<div class="text-center mb-5 col-md-4 mx-auto">
+												<img src="{{ pict.add_view_2.url }}" class="rounded img-fluid shadow" style="width: 100%;">
+											</div>
+										{% endif %}
+									</div>
 								{% endif %}
-								<div class="row  mx-auto align-middle col-md-10 col-lg-10 mb-5">
-									<div class="col-md-6">
-										<b>Техника:</b> {{ pict.technique }}
-									</div>
-									<div class="col-md-6 text-right">
-										<b>Категория:</b> {{ pict.author.profile.get_category_display }}
-									</div>
-								</div>
+
+
 								{% with form=forms|lookup:pict.pk %}
 									<div class="row  mx-auto align-middle col-md-10 col-lg-10">
 										<div class="text-center col-md-2 col-lg-2 mx-auto">
@@ -76,7 +106,7 @@
 										</div>
 									</div>
 								{% endwith %}
-								<hr>
+								<hr style="border-width: 5px; border-color: black;">
 							{% endfor %}
 						</div>
 					</div>

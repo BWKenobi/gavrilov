@@ -26,7 +26,7 @@
           {% for movie in movies %}
             <tr class="table_hover {% if movie.has_come %} table_has_come{% endif %}" pk-data="{{ movie.pk }}" scene-num="{{ movie.scene_num }}">
               <th scope="row" class="align-middle table_click">{{ movie.scene_num }}</th>
-              <td class="align-middle table_click"><b>{{ movie.name_1 }}</b>{% if movie.composer_1 %} муз. {{ movie.composer_1 }}{% endif %}{% if movie.poet_1 %} сл. {{ movie.poet_1 }}{% endif %}<br><b>{{ movie.name_2 }}</b>{% if movie.composer_2 %} муз. {{ movie.composer_2 }}{% endif %}{% if movie.poet_2 %} сл. {{ movie.poet_2 }}{% endif %}</td>
+              <td class="align-middle table_click"><b>{{ movie.name_1 }}</b>{% if movie.composer_1 %} муз. {{ movie.composer_1 }}{% endif %}{% if movie.poet_1 %} сл. {{ movie.poet_1 }}{% endif %}{% if movie.region_1 %}<br><b>Регион:</b> {{ movie.region_1 }}{% endif %}<br><br><b>{{ movie.name_2 }}</b>{% if movie.composer_2 %} муз. {{ movie.composer_2 }}{% endif %}{% if movie.poet_2 %} сл. {{ movie.poet_2 }}{% endif %}{% if movie.region_2 %}<br><b>Регион:</b> {{ movie.region_2 }}{% endif %}</td>
               <td class="align-middle table_click">{{ movie.author.get_full_name }}{% if co_movies|lookup:movie.pk %}{% for co_movie in co_movies|lookup:movie.pk %}<br>{{ co_movie.coauthor.short_profile_type }} {{ co_movie.coauthor.get_file_name }}{% endfor %}{% endif %}</td>
               <td class="align-middle table_click">{{ movie.nomination }}</td>
               <td class="align-middle table_click">{{ movie.author.main_user.profile.get_institute }}<br><em>{{ movie.author.main_user.profile.short_category_type }}</em></td>
