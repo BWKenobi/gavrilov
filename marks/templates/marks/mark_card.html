@@ -5,9 +5,19 @@
 	<div class="row col-md-12 col-lg-12 mark-card">
 		{% if movie %}
 		<div class="mx-auto mb-1 col-md-12 col-lg-12 mb-5">
-			<p class="text-center mb-0">{{ movie.author.profile.get_full_name }}{% if movie.author.profile.group %} <b>({{ movie.author.profile.group }})</b>{% endif %}</p>
-			<p class="text-center mb-0"><b>Категория участника: {{ movie.author.profile.get_category_display }}</b></p>
-			<p class="text-center mb-0">{{ movie.name }}</p>
+			<p class="text-center mb-0"><b style="font-size: 150%;">{{ movie.author.get_full_name }}</b><br>{{ movie.nomination}}</p>
+			<p class="text-center mb-0"><b>Категория участника: {{ movie.author.main_user.profile.get_category_display }}</b></p>
+			<hr>
+			<p class="text-left mt-3 mb-0">
+				<div class="row">
+					<div class="col-md-6">
+						<b>{{ movie.name_1 }}</b>{% if movie.composer_1 %} муз. {{ movie.composer_1 }}{% endif %}{% if movie.poet_1 %} сл. {{ movie.poet_1 }}{% endif %}{% if movie.region_1 %}<br><b>Регион:</b> {{ movie.region_1 }}{% endif %}
+					</div>
+					<div class="col-md-6">
+						<b>{{ movie.name_2 }}</b>{% if movie.composer_2 %} муз. {{ movie.composer_2 }}{% endif %}{% if movie.poet_2 %} сл. {{ movie.poet_2 }}{% endif %}{% if movie.region_2 %}<br><b>Регион:</b> {{ movie.region_2 }}{% endif %}
+					</div>
+				</div>
+			</p>
 		</div>
 		<form action="" method="post" autocomplete="false" class="col-md-12"> {% csrf_token %}
 			<div class="row">
@@ -230,6 +240,24 @@
 						'pk': pk
 					},
 					success: function(data){
+						toastr.options = {
+						  "closeButton": false,
+						  "debug": false,
+						  "newestOnTop": false,
+						  "progressBar": false,
+						  "positionClass": "toast-top-right",
+						  "preventDuplicates": false,
+						  "onclick": null,
+						  "showDuration": "300",
+						  "hideDuration": "1000",
+						  "timeOut": "3000",
+						  "extendedTimeOut": "3000",
+						  "showEasing": "swing",
+						  "hideEasing": "linear",
+						  "showMethod": "fadeIn",
+						  "hideMethod": "fadeOut"
+						}
+						toastr["success"]("Оценка сохранена!");
 					}
 				});
 			});

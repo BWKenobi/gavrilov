@@ -63,7 +63,7 @@ def mark_card(request):
 	else:
 		pk = 1
 
-	movies = Movie.objects.filter(author__profile__has_come = True, author__profile__participation = '1').order_by('scene_num')
+	movies = Movie.objects.filter(has_come = True, participation = '1').order_by('scene_num')
 	
 	criteria1 = 'Сложность и трактовка музыкальных произведений'
 	criteria2 = 'Интонационная выразительность'
@@ -83,14 +83,14 @@ def mark_card(request):
 					break
 				old_movie = movie
 
-		marks = MovieMark.objects.filter(expert=request.user, work=movie)
+		marks = MovieMark.objects.filter(expert=request.user, work=movie).first()
 		if marks:
-			if marks[0].criterai_one:
-				mark1 = marks[0].criterai_one
-			if marks[0].criterai_two:
-				mark2 = marks[0].criterai_two
-			if marks[0].criterai_three:
-				mark3 = marks[0].criterai_three
+			if marks.criterai_one:
+				mark1 = marks.criterai_one
+			if marks.criterai_two:
+				mark2 = marks.criterai_two
+			if marks.criterai_three:
+				mark3 = marks.criterai_three
 
 		pk = movie.scene_num
 
