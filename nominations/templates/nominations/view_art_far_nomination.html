@@ -47,7 +47,7 @@
 										<div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="type_{{ user.pk }}" role="tab-panel">
 											{% with mark_container|lookup:user.pk as marks %}
 
-											<div class="row">
+											<div class="row mb-3">
 												<div class="col-md-3"><b>{{ criterai1 }}</b></div>
 												<div class="row text-center col-md-9" data-criteria='1' data-pk="{{ user.pk }}">
 													<div class="col-1-my">
@@ -82,7 +82,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="row">
+											<div class="row mb-3">
 												<div class="col-md-3"><b>{{ criterai2 }}</b></div>
 												<div class="row text-center col-md-9" data-criteria='2' data-pk="{{ user.pk }}">
 													<div class="col-1-my">
@@ -117,7 +117,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="row">
+											<div class="row mb-3">
 												<div class="col-md-3"><b>{{ criterai3 }}</b></div>
 												<div class="row text-center col-md-9" data-criteria='3' data-pk="{{ user.pk }}">
 													<div class="col-1-my">
@@ -152,7 +152,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="row">
+											<div class="row mb-3">
 												<div class="col-md-3"><b>{{ criterai4 }}</b></div>
 												<div class="row text-center col-md-9" data-criteria='4' data-pk="{{ user.pk }}">
 													<div class="col-1-my">
