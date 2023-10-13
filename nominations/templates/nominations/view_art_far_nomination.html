@@ -37,7 +37,7 @@
 									<ul class="nav nav-tabs" id="myTab">
 										{% for user in users %}
 											<li class="nav-item">
-												<a class="nav-link {% if forloop.counter == 1 %}active{% endif %}" href="#type_{{ user.pk }}">{{ user.profile.get_io_name }}</a>
+												<a class="nav-link {% if forloop.counter == 1 %}active{% endif %}" href="#type_{{ user.pk }}">{{ user.profile.get_file_name }}</a>
 											</li>
 										{% endfor %}
 									</ul>
