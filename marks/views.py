@@ -199,3 +199,35 @@ def ajax_set_pict_far_marks(request):
 			criterai_five = mark5,
 		)
 	return HttpResponse(True)
+
+
+def ajax_set_movie_far_marks(request):
+	pk = int(request.GET['pk'])
+	user_pk = int(request.GET['user_pk'])
+	user = User.objects.get(pk = user_pk)
+
+	mark1 = int(request.GET['mark1'])
+	mark2 = int(request.GET['mark2'])
+	mark3 = int(request.GET['mark3'])
+
+	marks = MovieMark.objects.filter(expert=user, work=pk).last()
+
+	if marks:
+		MovieMark.objects.filter(expert=user, work=pk).exclude(pk = marks.pk).delete()
+
+	if marks:
+		marks.criterai_one = mark1
+		marks.criterai_two = mark2
+		marks.criterai_three = mark3
+
+		marks.save()
+	else:
+		MovieMark.objects.create(
+			expert=user,
+			work = Movie.objects.get(pk=pk),
+			criterai_one = mark1,
+			criterai_two = mark2,
+			criterai_three = mark3,
+
+		)
+	return HttpResponse(True)

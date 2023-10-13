@@ -790,7 +790,7 @@ def juri_new(request):
 	if request.method=='POST':
 		form = NewJuriForm(request.POST)
 		if form.is_valid():
-			password = '1QaZ2WsX3EdC'#User.objects.make_random_password(8)
+			password = '12345678'#User.objects.make_random_password(8)
 			new_user = form.save(commit=False)
 			new_user.username = new_user.email
 			new_user.is_active = True

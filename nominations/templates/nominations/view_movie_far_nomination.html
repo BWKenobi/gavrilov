@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="row col-md-12 col-lg-12 ">
+		<form action="" method="post" enctype="multipart/form-data" autocomplete="false" class="col-md-12 col-lg-12"> {% csrf_token %}
+
+			{{form.as_p}}
+
+			<form action="" method="post" autocomplete="false"> {% csrf_token %}
+				<div class="tab-content col-md-12 col-lg-12">
+					<div class="tab-pane {% if not master %}active{% endif %}" id="pictures" role="tab-panel">
+						<div class="mx-auto mb-5 col-md-12 col-lg-12">
+								<div class="mx-auto text-center">
+									<h5>{{ movie.name_1 }} - {{ movie.name_2 }}</h5>
+									<h5>{{ movie.nomination }}</h5>
+								</div>
+								<div class="row">
+									<div class="col-md-12 text-left">
+										<b>Категория:</b> {{ movie.author.main_user.profile.get_category_display }}
+									</div>
+								</div>
+
+
+								<div class="mx-auto my-5 col-md-12 col-lg-12">
+									<ul class="nav nav-tabs" id="myTab">
+										{% for user in users %}
+											<li class="nav-item">
+												<a class="nav-link {% if forloop.counter == 1 %}active{% endif %}" href="#type_{{ user.pk }}">{{ user.profile.get_file_name }}</a>
+											</li>
+										{% endfor %}
+									</ul>
+								</div>
+
+
+								<div class="tab-content col-md-12 col-lg-12">
+									{% for user in users %}
+										<div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="type_{{ user.pk }}" role="tab-panel">
+											{% with mark_container|lookup:user.pk as marks %}
+
+											<div class="row mb-3">
+												<div class="col-md-3"><b>{{ criterai1 }}</b></div>
+												<div class="row text-center col-md-9" data-criteria='1' data-pk="{{ user.pk }}">
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark1 == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark1 == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark1 == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark1 == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark1 == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark1 == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark1 == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark1 == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark1 == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark1 == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+													</div>
+												</div>
+											</div>
+											<div class="row mb-3">
+												<div class="col-md-3"><b>{{ criterai2 }}</b></div>
+												<div class="row text-center col-md-9" data-criteria='2' data-pk="{{ user.pk }}">
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark2 == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark2 == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark2 == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark2 == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark2 == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark2 == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark2 == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark2 == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark2 == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark2 == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+													</div>
+												</div>
+											</div>
+											<div class="row mb-3">
+												<div class="col-md-3"><b>{{ criterai3 }}</b></div>
+												<div class="row text-center col-md-9" data-criteria='3' data-pk="{{ user.pk }}">
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark3 == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark3 == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark3 == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark3 == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark3 == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark3 == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark3 == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark3 == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark3 == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+													</div>
+													<div class="col-1-my">
+														<button type="button" class="btn btn-block mb-1 {% if marks.mark3 == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+													</div>
+												</div>
+											</div>
+											{% endwith %}
+										</div>
+									{% endfor %}
+								</div>
+								<hr style="border-width: 5px; border-color: black;">
+						</div>
+					</div>
+				</div>
+			</form>
+		</form>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#myTab a').on('click', function(e){
+				e.preventDefault();
+				$(this).tab('show')
+			});
+
+			$('label[for=id_pictures]').remove();
+
+			$('button[type=button]').click(function(){
+				if ($(this).hasClass('btn-danger')){
+					$(this).removeClass('btn-danger');
+					$(this).addClass('btn-outline-secondary');
+				}else{
+					$(this).parent().parent().parent().find('button').removeClass('btn-danger');
+					$(this).parent().parent().parent().find('button').removeClass('btn-outline-secondary');
+					$(this).parent().parent().parent().find('button').addClass('btn-outline-secondary');
+					$(this).removeClass('btn-outline-secondary');
+					$(this).addClass('btn-danger');
+				}
+
+
+				url = "{% url 'marks:ajax_set_movie_far_marks' %}";
+				mark1 = 0;
+				mark2 = 0;
+				mark3 = 0;
+
+				user_pk = $(this).parent().parent().attr('data-pk');
+
+				element = $(this).parent().parent().parent().parent().find('div[data-criteria=1]').find('.btn-danger');
+				if (element.length>0)
+					mark1 = $(element).text();
+				element = $(this).parent().parent().parent().parent().find('div[data-criteria=2]').find('.btn-danger');
+				if (element.length>0)
+					mark2 = $(element).text();
+				element = $(this).parent().parent().parent().parent().find('div[data-criteria=3]').find('.btn-danger');
+				if (element.length>0)
+					mark3 = $(element).text();
+
+
+				$.ajax({
+					url: url,
+					data: {
+						'mark1': mark1,
+						'mark2': mark2,
+						'mark3': mark3,
+						'user_pk': user_pk,
+						'pk': "{{ pk }}"
+					},
+					success: function(data){
+						toastr.options = {
+						  "closeButton": false,
+						  "debug": false,
+						  "newestOnTop": false,
+						  "progressBar": false,
+						  "positionClass": "toast-top-right",
+						  "preventDuplicates": false,
+						  "onclick": null,
+						  "showDuration": "300",
+						  "hideDuration": "1000",
+						  "timeOut": "3000",
+						  "extendedTimeOut": "3000",
+						  "showEasing": "swing",
+						  "hideEasing": "linear",
+						  "showMethod": "fadeIn",
+						  "hideMethod": "fadeOut"
+						}
+						toastr["success"]("Оценка сохранена!");
+					}
+				});
+			});
+
+
+			$('#id_movies').change(function(){
+				url = "{% url 'nominations:view_movie_far_nomination' %}";
+				$('.content-blocker').attr('style', 'display: block !important;');
+				document.location.href = url + $(this).val();
+			});
+		});
+
+
+	</script>
+{% endblock %}
+

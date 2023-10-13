@@ -163,7 +163,7 @@
                                             </a>
                                         </li>
                                         <li class="nav-item list-unstyled ">
-                                            <a class="nav-link" href="">
+                                            <a class="nav-link {% if 'view-movie-far-nomination' in request.path %}active{% endif %}" href="{% url 'nominations:view_movie_far_nomination' %}">
                                                 <span data-feather="image"></span>
                                                 <em><u>Вокал (заочно)</u></em>
                                             </a>

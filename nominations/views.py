@@ -18,7 +18,7 @@ from movies.models import Movie
 from .models import ArtNomination, VocalNomination
 from marks.models import PictureMark, MovieMark
 from marks.forms import PictureMarkForm, MovieMarkForm
-from .forms import PictureFilter
+from .forms import PictureFilter, MovieFilter
 
 
 @login_required(login_url='/login/')
@@ -79,7 +79,6 @@ def view_art_nomination(request, pk):
 		'mark5_list': mark5_list,
 	}
 	return render(request, 'nominations/view_art_nominations.html', args)
-
 
 
 @login_required(login_url='/login/')
@@ -243,3 +242,60 @@ def view_movie_nomination(request, pk):
 	}
 	return render(request, 'nominations/view_movie_nominations.html', args)
 
+
+
+@login_required(login_url='/login/')
+def view_movie_far_nomination(request, pk = None):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	movies = Movie.objects.filter(participation = '2').order_by('author__surname', 'author__name', 'author__team')
+	if not pk:
+		pk = movies.first().pk
+
+
+	form = MovieFilter(movies = movies, selected = str(pk))
+
+	movie = Movie.objects.get(pk = pk)
+
+	users = User.objects.filter(profile__juri_accecc = True, profile__juri_type = '2')
+
+	criterai1 = 'Сложность и трактовка'
+	criterai2 = 'Интонационная выразительность'
+	criterai3 = 'Артистизм'
+
+	mark_container = {}
+
+	for user in users:
+		marks = MovieMark.objects.filter(expert=user, work=movie).first()
+		mark1 = None
+		mark2 = None
+		mark3 = None
+
+
+		if marks:
+			if marks.criterai_one:
+				mark1 = marks.criterai_one
+			if marks.criterai_two:
+				mark2 = marks.criterai_two
+			if marks.criterai_three:
+				mark3 = marks.criterai_three
+
+		mark_container[user.pk] = {
+			'mark1': mark1,
+			'mark2': mark2,
+			'mark3': mark3,
+		}
+
+	print(mark_container)
+	args = {
+		'form': form,
+		'pk': pk,
+		'movie': movie,
+		'users': users,
+		'mark_container': mark_container,
+		'criterai1': criterai1,
+		'criterai2': criterai2,
+		'criterai3': criterai3,
+	}
+	return render(request, 'nominations/view_movie_far_nomination.html', args)
