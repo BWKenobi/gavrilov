@@ -44,40 +44,62 @@ def view_art_nomination(request, pk):
 	for picture_all in pictures_all:
 		copictures[picture_all.pk] = CoPicturee.objects.filter(picture=picture_all)
 
-	pictures_1_1 = Picture.objects.filter(nomination=nomination, author__profile__category='1', author__profile__participation='1')
-	pictures_2_1 = Picture.objects.filter(nomination=nomination, author__profile__category='2', author__profile__participation='1')
-	pictures_3_1 = Picture.objects.filter(nomination=nomination, author__profile__category='3', author__profile__participation='1')
-	pictures_4_1 = Picture.objects.filter(nomination=nomination, author__profile__category='4', author__profile__participation='1')
-	pictures_1_2 = Picture.objects.filter(nomination=nomination, author__profile__category='1', author__profile__participation='2')
-	pictures_2_2 = Picture.objects.filter(nomination=nomination, author__profile__category='2', author__profile__participation='2')
-	pictures_3_2 = Picture.objects.filter(nomination=nomination, author__profile__category='3', author__profile__participation='2')
-	pictures_4_2 = Picture.objects.filter(nomination=nomination, author__profile__category='4', author__profile__participation='2')
+	pictures_1_1 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='1', participation='1')
+	pictures_2_1 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='2', participation='1')
+	pictures_3_1 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='3', participation='1')
+	pictures_4_1 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='4', participation='1')
+	pictures_5_1 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='5', participation='1')
+	pictures_6_1 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='6', participation='1')
+
+	pictures_1_2 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='1', participation='2')
+	pictures_2_2 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='2', participation='2')
+	pictures_3_2 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='3', participation='2')
+	pictures_4_2 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='4', participation='2')
+	pictures_5_2 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='5', participation='2')
+	pictures_6_2 = Picture.objects.filter(nomination=nomination, author__main_user__profile__category='6', participation='2')
 
 	marks_1_1 = PictureMark.objects.filter(work__in = pictures_1_1)
 	marks_2_1 = PictureMark.objects.filter(work__in = pictures_2_1)
 	marks_3_1 = PictureMark.objects.filter(work__in = pictures_3_1)
 	marks_4_1 = PictureMark.objects.filter(work__in = pictures_4_1)
+	marks_5_1 = PictureMark.objects.filter(work__in = pictures_5_1)
+	marks_6_1 = PictureMark.objects.filter(work__in = pictures_6_1)
+
 	marks_1_2 = PictureMark.objects.filter(work__in = pictures_1_2)
 	marks_2_2 = PictureMark.objects.filter(work__in = pictures_2_2)
 	marks_3_2 = PictureMark.objects.filter(work__in = pictures_3_2)
 	marks_4_2 = PictureMark.objects.filter(work__in = pictures_4_2)
+	marks_5_2 = PictureMark.objects.filter(work__in = pictures_5_2)
+	marks_6_2 = PictureMark.objects.filter(work__in = pictures_6_2)
 
 	ratings_1_1 = {}
 	ratings_2_1 = {}
 	ratings_3_1 = {}
 	ratings_4_1 = {}
+	ratings_5_1 = {}
+	ratings_6_1 = {}
+
 	ratings_1_2 = {}
 	ratings_2_2 = {}
 	ratings_3_2 = {}
 	ratings_4_2 = {}
+	ratings_5_2 = {}
+	ratings_6_2 = {}
+
 	pictures_list_1_1 = {}
 	pictures_list_2_1 = {}
 	pictures_list_3_1 = {}
 	pictures_list_4_1 = {}
+	pictures_list_5_1 = {}
+	pictures_list_6_1 = {}
+
 	pictures_list_1_2 = {}
 	pictures_list_2_2 = {}
 	pictures_list_3_2 = {}
 	pictures_list_4_2 = {}
+	pictures_list_5_2 = {}
+	pictures_list_6_2 = {}
+
 
 	for picture in pictures_1_1:
 		mrks = marks_1_1.filter(work=picture)
@@ -146,6 +168,40 @@ def view_art_nomination(request, pk):
 		else:
 			ratings_4_1[picture.id] = 0
 		pictures_list_4_1[picture.id]=picture
+
+	for picture in pictures_5_1:
+		mrks = marks_5_1.filter(work=picture)
+		if mrks:
+			length = len(mrks)
+			summa = 0;
+			for mark in mrks:
+				summa += mark.criterai_one
+				summa += mark.criterai_two
+				summa += mark.criterai_three
+				summa += mark.criterai_four
+				summa += mark.criterai_five
+			summa = summa / length
+			ratings_5_1[picture.id] = round(summa, 1)
+		else:
+			ratings_5_1[picture.id] = 0
+		pictures_list_5_1[picture.id]=picture
+
+	for picture in pictures_6_1:
+		mrks = marks_6_1.filter(work=picture)
+		if mrks:
+			length = len(mrks)
+			summa = 0;
+			for mark in mrks:
+				summa += mark.criterai_one
+				summa += mark.criterai_two
+				summa += mark.criterai_three
+				summa += mark.criterai_four
+				summa += mark.criterai_five
+			summa = summa / length
+			ratings_6_1[picture.id] = round(summa, 1)
+		else:
+			ratings_6_1[picture.id] = 0
+		pictures_list_6_1[picture.id]=picture
 
 
 ########################################################
@@ -217,57 +273,117 @@ def view_art_nomination(request, pk):
 			ratings_4_2[picture.id] = 0
 		pictures_list_4_2[picture.id]=picture
 
+	for picture in pictures_5_2:
+		mrks = marks_5_2.filter(work=picture)
+		if mrks:
+			length = len(mrks)
+			summa = 0;
+			for mark in mrks:
+				summa += mark.criterai_one
+				summa += mark.criterai_two
+				summa += mark.criterai_three
+				summa += mark.criterai_four
+				summa += mark.criterai_five
+			summa = summa / length
+			ratings_5_2[picture.id] = round(summa, 1)
+		else:
+			ratings_5_2[picture.id] = 0
+		pictures_list_5_2[picture.id]=picture
+
+	for picture in pictures_6_2:
+		mrks = marks_6_2.filter(work=picture)
+		if mrks:
+			length = len(mrks)
+			summa = 0;
+			for mark in mrks:
+				summa += mark.criterai_one
+				summa += mark.criterai_two
+				summa += mark.criterai_three
+				summa += mark.criterai_four
+				summa += mark.criterai_five
+			summa = summa / length
+			ratings_6_2[picture.id] = round(summa, 1)
+		else:
+			ratings_6_2[picture.id] = 0
+		pictures_list_6_2[picture.id]=picture
+
 	sorting_1_1 = sorted(ratings_1_1.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_2_1 = sorted(ratings_2_1.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_3_1 = sorted(ratings_3_1.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_4_1 = sorted(ratings_4_1.items(), key=operator.itemgetter(1), reverse=True)
+	sorting_5_1 = sorted(ratings_5_1.items(), key=operator.itemgetter(1), reverse=True)
+	sorting_6_1 = sorted(ratings_6_1.items(), key=operator.itemgetter(1), reverse=True)
+
 	sorting_1_2 = sorted(ratings_1_2.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_2_2 = sorted(ratings_2_2.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_3_2 = sorted(ratings_3_2.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_4_2 = sorted(ratings_4_2.items(), key=operator.itemgetter(1), reverse=True)
+	sorting_5_2 = sorted(ratings_5_2.items(), key=operator.itemgetter(1), reverse=True)
+	sorting_6_2 = sorted(ratings_6_2.items(), key=operator.itemgetter(1), reverse=True)
+
 
 	if request.POST:
 		filename = translit.slugify(str(nomination)) + ' ('
 		if 'type_1_1' in request.POST:
 			pictures_list = pictures_list_1_1
 			sorting = sorting_1_1
-			name = 'Студенты учреждений среднего профессионального образовани (очное участие)'
-			filename += 'students_spo_ochno (DPI)'
+			name = 'Студенты (профи) высших учебных заведений (очное участие)'
+			filename += 'students_vpo_profi_ochno (DPI)'
 		elif 'type_1_2' in request.POST:
 			pictures_list = pictures_list_1_2
 			sorting = sorting_1_2
-			name = 'Студенты учреждений среднего профессионального образовани (заочное участие)'
-			filename += 'students_spo_zaochno (DPI)'
+			name = 'Студенты (профи) высших учебных заведений (заочное участие)'
+			filename += 'students_vpo_profi__zaochno (DPI)'
 		elif  'type_2_1' in request.POST:
 			pictures_list = pictures_list_2_1
 			sorting = sorting_2_1
-			name = 'Студенты высших учебных заведений (очное участие)'
-			filename += 'students_vpo_ochno (DPI)'
+			name = 'Студенты (любители) высших учебных заведений (очное участие)'
+			filename += 'students_vpo_lubiteli_ochno (DPI)'
 		elif  'type_2_2' in request.POST:
 			pictures_list = pictures_list_2_2
 			sorting = sorting_2_2
-			name = 'Студенты высших учебных заведений (заочное участие)'
-			filename += 'students_vpo_zaochno (DPI)'
+			name = 'Студенты (любители) высших учебных заведений (заочное участие)'
+			filename += 'students_vpo_lubiteli_zaochno (DPI)'
 		elif  'type_3_1' in request.POST:
 			pictures_list = pictures_list_3_1
 			sorting = sorting_3_1
-			name = 'Преподаватели, руководители коллективов (очное участие)'
-			filename += 'teachers_ochno (DPI)'
+			name = 'Студенты (профи) учреждений среднего профессионального образовани (очное участие)'
+			filename += 'students_spo_profi_ochno (DPI)'
 		elif  'type_3_2' in request.POST:
 			pictures_list = pictures_list_3_2
 			sorting = sorting_3_2
-			name = 'Преподаватели, руководители коллективов (заочное участие)'
-			filename += 'teachers_zaochno (DPI)'
+			name = 'Студенты (профи) учреждений среднего профессионального образовани (заочное участие)'
+			filename += 'students_spo_profi_zaochno (DPI)'
 		elif  'type_4_1' in request.POST:
 			pictures_list = pictures_list_4_1
 			sorting = sorting_4_1
-			name = 'Любительские коллективы (очное участие)'
-			filename += 'groups_ochno (DPI)'
-		else:
+			name = 'Студенты (любители) учреждений среднего профессионального образовани (очное участие)'
+			filename += 'students_spo_lubiteli_ochno (DPI)'
+		elif  'type_4_2' in request.POST:
 			pictures_list = pictures_list_4_2
 			sorting = sorting_4_2
-			name = 'Любительские коллективы (заочное участие)'
-			filename += 'groups_zaochno (DPI)'
+			name = 'Студенты (любители) учреждений среднего профессионального образовани (заочное участие)'
+			filename += 'students_spo_lubiteli_zaochno (DPI)'
+		elif  'type_5_1' in request.POST:
+			pictures_list = pictures_list_5_1
+			sorting = sorting_5_1
+			name = 'Профи (очное участие)'
+			filename += 'profi_ochno (DPI)'
+		elif  'type_5_2' in request.POST:
+			pictures_list = pictures_list_5_2
+			sorting = sorting_5_2
+			name = 'Профи (заочное участие)'
+			filename += 'profi_zaochno (DPI)'
+		elif  'type_6_1' in request.POST:
+			pictures_list = pictures_list_6_1
+			sorting = sorting_6_1
+			name = 'Любители (очное участие)'
+			filename += 'lubiteli_ochno (DPI)'
+		elif  'type_6_2' in request.POST:
+			pictures_list = pictures_list_6_2
+			sorting = sorting_6_2
+			name = 'Любители (заочное участие)'
+			filename += 'lubiteli_zaochno (DPI)'
 		filename += ')'
 
 
@@ -332,13 +448,13 @@ def view_art_nomination(request, pk):
 			row_cells[0].width = Mm(10)
 			row_cells[1].text = picture.name
 			row_cells[1].width = Mm(60)
-			row_cells[2].text = picture.author.profile.get_full_name()
+			row_cells[2].text = picture.author.get_full_name()
 			row_cells[2].width = Mm(60)
 			row_cells[3].text = ''
 			for copicture in copictures[key]:
 				row_cells[3].text += copicture.coauthor.get_file_name() + ' (' + copicture.coauthor.get_profile_type_display() + ')\n'
 			row_cells[3].width = Mm(50)
-			row_cells[4].text = picture.author.profile.institution
+			row_cells[4].text = picture.author.main_user.profile.institution
 			row_cells[4].width = Mm(50)
 			row_cells[5].text = str(val)
 			row_cells[5].width = Mm(17)
@@ -357,18 +473,26 @@ def view_art_nomination(request, pk):
 		'pictures_list_2_1': pictures_list_2_1,
 		'pictures_list_3_1': pictures_list_3_1,
 		'pictures_list_4_1': pictures_list_4_1,
+		'pictures_list_5_1': pictures_list_5_1,
+		'pictures_list_6_1': pictures_list_6_1,
 		'pictures_list_1_2': pictures_list_1_2,
 		'pictures_list_2_2': pictures_list_2_2,
 		'pictures_list_3_2': pictures_list_3_2,
 		'pictures_list_4_2': pictures_list_4_2,
+		'pictures_list_5_2': pictures_list_5_2,
+		'pictures_list_6_2': pictures_list_6_2,
 		'sorting_1_1': sorting_1_1,
 		'sorting_2_1': sorting_2_1,
 		'sorting_3_1': sorting_3_1,
 		'sorting_4_1': sorting_4_1,
+		'sorting_5_1': sorting_5_1,
+		'sorting_6_1': sorting_6_1,
 		'sorting_1_2': sorting_1_2,
 		'sorting_2_2': sorting_2_2,
 		'sorting_3_2': sorting_3_2,
 		'sorting_4_2': sorting_4_2,
+		'sorting_5_2': sorting_5_2,
+		'sorting_6_2': sorting_6_2,
 		'copictures': copictures
 	}
 	return render(request, 'ratings/view_art_nominations.html', args)

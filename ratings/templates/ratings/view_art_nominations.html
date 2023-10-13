@@ -11,16 +11,22 @@
 			<div class="mx-auto my-5 col-md-12 col-lg-12">
 				<ul class="nav nav-tabs" id="myTab">
 					<li class="nav-item">
-						<a class="nav-link active" href="#type_1">Студенты СПО</a>
+						<a class="nav-link active" href="#type_1">Студенты ВПО (профи)</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#type_2">Студенты ВПО</a>
+						<a class="nav-link" href="#type_2">Студенты ВПО (любители)</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#type_3">Преподаватели, руководители коллективов</a>
+						<a class="nav-link" href="#type_3">Студенты СПО (профи)</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#type_4">Любительские коллективы</a>
+						<a class="nav-link" href="#type_4">Студенты СПО (любители)</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#type_5">Профи</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#type_6">Любители</a>
 					</li>
 				</ul>
 			</div>
@@ -42,7 +48,7 @@
 						<tbody>
 							{% for key, val in sorting_1_1 %}
 							{% with picture=pictures_list_1_1|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.profile.pk %}">
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
 									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
@@ -76,7 +82,7 @@
 						<tbody>
 							{% for key, val in sorting_1_2 %}
 							{% with picture=pictures_list_1_2|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.profile.pk %}">
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
 									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
@@ -112,7 +118,7 @@
 						<tbody>
 							{% for key, val in sorting_2_1 %}
 							{% with picture=pictures_list_2_1|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.profile.pk %}">
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
 									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
@@ -146,7 +152,7 @@
 						<tbody>
 							{% for key, val in sorting_2_2 %}
 							{% with picture=pictures_list_2_2|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.profile.pk %}">
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
 									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
@@ -182,12 +188,12 @@
 						<tbody>
 							{% for key, val in sorting_3_1 %}
 							{% with picture=pictures_list_3_1|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.profile.pk %}">
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
 									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
 							{% endwith %}
@@ -216,12 +222,12 @@
 						<tbody>
 							{% for key, val in sorting_3_2 %}
 							{% with picture=pictures_list_3_2|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.profile.pk %}">
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
 									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
 							{% endwith %}
@@ -252,12 +258,12 @@
 						<tbody>
 							{% for key, val in sorting_4_1 %}
 							{% with picture=pictures_list_4_1|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.profile.pk %}">
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
 									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
 							{% endwith %}
@@ -286,12 +292,12 @@
 						<tbody>
 							{% for key, val in sorting_4_2 %}
 							{% with picture=pictures_list_4_2|lookup:key %}
-								<tr class="table_hover" child-href="{% url 'view_contestant' pk=picture.author.profile.pk %}">
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
 									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 								</tr>
 							{% endwith %}
@@ -302,6 +308,146 @@
 					<div class="row col-md-12 col-lg-12 ">
 						<div class="col-md-12 text-right pb-3">
 							<input type="submit" value="Выгрузить список" name="type_4_2">
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane" id="type_5" role="tab-panel">
+					<h6>Очное участие</h6>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_5_1 %}
+							{% with picture=pictures_list_5_1|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<td class="align-middle table_click">{{ picture.name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
+									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_5_1">
+						</div>
+					</div>
+
+					<h6>Заочное участие</h6>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_5_2 %}
+							{% with picture=pictures_list_5_2|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<td class="align-middle table_click">{{ picture.name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
+									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_5_2">
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane" id="type_6" role="tab-panel">
+					<h6>Очное участие</h6>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_6_1 %}
+							{% with picture=pictures_list_6_1|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<td class="align-middle table_click">{{ picture.name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
+									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_6_1">
+						</div>
+					</div>
+
+					<h6>Заочное участие</h6>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант</th>
+								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
+								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for key, val in sorting_6_2 %}
+							{% with picture=pictures_list_6_2|lookup:key %}
+								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
+									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
+									<td class="align-middle table_click">{{ picture.name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
+									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
+									<td class="align-middle text-center table_click">{{ val }}</td>
+								</tr>
+							{% endwith %}
+							{% endfor %}
+						</tbody>
+					</table>
+
+					<div class="row col-md-12 col-lg-12 ">
+						<div class="col-md-12 text-right pb-3">
+							<input type="submit" value="Выгрузить список" name="type_6_2">
 						</div>
 					</div>
 				</div>
