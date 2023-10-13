@@ -7,8 +7,7 @@
 		<form action="" method="post" enctype="multipart/form-data" autocomplete="false" class="col-md-12 col-lg-12"> {% csrf_token %}
 			<div class="mx-auto mb-2 col-md-12 col-lg-12">
 				<h4 class="display-5 text-center">Номинация: <b>{{ nomination }}</b> (заочно)</h4>
-				<h5 class="text-center text-danger">После выставления оценок, нажмите кнопку <b>"Сохранить оценки работ"</b> внизу страницы</h5>
-				<h4 class="text-center text-danger"><b>Оценки от "0" до "10" без десятых.</b></h4>
+				<h5 class="text-center text-danger">Оценки сохраняются автомаически</h5>
 
 			</div>
 
@@ -70,54 +69,246 @@
 								{% endif %}
 
 
-								{% with form=forms|lookup:pict.pk %}
-									<div class="row  mx-auto align-middle col-md-10 col-lg-10">
-										<div class="text-center col-md-2 col-lg-2 mx-auto">
-											{{ form.criterai_one.label_tag }}
+								<div class="row">
+									<div class="col-md-3"><b>{{ criterai1 }}</b></div>
+									<div class="row text-center col-md-9" data-criteria='1' data-pk="{{ pict.pk }}">
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
 										</div>
-										<div class="text-center col-md-2 col-lg-2 mx-auto">
-											{{ form.criterai_two.label_tag }}
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
 										</div>
-										<div class="text-center col-md-2 col-lg-2 mx-auto">
-											{{ form.criterai_three.label_tag }}
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
 										</div>
-										<div class="text-center col-md-2 col-lg-2 mx-auto">
-											{{ form.criterai_four.label_tag }}
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
 										</div>
-										<div class="text-center col-md-2 col-lg-2 mx-auto">
-											{{ form.criterai_five.label_tag }}
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
 										</div>
 									</div>
-									<div class="row  mx-auto align-middle col-md-10 col-lg-10">
-										<div class="text-center col-md-2 col-lg-2 mx-auto">
-											{{ form.criterai_one }}
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-md-3"><b>{{ criterai2 }}</b></div>
+									<div class="row text-center col-md-9" data-criteria='2' data-pk="{{ pict.pk }}">
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
 										</div>
-										<div class="text-center col-md-2 col-lg-2 mx-auto">
-											{{ form.criterai_two }}
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
 										</div>
-										<div class="text-center col-md-2 col-lg-2 mx-auto">
-											{{ form.criterai_three }}
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
 										</div>
-										<div class="text-center col-md-2 col-lg-2 mx-auto">
-											{{ form.criterai_four }}
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
 										</div>
-										<div class="text-center col-md-2 col-lg-2 mx-auto">
-											{{ form.criterai_five }}
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
 										</div>
 									</div>
-								{% endwith %}
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-md-3"><b>{{ criterai3 }}</b></div>
+									<div class="row text-center col-md-9" data-criteria='3' data-pk="{{ pict.pk }}">
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+										</div>
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-md-3"><b>{{ criterai4 }}</b></div>
+									<div class="row text-center col-md-9" data-criteria='4' data-pk="{{ pict.pk }}">
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+										</div>
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-md-3"><b>{{ criterai5 }}</b></div>
+									<div class="row text-center col-md-9" data-criteria='5' data-pk="{{ pict.pk }}">
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+										</div>
+									</div>
+								</div>
+
 								<hr style="border-width: 5px; border-color: black;">
 							{% endfor %}
 						</div>
 					</div>
 				</div>
-				<div class="row align-middle">
-					<div class="col-md-12 text-center">
-						<input type="submit" value="Сохранить оценки работ"  class="show-loader">
-					</div>
-				</div>
 			</form>
 		</form>
 	</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('button[type=button]').click(function(){
+				if ($(this).hasClass('btn-danger')){
+					$(this).removeClass('btn-danger');
+					$(this).addClass('btn-outline-secondary');
+				}else{
+					$(this).parent().parent().parent().find('button').removeClass('btn-danger');
+					$(this).parent().parent().parent().find('button').removeClass('btn-outline-secondary');
+					$(this).parent().parent().parent().find('button').addClass('btn-outline-secondary');
+					$(this).removeClass('btn-outline-secondary');
+					$(this).addClass('btn-danger');
+				}
+
+
+				url = "url 'marks:ajax_set_marks' ";
+				mark1 = 0;
+				mark2 = 0;
+				mark3 = 0;
+				mark4 = 0;
+				mark5 = 0;
+				pk = '{{ movie.pk }}';
+
+				element = $('div[data-criteria=1]').find('.btn-danger');
+				if (element.length>0)
+					mark1 = $(element).text();
+				element = $('div[data-criteria=2]').find('.btn-danger');
+				if (element.length>0)
+					mark2 = $(element).text();
+				element = $('div[data-criteria=3]').find('.btn-danger');
+				if (element.length>0)
+					mark3 = $(element).text();
+
+				// $.ajax({
+				// 	url: url,
+				// 	data: {
+				// 		'mark1': mark1,
+				// 		'mark2': mark2,
+				// 		'mark3': mark3,
+				// 		'pk': pk
+				// 	},
+				// 	success: function(data){
+				// 	}
+				// });
+			});
+		});
+
+
+	</script>
 {% endblock %}
 

@@ -26,9 +26,10 @@
 		<div class="mx-auto mb-2 col-md-12 col-lg-12">
 			<h5 class="display-5 text-center">Председатель жюри</h5>
 			{% for chef_juri in chef_juris %}
-				<div class="row mx-auto mb-2 col-md-6 col-lg-6">
+				<div class="row mx-auto mb-2 col-md-12 col-lg-12">
 					<div class="mx-auto col-md-8 col-lg-8">
-						{{ chef_juri.get_file_name }} ({{ chef_juri.get_juri_type_display }})
+						<b>{{ chef_juri.get_full_name }} - {{ chef_juri.get_juri_type_display }} ({{ chef_juri.user.email }})<br></b>
+						<em>{{ chef_juri.rank }}</em>
 					</div>
 					<div class="col-md-2 text-center">
 						<a href="{% url 'juri_change' pk=chef_juri.pk %}" class="edit_juri">Изменить</a>
@@ -47,9 +48,10 @@
 		<div class="mx-auto mb-2 col-md-12 col-lg-12">
 			<h5 class="display-5 text-center">Члены жюри</h5>
 			{% for juri in juris %}
-				<div class="row mx-auto mb-2 col-md-6 col-lg-6">
+				<div class="row mx-auto mb-2 col-md-12 col-lg-12">
 					<div class="mx-auto col-md-8 col-lg-8">
-						{{ juri.get_file_name }} ({{ juri.get_juri_type_display }})
+						<b>{{ juri.get_full_name }} - {{ juri.get_juri_type_display }} ({{ juri.user.email }})<br></b>
+						<em>{{ juri.rank }}</em>
 					</div>
 					<div class="col-md-2 text-center">
 						<a href="{% url 'juri_change' pk=juri.pk %}" class="edit_juri">Изменить</a>

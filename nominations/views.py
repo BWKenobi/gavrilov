@@ -26,132 +26,54 @@ def view_art_nomination(request, pk):
 	nomination = ArtNomination.objects.get(pk=pk)
 	pictures = Picture.objects.filter(nomination=nomination, participation = '2')
 
-	criterai_one = 'Соответствие названию, полнота раскрытия'
-	criterai_two = 'Техническое воспроизведение'
-	criterai_three = 'Авторское новаторство'
-	criterai_four = 'Эстетика подачи работы'
-	criterai_five = 'Визуальное восприятие'
+	criterai1 = 'Соответствие названию, полнота раскрытия'
+	criterai2 = 'Техническое воспроизведение'
+	criterai3 = 'Авторское новаторство'
+	criterai4 = 'Эстетика подачи работы'
+	criterai5 = 'Визуальное восприятие'
 
-	if request.POST:
-		criterai_one = request.POST.getlist('criterai_one')
-		criterai_two = request.POST.getlist('criterai_two')
-		criterai_three = request.POST.getlist('criterai_three')
-		criterai_four = request.POST.getlist('criterai_four')
-		criterai_five = request.POST.getlist('criterai_five')
-
-		cnt = 0
-		for picture in pictures:
-			marks = PictureMark.objects.filter(expert=request.user, work=picture)
-			if marks:
-				mark = marks[0]
-
-				if not criterai_one[cnt] and not criterai_two[cnt] and not criterai_three[cnt] and not criterai_four[cnt]\
-					and not criterai_five[cnt]:
-					mark.delete()
-				else:
-					if criterai_one[cnt]:
-						mark.criterai_one = int(criterai_one[cnt])
-						if mark.criterai_one>10:
-							mark.criterai_one = 10
-					else:
-						mark.criterai_one = 0
-
-					if criterai_two[cnt]:
-						mark.criterai_two = int(criterai_two[cnt])
-						if mark.criterai_two>10:
-							mark.criterai_two = 10
-					else:
-						mark.criterai_two = 0
-
-					if criterai_three[cnt]:
-						mark.criterai_three = int(criterai_three[cnt])
-						if mark.criterai_three>10:
-							mark.criterai_three = 10
-					else:
-						mark.criterai_three = 0
-
-					if criterai_four[cnt]:
-						mark.criterai_four = int(criterai_four[cnt])
-						if mark.criterai_four>10:
-							mark.criterai_four = 10
-					else:
-						mark.criterai_four = 0
-
-					if criterai_five[cnt]:
-						mark.criterai_five = int(criterai_five[cnt])
-						if mark.criterai_five>10:
-							mark.criterai_five = 10
-					else:
-						mark.criterai_five = 0
-
-					mark.save()
-			else:
-				if  criterai_one[cnt] or  criterai_two[cnt] or  criterai_three[cnt] or  criterai_four[cnt]\
-					or  criterai_five[cnt]:
-					mark = PictureMark.objects.create(expert = request.user, work = picture)
-
-					if criterai_one[cnt]:
-						mark.criterai_one = int(criterai_one[cnt])
-						if mark.criterai_one>10:
-							mark.criterai_one = 10
-					else:
-						mark.criterai_one = 0
-
-					if criterai_two[cnt]:
-						mark.criterai_two = int(criterai_two[cnt])
-						if mark.criterai_two>10:
-							mark.criterai_two = 10
-					else:
-						mark.criterai_two = 0
-
-					if criterai_three[cnt]:
-						mark.criterai_three = int(criterai_three[cnt])
-						if mark.criterai_three>10:
-							mark.criterai_three = 10
-					else:
-						mark.criterai_three = 0
-
-					if criterai_four[cnt]:
-						mark.criterai_four = int(criterai_four[cnt])
-						if mark.criterai_four>10:
-							mark.criterai_four = 10
-					else:
-						mark.criterai_four = 0
-
-					if criterai_five[cnt]:
-						mark.criterai_five = int(criterai_five[cnt])
-						if mark.criterai_five>10:
-							mark.criterai_five = 10
-					else:
-						mark.criterai_five = 0
-
-					mark.save()
-
-			cnt += 1
+	mark1_list = {}
+	mark2_list = {}
+	mark3_list = {}
+	mark4_list = {}
+	mark5_list = {}
 
 
-	forms = {}
 	for picture in pictures:
-		mark = PictureMark.objects.filter(expert=request.user, work=picture).first()
-		if mark:
-			form = PictureMarkForm(instance=mark, label_suffix='')
-		else:
-			form = PictureMarkForm(label_suffix='')
+		marks = PictureMark.objects.filter(expert=request.user, work=picture).first()
+		mark1_list[picture.pk] = None
+		mark2_list[picture.pk] = None
+		mark3_list[picture.pk] = None
+		mark4_list[picture.pk] = None
+		mark5_list[picture.pk] = None
 
-		forms[picture.id] = form
+		if marks:
+			if marks.criterai_one:
+				mark1_list[picture.pk] = marks.criterai_one
+			if marks.criterai_two:
+				mark2_list[picture.pk] = marks.criterai_two
+			if marks.criterai_three:
+				mark3_list[picture.pk] = marks.criterai_three
+			if marks.criterai_four:
+				mark4_list[picture.pk] = marks.criterai_four
+			if marks.criterai_five:
+				mark5_list[picture.pk] = marks.criterai_five
+
 
 	args = {
 		'nomination': nomination, 
 		'pictures': pictures,
 		'nomination_pk': pk,
-		'criterai_one': criterai_one,
-		'criterai_two': criterai_two,
-		'criterai_three': criterai_three,
-		'criterai_four': criterai_four,
-		'criterai_five': criterai_five,
-
-
-		'forms': forms
+		'criterai1': criterai1,
+		'criterai2': criterai2,
+		'criterai3': criterai3,
+		'criterai4': criterai4,
+		'criterai5': criterai5,
+		'mark1_list': mark1_list,
+		'mark2_list': mark2_list,
+		'mark3_list': mark3_list,
+		'mark4_list': mark4_list,
+		'mark5_list': mark5_list,
 	}
 	return render(request, 'nominations/view_art_nominations.html', args)
 

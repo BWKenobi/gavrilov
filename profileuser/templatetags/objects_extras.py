@@ -10,3 +10,8 @@ def lookup(d, key):
 		return None
 
 	return t
+
+
+@register.filter(name = 'addstr')
+def addstr(arg1, arg2):
+	return str(arg1) + str(arg2)

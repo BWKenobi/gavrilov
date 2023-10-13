@@ -176,14 +176,18 @@ class SetJuriForm(forms.Form):
 		self.fields['juri_type'].initial='1'
 
 
+
 class ChangeJuriForm(forms.ModelForm):
 	class Meta:
 		model = Profile
-		fields = ('chef_juri_accecc','juri_type',)
+		fields = ('surname', 'name', 'name2', 'chef_juri_accecc', 'juri_type', 'rank')
 
-		widgets = {
-			'juri_type': forms.RadioSelect,
-		}
+	def __init__(self, *args, **kwargs):
+		super(ChangeJuriForm, self).__init__(*args, **kwargs)
+		for field in self.fields:
+			if field != 'chef_juri_accecc':
+				self.fields[field].widget.attrs.update({'class': 'form-control'})
+
 
 
 class NewJuriForm(forms.ModelForm):

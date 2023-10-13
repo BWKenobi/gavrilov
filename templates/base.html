@@ -2,7 +2,7 @@
 {% load objects_extras %}
 {% url 'home' as home_url %}
 
-{% with '2.3' as version %}
+{% with '2.4' as version %}
 <!doctype html>
 <html lang="en">
     <head>
@@ -211,10 +211,12 @@
                                     <ul>
                                         {% for art in arts %}
                                              <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'nominations:view_art_nomination' pk=art.pk %}">
-                                                    <span data-feather="image"></span>
-                                                    <em><u>{{ art }}</u></em>
-                                                </a>
+                                                {% with 'view-art-nomination/'|addstr:forloop.counter as tmp %}
+                                                    <a class="nav-link {% if tmp in request.path %}active{% endif %}" href="{% url 'nominations:view_art_nomination' pk=art.pk %}">
+                                                        <span data-feather="image"></span>
+                                                        <em><u>{{ art }}</u></em>
+                                                    </a>
+                                                {% endwith %}
                                             </li>
                                         {% endfor %}
                                     </ul>
