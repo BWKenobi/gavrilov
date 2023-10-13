@@ -54,6 +54,10 @@ label{
 	}
 }
 
+.img-fluid{
+	cursor: pointer;
+}
+
 .sidebar .nav-link {
 	font-weight: 500;
 	color: #333;
