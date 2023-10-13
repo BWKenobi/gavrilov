@@ -276,13 +276,13 @@
 				}
 
 
-				url = "url 'marks:ajax_set_marks' ";
+				url = "{% url 'marks:ajax_set_pict_marks' %}";
 				mark1 = 0;
 				mark2 = 0;
 				mark3 = 0;
 				mark4 = 0;
 				mark5 = 0;
-				pk = '{{ movie.pk }}';
+				pk = $(this).parent().parent().attr('data-pk');
 
 				element = $('div[data-criteria=1]').find('.btn-danger');
 				if (element.length>0)
@@ -293,18 +293,44 @@
 				element = $('div[data-criteria=3]').find('.btn-danger');
 				if (element.length>0)
 					mark3 = $(element).text();
+				element = $('div[data-criteria=4]').find('.btn-danger');
+				if (element.length>0)
+					mark4 = $(element).text();
+				element = $('div[data-criteria=5]').find('.btn-danger');
+				if (element.length>0)
+					mark5 = $(element).text();
 
-				// $.ajax({
-				// 	url: url,
-				// 	data: {
-				// 		'mark1': mark1,
-				// 		'mark2': mark2,
-				// 		'mark3': mark3,
-				// 		'pk': pk
-				// 	},
-				// 	success: function(data){
-				// 	}
-				// });
+				$.ajax({
+					url: url,
+					data: {
+						'mark1': mark1,
+						'mark2': mark2,
+						'mark3': mark3,
+						'mark4': mark4,
+						'mark5': mark5,
+						'pk': pk
+					},
+					success: function(data){
+						toastr.options = {
+						  "closeButton": false,
+						  "debug": false,
+						  "newestOnTop": false,
+						  "progressBar": false,
+						  "positionClass": "toast-top-right",
+						  "preventDuplicates": false,
+						  "onclick": null,
+						  "showDuration": "300",
+						  "hideDuration": "1000",
+						  "timeOut": "3000",
+						  "extendedTimeOut": "3000",
+						  "showEasing": "swing",
+						  "hideEasing": "linear",
+						  "showMethod": "fadeIn",
+						  "hideMethod": "fadeOut"
+						}
+						toastr["success"]("Оценка сохранена!");
+					}
+				});
 			});
 		});
 
