@@ -142,7 +142,8 @@ def ajax_set_pict_marks(request):
 
 	marks = PictureMark.objects.filter(expert=request.user, work=pk).last()
 
-	PictureMark.objects.filter(expert=request.user, work=pk).exclude(pk = marks.pk).delete()
+	if marks:
+		PictureMark.objects.filter(expert=request.user, work=pk).exclude(pk = marks.pk).delete()
 
 	if marks:
 		marks.criterai_one = mark1
@@ -154,6 +155,42 @@ def ajax_set_pict_marks(request):
 	else:
 		PictureMark.objects.create(
 			expert=request.user,
+			work = Picture.objects.get(pk=pk),
+			criterai_one = mark1,
+			criterai_two = mark2,
+			criterai_three = mark3,
+			criterai_four = mark4,
+			criterai_five = mark5,
+		)
+	return HttpResponse(True)
+
+
+def ajax_set_pict_far_marks(request):
+	pk = int(request.GET['pk'])
+	user_pk = int(request.GET['user_pk'])
+	user = User.objects.get(pk = user_pk)
+
+	mark1 = int(request.GET['mark1'])
+	mark2 = int(request.GET['mark2'])
+	mark3 = int(request.GET['mark3'])
+	mark4 = int(request.GET['mark4'])
+	mark5 = int(request.GET['mark5'])
+
+	marks = PictureMark.objects.filter(expert=user, work=pk).last()
+
+	if marks:
+		PictureMark.objects.filter(expert=user, work=pk).exclude(pk = marks.pk).delete()
+
+	if marks:
+		marks.criterai_one = mark1
+		marks.criterai_two = mark2
+		marks.criterai_three = mark3
+		marks.criterai_four = mark4
+		marks.criterai_five = mark5
+		marks.save()
+	else:
+		PictureMark.objects.create(
+			expert=user,
 			work = Picture.objects.get(pk=pk),
 			criterai_one = mark1,
 			criterai_two = mark2,
