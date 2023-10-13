@@ -263,6 +263,11 @@
 			});
 		});
 
+		$(document).ready(function(){
+			$('button[type=submit]').click(function(){
+				$('.content-blocker').attr('style', 'display: block !important;');
+			});
+		});
 		
 	</script>
 {% endblock %}
