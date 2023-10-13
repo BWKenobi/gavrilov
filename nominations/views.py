@@ -258,7 +258,7 @@ def view_movie_far_nomination(request, pk = None):
 
 	movie = Movie.objects.get(pk = pk)
 
-	users = User.objects.filter(profile__juri_accecc = True, profile__juri_type = '2')
+	users = User.objects.filter(profile__juri_accecc = True, profile__juri_type = '1')
 
 	criterai1 = 'Сложность и трактовка'
 	criterai2 = 'Интонационная выразительность'
