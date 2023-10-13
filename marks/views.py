@@ -140,7 +140,10 @@ def ajax_set_pict_marks(request):
 	mark4 = int(request.GET['mark4'])
 	mark5 = int(request.GET['mark5'])
 
-	marks = PictureMark.objects.filter(expert=request.user, work=pk).first()
+	marks = PictureMark.objects.filter(expert=request.user, work=pk).last()
+
+	PictureMark.objects.filter(expert=request.user, work=pk).exclude(pk = marks.pk).delete()
+
 	if marks:
 		marks.criterai_one = mark1
 		marks.criterai_two = mark2

@@ -211,7 +211,7 @@
                                     <ul>
                                         {% for art in arts %}
                                              <li class="nav-item list-unstyled ">
-                                                {% with 'view-art-nomination/'|addstr:forloop.counter as tmp %}
+                                                {% with 'view-art-nomination/'|addstr:art.pk as tmp %}
                                                     <a class="nav-link {% if tmp in request.path %}active{% endif %}" href="{% url 'nominations:view_art_nomination' pk=art.pk %}">
                                                         <span data-feather="image"></span>
                                                         <em><u>{{ art }}</u></em>
