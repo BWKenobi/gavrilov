@@ -22,6 +22,7 @@
 					<div class="tab-pane {% if not master %}active{% endif %}" id="pictures" role="tab-panel">
 						<div class="mx-auto mb-5 col-md-12 col-lg-12">
 							{% for pict in pictures %}
+							<div>
 								<div class="mx-auto text-center">
 									<h3>{{ pict.name }}</h3>
 									{% if pict.technique %}<h5><b>Техника:</b> {{ pict.technique }}</h5>{% endif %}
@@ -250,6 +251,7 @@
 								</div>
 
 								<hr style="border-width: 5px; border-color: black;">
+							</div>
 							{% endfor %}
 						</div>
 					</div>
