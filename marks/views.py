@@ -79,7 +79,7 @@ def mark_card(request):
 				if movie.scene_num == pk:
 					break
 				if movie.scene_num > pk:
-					movie = old_dance
+					movie = old_movie
 					break
 				old_movie = movie
 
