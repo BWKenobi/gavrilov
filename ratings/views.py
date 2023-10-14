@@ -1023,7 +1023,7 @@ def view_protocols(request):
 
 
 @login_required(login_url='/login/')
-def get_check_list(request, pk):
+def get_check_list(request, pk, param):
 	if not request.user.profile.admin_access:
 		return redirect('home')
 
@@ -1077,7 +1077,7 @@ def get_check_list(request, pk):
 
 		for nomination in nominations:
 
-			find_cnt = Movie.objects.filter(nomination=nomination).count()
+			find_cnt = Movie.objects.filter(nomination=nomination, participation = param).count()
 			if find_cnt:
 				document.add_paragraph()
 				p = document.add_paragraph()
@@ -1088,7 +1088,7 @@ def get_check_list(request, pk):
 					category = CATEGORY_TYPES[cat_num]
 
 
-					members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num)
+					members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param)
 
 					if members:
 						p = document.add_paragraph()
@@ -1256,7 +1256,7 @@ def get_check_list(request, pk):
 
 		for nomination in nominations:
 
-			find_cnt = Picture.objects.filter(nomination=nomination).count()
+			find_cnt = Picture.objects.filter(nomination=nomination, participation = param).count()
 			if find_cnt:
 				document.add_paragraph()
 				p = document.add_paragraph()
@@ -1267,7 +1267,7 @@ def get_check_list(request, pk):
 					category = CATEGORY_TYPES[cat_num]
 
 
-					members = Picture.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num)
+					members = Picture.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param)
 
 					if members:
 						p = document.add_paragraph()

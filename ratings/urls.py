@@ -6,5 +6,5 @@ urlpatterns = [
 	path('view-art-nomination/<int:pk>', view_art_nomination, name = 'view_art_nomination'),
 	path('view-mov-nomination/<int:pk>', view_mov_nomination, name = 'view_mov_nomination'),
 	path('view-protocols', view_protocols, name = 'view_protocols'),
-	path('get-check-list/<int:pk>', get_check_list, name = 'get_check_list'),
+	path('get-check-list/<int:pk>/<str:param>', get_check_list, name = 'get_check_list'),
 ]
