@@ -1059,7 +1059,10 @@ def get_check_list(request, pk, param):
 	font.size = Pt(8)
 
 	p = document.add_paragraph()
-	p.add_run('Оценочный лист Всероссийского фестиваля конкурса народного творчества «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023г.').bold = True
+	if param == '1':
+		p.add_run('Оценочный лист Всероссийского фестиваля конкурса народного творчества «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023г. (Очное участие)').bold = True
+	else:
+		p.add_run('Оценочный лист Всероссийского фестиваля конкурса народного творчества «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023г. (Зачное участие)').bold = True
 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 	p.paragraph_format.space_after = 0
 	document.add_paragraph()
@@ -1071,7 +1074,10 @@ def get_check_list(request, pk, param):
 		criteria3 = 'Артистизм'
 
 
-		filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист)')
+		if param == '1':
+			filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист очного участия)')
+		else:
+			filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист заочного участия)')
 
 		nominations = VocalNomination.objects.all()
 
@@ -1250,7 +1256,10 @@ def get_check_list(request, pk, param):
 		criteria5 = 'Визуальное восприятие'
 
 
-		filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист)')
+		if param == '1':
+			filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист очного участия)')
+		else:
+			filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист заочного участия)')
 
 		nominations = ArtNomination.objects.all()
 
