@@ -45,6 +45,8 @@ class Picture(models.Model):
 	add_view_1 = models.ImageField(verbose_name='Дополнительный вид', blank=True, null=True, upload_to = make_picture_path)
 	add_view_2 = models.ImageField(verbose_name='Дополнительный вид', blank=True, null=True, upload_to = make_picture_path)
 
+	place = models.DecimalField(verbose_name="Место", max_digits=1, decimal_places=0, default=None, blank=True, null=True)
+
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 
 

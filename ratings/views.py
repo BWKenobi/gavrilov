@@ -1451,4 +1451,45 @@ def get_check_list(request, pk, param):
 	return response
 
 
+def ajax_change_pic_place(request):
+	pk = int(request.GET['pk'])
+	val = request.GET['val']
 
+	member = Picture.objects.get(pk = pk)
+
+	if val=='0':
+		member.place = 0
+	elif val=='1':
+		member.place = 1
+	elif val=='2':
+		member.place = 2
+	elif val=='3':
+		member.place = 3
+	else:
+		member.place = None
+
+	member.save()
+
+	return HttpResponse(True)
+
+
+def ajax_change_mov_place(request):
+	pk = int(request.GET['pk'])
+	val = request.GET['val']
+
+	member = Movie.objects.get(pk = pk)
+
+	if val=='0':
+		member.place = 0
+	elif val=='1':
+		member.place = 1
+	elif val=='2':
+		member.place = 2
+	elif val=='3':
+		member.place = 3
+	else:
+		member.place = None
+
+	member.save()
+
+	return HttpResponse(True)

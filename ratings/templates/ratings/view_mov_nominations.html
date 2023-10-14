@@ -38,11 +38,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -55,6 +56,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -72,11 +82,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -89,6 +100,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -108,11 +128,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -125,6 +146,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -142,11 +172,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -159,6 +190,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -178,11 +218,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -195,6 +236,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -212,11 +262,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -229,6 +280,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -248,11 +308,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -265,6 +326,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -282,11 +352,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -299,6 +370,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -318,11 +398,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -335,6 +416,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -352,11 +442,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -369,6 +460,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -388,11 +488,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -405,6 +506,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -422,11 +532,12 @@
 						<thead>
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-20 align-middle">Название работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Название работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Конкурсант(Коллектив)</th>
 								<th scope="col" class="table-cel-width-20 align-middle">Преподаватель/Концертмейстер</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Учреждение</th>
 								<th scope="col" class="table-cel-width-10 align-middle text-center">Оценка</th>
+								<th scope="col" class="table-cel-width-5 align-middle text-center">Место</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -439,6 +550,15 @@
 									<td class="align-middle table_click">{% for comovie in comovies|lookup:key %}{{ comovie.coauthor.get_file_name }} ({{ comovie.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
 									<td class="align-middle table_click">{{ movie.author.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
+									<td class="align-middle text-center table_click">
+										<select class="" data-pk="{{ movie.pk }}">
+											<option value=""></option>
+											<option value="0" {% if movie.place == 0 %}selected{% endif %}>Гран-при</option>
+											<option value="1" {% if movie.place == 1 %}selected{% endif %}>I</option>
+											<option value="2" {% if movie.place == 2 %}selected{% endif %}>II</option>
+											<option value="3" {% if movie.place == 3 %}selected{% endif %}>III</option>
+										</select>
+									</td>
 								</tr>
 							{% endwith %}
 							{% endfor %}
@@ -461,11 +581,21 @@
     {{ block.super }}
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.table_click').click(function(){
-				url = $(this).parent().attr('child-href');
-				col = parseInt($(this).index());
-				if (col != 5)
-					document.location.href = url;
+			$('select').change(function(){
+				pk = $(this).attr('data-pk');
+				val = $(this).find('option').filter(':selected').val()
+
+				url = "{% url 'ratings:ajax_change_mov_place' %}";
+				$.ajax({
+					url: url,
+					data: {
+						'pk': pk,
+						'val': val
+					},
+					success: function(data){
+					}
+				});
+
 			});
 
 

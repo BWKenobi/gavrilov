@@ -46,6 +46,8 @@ class Movie(models.Model):
 
 	has_come= models.BooleanField("Факт прибытия", default=False)
 
+	place = models.DecimalField(verbose_name="Место", max_digits=1, decimal_places=0, default=None, blank=True, null=True)
+
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 
 
