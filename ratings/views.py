@@ -20,6 +20,7 @@ from pytils import translit
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
+from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.shared import Mm, Pt
 
 from pictures.models import Picture, CoPicturee
@@ -426,16 +427,34 @@ def view_art_nomination(request, pk):
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
+		hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[0].width = Mm(10)
 		hdr_cells[1].text = 'Название работы'
+		hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[1].width = Mm(60)
 		hdr_cells[2].text = 'Конкурсант'
+		hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[2].width = Mm(60)
 		hdr_cells[3].text = 'Преподаватель'
+		hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[3].width = Mm(50)
 		hdr_cells[4].text = 'Учреждение'
+		hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[4].width = Mm(50)
-		hdr_cells[5].text = 'Оценка'
+		hdr_cells[5].text = 'Баллы'
+		hdr_cells[5].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[5].width = Mm(17)
 
 
@@ -445,18 +464,27 @@ def view_art_nomination(request, pk):
 
 			row_cells = table.add_row().cells
 			row_cells[0].text = str(cnt)
+			row_cells[0].paragraphs[0].runs[0].font.bold = True
+			row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[0].width = Mm(10)
 			row_cells[1].text = picture.name
+			row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[1].width = Mm(60)
 			row_cells[2].text = picture.author.get_full_name()
+			row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[2].width = Mm(60)
 			row_cells[3].text = ''
 			for copicture in copictures[key]:
 				row_cells[3].text += copicture.coauthor.get_file_name() + ' (' + copicture.coauthor.get_profile_type_display() + ')\n'
+			row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[3].width = Mm(50)
 			row_cells[4].text = picture.author.main_user.profile.institution
+			row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[4].width = Mm(50)
 			row_cells[5].text = str(val)
+			row_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			row_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[5].width = Mm(17)
 
 			cnt += 1
@@ -511,41 +539,63 @@ def view_mov_nomination(request, pk):
 	for move_all in movies_all:
 		comovies[move_all.pk] = CoMovie.objects.filter(movie=move_all)
 
+	movies_1_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='1', participation='1')
+	movies_2_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='2', participation='1')
+	movies_3_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='3', participation='1')
+	movies_4_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='4', participation='1')
+	movies_5_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='5', participation='1')
+	movies_6_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='6', participation='1')
 
-	movies_1_1 = Movie.objects.filter(nomination=nomination, author__profile__category='1', author__profile__participation='1')
-	movies_2_1 = Movie.objects.filter(nomination=nomination, author__profile__category='2', author__profile__participation='1')
-	movies_3_1 = Movie.objects.filter(nomination=nomination, author__profile__category='3', author__profile__participation='1')
-	movies_4_1 = Movie.objects.filter(nomination=nomination, author__profile__category='4', author__profile__participation='1')
-	movies_1_2 = Movie.objects.filter(nomination=nomination, author__profile__category='1', author__profile__participation='2')
-	movies_2_2 = Movie.objects.filter(nomination=nomination, author__profile__category='2', author__profile__participation='2')
-	movies_3_2 = Movie.objects.filter(nomination=nomination, author__profile__category='3', author__profile__participation='2')
-	movies_4_2 = Movie.objects.filter(nomination=nomination, author__profile__category='4', author__profile__participation='2')
+	movies_1_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='1', participation='2')
+	movies_2_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='2', participation='2')
+	movies_3_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='3', participation='2')
+	movies_4_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='4', participation='2')
+	movies_5_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='5', participation='2')
+	movies_6_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='6', participation='2')
 
 	marks_1_1 = MovieMark.objects.filter(work__in = movies_1_1)
 	marks_2_1 = MovieMark.objects.filter(work__in = movies_2_1)
 	marks_3_1 = MovieMark.objects.filter(work__in = movies_3_1)
 	marks_4_1 = MovieMark.objects.filter(work__in = movies_4_1)
+	marks_5_1 = MovieMark.objects.filter(work__in = movies_5_1)
+	marks_6_1 = MovieMark.objects.filter(work__in = movies_6_1)
+
 	marks_1_2 = MovieMark.objects.filter(work__in = movies_1_2)
 	marks_2_2 = MovieMark.objects.filter(work__in = movies_2_2)
 	marks_3_2 = MovieMark.objects.filter(work__in = movies_3_2)
 	marks_4_2 = MovieMark.objects.filter(work__in = movies_4_2)
+	marks_5_2 = MovieMark.objects.filter(work__in = movies_5_2)
+	marks_6_2 = MovieMark.objects.filter(work__in = movies_6_2)
 
 	ratings_1_1 = {}
 	ratings_2_1 = {}
 	ratings_3_1 = {}
 	ratings_4_1 = {}
+	ratings_5_1 = {}
+	ratings_6_1 = {}
+
 	ratings_1_2 = {}
 	ratings_2_2 = {}
 	ratings_3_2 = {}
 	ratings_4_2 = {}
+	ratings_5_2 = {}
+	ratings_6_2 = {}
+
 	movies_list_1_1 = {}
 	movies_list_2_1 = {}
 	movies_list_3_1 = {}
 	movies_list_4_1 = {}
+	movies_list_5_1 = {}
+	movies_list_6_1 = {}
+
 	movies_list_1_2 = {}
 	movies_list_2_2 = {}
 	movies_list_3_2 = {}
 	movies_list_4_2 = {}
+	movies_list_5_2 = {}
+	movies_list_6_2 = {}
+
+
 
 	for movie in movies_1_1:
 		mrks = marks_1_1.filter(work=movie)
@@ -606,6 +656,36 @@ def view_mov_nomination(request, pk):
 		else:
 			ratings_4_1[movie.id] = 0
 		movies_list_4_1[movie.id]=movie
+
+	for movie in movies_5_1:
+		mrks = marks_5_1.filter(work=movie)
+		if mrks:
+			length = len(mrks)
+			summa = 0;
+			for mark in mrks:
+				summa += mark.criterai_one
+				summa += mark.criterai_two
+				summa += mark.criterai_three
+			summa = summa / length
+			ratings_5_1[movie.id] = round(summa, 1)
+		else:
+			ratings_5_1[movie.id] = 0
+		movies_list_5_1[movie.id]=movie
+
+	for movie in movies_6_1:
+		mrks = marks_6_1.filter(work=movie)
+		if mrks:
+			length = len(mrks)
+			summa = 0;
+			for mark in mrks:
+				summa += mark.criterai_one
+				summa += mark.criterai_two
+				summa += mark.criterai_three
+			summa = summa / length
+			ratings_6_1[movie.id] = round(summa, 1)
+		else:
+			ratings_6_1[movie.id] = 0
+		movies_list_6_1[movie.id]=movie
 
 ########################################################
 	for movie in movies_1_2:
@@ -668,59 +748,113 @@ def view_mov_nomination(request, pk):
 			ratings_4_2[movie.id] = 0
 		movies_list_4_2[movie.id]=movie
 
+	for movie in movies_5_2:
+		mrks = marks_5_2.filter(work=movie)
+		if mrks:
+			length = len(mrks)
+			summa = 0;
+			for mark in mrks:
+				summa += mark.criterai_one
+				summa += mark.criterai_two
+				summa += mark.criterai_three
+			summa = summa / length
+			ratings_5_2[movie.id] = round(summa, 1)
+		else:
+			ratings_5_2[movie.id] = 0
+		movies_list_5_2[movie.id]=movie
+
+	for movie in movies_6_2:
+		mrks = marks_6_2.filter(work=movie)
+		if mrks:
+			length = len(mrks)
+			summa = 0;
+			for mark in mrks:
+				summa += mark.criterai_one
+				summa += mark.criterai_two
+				summa += mark.criterai_three
+			summa = summa / length
+			ratings_6_2[movie.id] = round(summa, 1)
+		else:
+			ratings_6_2[movie.id] = 0
+		movies_list_6_2[movie.id]=movie
+
 
 	sorting_1_1 = sorted(ratings_1_1.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_2_1 = sorted(ratings_2_1.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_3_1 = sorted(ratings_3_1.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_4_1 = sorted(ratings_4_1.items(), key=operator.itemgetter(1), reverse=True)
+	sorting_5_1 = sorted(ratings_5_1.items(), key=operator.itemgetter(1), reverse=True)
+	sorting_6_1 = sorted(ratings_6_1.items(), key=operator.itemgetter(1), reverse=True)
 
 	sorting_1_2 = sorted(ratings_1_2.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_2_2 = sorted(ratings_2_2.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_3_2 = sorted(ratings_3_2.items(), key=operator.itemgetter(1), reverse=True)
 	sorting_4_2 = sorted(ratings_4_2.items(), key=operator.itemgetter(1), reverse=True)
+	sorting_5_2 = sorted(ratings_5_2.items(), key=operator.itemgetter(1), reverse=True)
+	sorting_6_2 = sorted(ratings_6_2.items(), key=operator.itemgetter(1), reverse=True)
 
 	if request.POST:
 		filename = translit.slugify(str(nomination)) + ' ('
 		if 'type_1_1' in request.POST:
 			movies_list = movies_list_1_1
 			sorting = sorting_1_1
-			name = 'Студенты учреждений среднего профессионального образовани (очное участие)'
-			filename += 'students_spo_ochno (vocal)'
+			name = 'Студенты (профи) высших учебных заведений (очное участие)'
+			filename += 'students_vpo_profi_ochno (vocal)'
 		elif 'type_1_2' in request.POST:
 			movies_list = movies_list_1_2
 			sorting = sorting_1_2
-			name = 'Студенты учреждений среднего профессионального образовани (заочное участие)'
-			filename += 'students_spo_zaochno (vocal)'
+			name = 'Студенты (профи) высших учебных заведений (заочное участие)'
+			filename += 'students_vpo_profi__zaochno (vocal)'
 		elif  'type_2_1' in request.POST:
 			movies_list = movies_list_2_1
 			sorting = sorting_2_1
-			name = 'Студенты высших учебных заведений (очное участие)'
-			filename += 'students_vpo_ochno (vocal)'
+			name = 'Студенты (любители) высших учебных заведений (очное участие)'
+			filename += 'students_vpo_lubiteli_ochno (vocal)'
 		elif  'type_2_2' in request.POST:
 			movies_list = movies_list_2_2
 			sorting = sorting_2_2
-			name = 'Студенты высших учебных заведений (заочное участие)'
-			filename += 'students_vpo_zaochno (vocal)'
+			name = 'Студенты (любители) высших учебных заведений (заочное участие)'
+			filename += 'students_vpo_lubiteli_zaochno (vocal)'
 		elif  'type_3_1' in request.POST:
 			movies_list = movies_list_3_1
 			sorting = sorting_3_1
-			name = 'Преподаватели, руководители коллективов (очное участие)'
-			filename += 'teachers_ochno (vocal)'
+			name = 'Студенты (профи) учреждений среднего профессионального образовани (очное участие)'
+			filename += 'students_spo_profi_ochno (vocal)'
 		elif  'type_3_2' in request.POST:
 			movies_list = movies_list_3_2
 			sorting = sorting_3_2
-			name = 'Преподаватели, руководители коллективов (заочное участие)'
-			filename += 'teachers_zaochno (vocal)'
+			name = 'Студенты (профи) учреждений среднего профессионального образовани (заочное участие)'
+			filename += 'students_spo_profi_zaochno (vocal)'
 		elif  'type_4_1' in request.POST:
 			movies_list = movies_list_4_1
 			sorting = sorting_4_1
-			name = 'Любительские коллективы (очное участие)'
-			filename += 'groups_ochno (vocal)'
-		else:
+			name = 'Студенты (любители) учреждений среднего профессионального образовани (очное участие)'
+			filename += 'students_spo_lubiteli_ochno (vocal)'
+		elif  'type_4_2' in request.POST:
 			movies_list = movies_list_4_2
 			sorting = sorting_4_2
-			name = 'Любительские коллективы (заочное участие)'
-			filename += 'groups_zaochno (vocal)'
+			name = 'Студенты (любители) учреждений среднего профессионального образовани (заочное участие)'
+			filename += 'students_spo_lubiteli_zaochno (vocal)'
+		elif  'type_5_1' in request.POST:
+			movies_list = movies_list_5_1
+			sorting = sorting_5_1
+			name = 'Профи (очное участие)'
+			filename += 'profi_ochno (vocal)'
+		elif  'type_5_2' in request.POST:
+			movies_list = movies_list_5_2
+			sorting = sorting_5_2
+			name = 'Профи (заочное участие)'
+			filename += 'profi_zaochno (vocal)'
+		elif  'type_6_1' in request.POST:
+			movies_list = movies_list_6_1
+			sorting = sorting_6_1
+			name = 'Любители (очное участие)'
+			filename += 'lubiteli_ochno (vocal)'
+		elif  'type_6_2' in request.POST:
+			movies_list = movies_list_6_2
+			sorting = sorting_6_2
+			name = 'Любители (заочное участие)'
+			filename += 'lubiteli_zaochno (vocal)'
 		filename += ')'
 
 		locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
@@ -762,16 +896,34 @@ def view_mov_nomination(request, pk):
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
+		hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[0].width = Mm(10)
 		hdr_cells[1].text = 'Название работы'
+		hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[1].width = Mm(60)
 		hdr_cells[2].text = 'Конкурсант(Коллектив)'
+		hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[2].width = Mm(60)
 		hdr_cells[3].text = 'Преподаватель/Концертмейстер'
+		hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[3].width = Mm(50)
 		hdr_cells[4].text = 'Учреждение'
+		hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[4].width = Mm(50)
-		hdr_cells[5].text = 'Оценка'
+		hdr_cells[5].text = 'Баллы'
+		hdr_cells[5].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[5].width = Mm(17)
 
 
@@ -781,20 +933,40 @@ def view_mov_nomination(request, pk):
 
 			row_cells = table.add_row().cells
 			row_cells[0].text = str(cnt)
+			row_cells[0].paragraphs[0].runs[0].font.bold = True
+			row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[0].width = Mm(10)
-			row_cells[1].text = movie.name
+			row_cells[1].text = movie.name_1
+			if movie.composer_1:
+				row_cells[1].text += ' муз. ' + movie.composer_1
+			if movie.poet_1:
+				row_cells[1].text += ' сл. ' + movie.poet_1
+			if movie.region_1:
+				row_cells[1].text += '\nРегион: ' + movie.region_1
+			row_cells[1].text += '\n' + movie.name_2
+			if movie.composer_2:
+				row_cells[1].text += ' муз. ' + movie.composer_2
+			if movie.poet_2:
+				row_cells[1].text += ' сл. ' + movie.poet_2
+			if movie.region_2:
+				row_cells[1].text += '\nРегион: ' + movie.region_2
+			row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[1].width = Mm(60)
-			row_cells[2].text = movie.author.profile.get_full_name()
-			if movie.author.profile.group:
-				row_cells[2].text += ' (' + movie.author.profile.group + ')'
+			row_cells[2].text = movie.author.get_full_name()
+			row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[2].width = Mm(60)
 			row_cells[3].text = ''
 			for comove in comovies[key]:
 				row_cells[3].text += comove.coauthor.get_file_name() + ' (' + comove.coauthor.get_profile_type_display() + ')\n'
+			row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[3].width = Mm(50)
-			row_cells[4].text = movie.author.profile.institution
+			row_cells[4].text = movie.author.main_user.profile.institution
+			row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[4].width = Mm(50)
 			row_cells[5].text = str(val)
+			row_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			row_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[5].width = Mm(17)
 
 			cnt += 1
@@ -811,18 +983,26 @@ def view_mov_nomination(request, pk):
 		'movies_list_2_1': movies_list_2_1,
 		'movies_list_3_1': movies_list_3_1,
 		'movies_list_4_1': movies_list_4_1,
+		'movies_list_5_1': movies_list_5_1,
+		'movies_list_6_1': movies_list_6_1,
 		'movies_list_1_2': movies_list_1_2,
 		'movies_list_2_2': movies_list_2_2,
 		'movies_list_3_2': movies_list_3_2,
 		'movies_list_4_2': movies_list_4_2,
+		'movies_list_5_2': movies_list_5_2,
+		'movies_list_6_2': movies_list_6_2,
 		'sorting_1_1': sorting_1_1,
 		'sorting_2_1': sorting_2_1,
 		'sorting_3_1': sorting_3_1,
 		'sorting_4_1': sorting_4_1,
+		'sorting_5_1': sorting_5_1,
+		'sorting_6_1': sorting_6_1,
 		'sorting_1_2': sorting_1_2,
 		'sorting_2_2': sorting_2_2,
 		'sorting_3_2': sorting_3_2,
 		'sorting_4_2': sorting_4_2,
+		'sorting_5_2': sorting_5_2,
+		'sorting_6_2': sorting_6_2,
 		'comovies': comovies
 	}
 	return render(request, 'ratings/view_mov_nominations.html', args)
