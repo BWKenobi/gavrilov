@@ -1272,7 +1272,7 @@ def get_check_list(request, pk, param):
 				p.add_run(nomination.name).bold = True
 				p.paragraph_format.space_after = 0
 
-				for cat_num in ['1','2','3','4']:
+				for cat_num in ['1','2','3','4','5','6']:
 					category = CATEGORY_TYPES[cat_num]
 
 
