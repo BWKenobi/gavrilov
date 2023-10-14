@@ -1029,12 +1029,13 @@ def get_check_list(request, pk):
 
 
 	CATEGORY_TYPES = {
-		'1': 'Студенты учреждений среднего профессионального образовани',
-		'2': 'Студенты высших учебных заведений',
-		'3': 'Преподаватели, руководители коллективов',
-		'4': 'Любительские коллективы',
+		'1': 'Студенты (профи) высших учебных заведений',
+		'2': 'Студенты (любители) высших учебных заведений',
+		'3': 'Студенты (профи) учреждений среднего профессионального образовани',
+		'4': 'Студенты (любители) учреждений среднего профессионального образовани',
+		'5': 'Профи',
+		'6': 'Любители',
 	}
-
 
 	user = User.objects.get(pk=pk)
 	juri_type = user.profile.juri_type
@@ -1058,7 +1059,7 @@ def get_check_list(request, pk):
 	font.size = Pt(8)
 
 	p = document.add_paragraph()
-	p.add_run('Оценочный лист Всероссийского фестиваля конкурса народного творчества «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2022г.').bold = True
+	p.add_run('Оценочный лист Всероссийского фестиваля конкурса народного творчества «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023г.').bold = True
 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 	p.paragraph_format.space_after = 0
 	document.add_paragraph()
@@ -1083,11 +1084,11 @@ def get_check_list(request, pk):
 				p.add_run(nomination.name).bold = True
 				p.paragraph_format.space_after = 0
 
-				for cat_num in ['1','2','3','4']:
+				for cat_num in ['1','2','3','4','5','6']:
 					category = CATEGORY_TYPES[cat_num]
 
 
-					members = Movie.objects.filter(nomination=nomination, author__profile__category=cat_num)
+					members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num)
 
 					if members:
 						p = document.add_paragraph()
@@ -1113,18 +1114,36 @@ def get_check_list(request, pk):
 
 						new_cell = table.cell(0, 0).merge(table.cell(1, 0))
 						new_cell.text = '№'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 						new_cell = table.cell(0, 1).merge(table.cell(1, 1))
 						new_cell.text = 'Участник'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 						new_cell = table.cell(0, 2).merge(table.cell(1, 2))
 						new_cell.text = 'Учреждение'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 						new_cell = table.cell(0, 3).merge(table.cell(1, 3))
 						new_cell.text = 'Преподаватель'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 						new_cell = table.cell(0, 4).merge(table.cell(1, 4))
 						new_cell.text = 'Название'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 
 						
 						new_cell = table.cell(0, 5).merge(table.cell(0, 7))
 						new_cell.text = 'Оценка (макс. 10 баллов)'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 
 						table.cell(1, 5).text = criteria1
 						table.cell(1, 6).text = criteria2
@@ -1132,6 +1151,9 @@ def get_check_list(request, pk):
 
 						new_cell = table.cell(0, 8).merge(table.cell(1, 8))
 						new_cell.text = 'Всего'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 
 						cnt = 1
 						for member in members:
@@ -1139,41 +1161,65 @@ def get_check_list(request, pk):
 
 							row_cells = table.add_row().cells
 							row_cells[0].text = str(cnt)
+							row_cells[0].paragraphs[0].runs[0].font.bold = True
+							row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[0].width = Mm(10)
 
-							row_cells[1].text = member.author.profile.get_file_name()
-							if member.author.profile.group:
-								row_cells[1].text += ' (' + member.author.profile.group + ')'
+							row_cells[1].text = member.author.get_file_name()
+							row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[1].width = Mm(50)
 
 
-							row_cells[2].text = member.author.profile.institution
+							row_cells[2].text = member.author.main_user.profile.institution
+							row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[2].width = Mm(50)
 
 							row_cells[3].text = ''
-							teachers = CoProfile.objects.filter(main_user = member.author)
+							teachers = CoMovie.objects.filter(movie = member)
 							if teachers:
 								for teacher in teachers:
-									row_cells[3].text += teacher.get_profile_type_display() + ' ' + teacher.get_file_name() + '\n'
+									row_cells[3].text += teacher.coauthor.get_profile_type_display() + ' ' + teacher.coauthor.get_file_name() + '\n'
+							row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[3].width = Mm(50)
 
-							row_cells[4].text = member.name
+							row_cells[4].text = member.name_1
+							if member.composer_1:
+								row_cells[4].text += ' муз. ' + member.composer_1
+							if member.poet_1:
+								row_cells[4].text += ' сл. ' + member.poet_1
+							if member.region_1:
+								row_cells[4].text += '\nРегион: ' + member.region_1
+							row_cells[4].text += '\n' + member.name_2
+							if member.composer_2:
+								row_cells[4].text += ' муз. ' + member.composer_2
+							if member.poet_2:
+								row_cells[4].text += ' сл. ' + member.poet_2
+							if member.region_2:
+								row_cells[4].text += '\nРегион: ' + member.region_2
+							row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[4].width = Mm(40)
 
 							
 							row_cells[5].text = ''
 							if marks:
 								row_cells[5].text = str(marks[0].criterai_one)
+							row_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[5].width = Mm(20)
 
 							row_cells[6].text = ''
 							if marks:
 								row_cells[6].text = str(marks[0].criterai_two)
+							row_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[6].width = Mm(20)
 
 							row_cells[7].text = ''
 							if marks:
 								row_cells[7].text = str(marks[0].criterai_three)
+							row_cells[7].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[7].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[7].width = Mm(20)
 
 
@@ -1188,6 +1234,8 @@ def get_check_list(request, pk):
 									summa += marks[0].criterai_two
 								if marks[0].criterai_three:
 									summa += marks[0].criterai_three
+							row_cells[8].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[8].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[8].text = str(summa)
 
 							cnt += 1
@@ -1219,7 +1267,7 @@ def get_check_list(request, pk):
 					category = CATEGORY_TYPES[cat_num]
 
 
-					members = Picture.objects.filter(nomination=nomination, author__profile__category=cat_num)
+					members = Picture.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num)
 
 					if members:
 						p = document.add_paragraph()
@@ -1247,18 +1295,36 @@ def get_check_list(request, pk):
 
 						new_cell = table.cell(0, 0).merge(table.cell(1, 0))
 						new_cell.text = '№'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 						new_cell = table.cell(0, 1).merge(table.cell(1, 1))
 						new_cell.text = 'Участник'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 						new_cell = table.cell(0, 2).merge(table.cell(1, 2))
 						new_cell.text = 'Учреждение'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 						new_cell = table.cell(0, 3).merge(table.cell(1, 3))
 						new_cell.text = 'Преподаватель'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 						new_cell = table.cell(0, 4).merge(table.cell(1, 4))
 						new_cell.text = 'Название'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 
 						
 						new_cell = table.cell(0, 5).merge(table.cell(0, 9))
 						new_cell.text = 'Оценка (макс. 10 баллов)'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 
 						table.cell(1, 5).text = criteria1
 						table.cell(1, 6).text = criteria2
@@ -1268,6 +1334,9 @@ def get_check_list(request, pk):
 
 						new_cell = table.cell(0, 10).merge(table.cell(1, 10))
 						new_cell.text = 'Всего'
+						new_cell.paragraphs[0].runs[0].font.bold = True
+						new_cell.paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+						new_cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 
 						cnt = 1
 						for member in members:
@@ -1275,55 +1344,72 @@ def get_check_list(request, pk):
 
 							row_cells = table.add_row().cells
 							row_cells[0].text = str(cnt)
+							row_cells[0].paragraphs[0].runs[0].font.bold = True
+							row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[0].width = Mm(10)
 
-							row_cells[1].text = member.author.profile.get_file_name()
-							if member.author.profile.group:
-								row_cells[1].text += ' (' + member.author.profile.group + ')'
+							row_cells[1].text = member.author.get_file_name()
+							row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[1].width = Mm(40)
 
 
-							row_cells[2].text = member.author.profile.institution
+							row_cells[2].text = member.author.main_user.profile.institution
+							row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[2].width = Mm(40)
 
 							row_cells[3].text = ''
-							teachers = CoProfile.objects.filter(main_user = member.author)
+							teachers = CoPicturee.objects.filter(picture = member)
 							if teachers:
 								for teacher in teachers:
-									row_cells[3].text += teacher.get_profile_type_display() + ' ' + teacher.get_file_name() + '\n'
+									row_cells[3].text += teacher.coauthor.get_profile_type_display() + ' ' + teacher.coauthor.get_file_name() + '\n'
+							row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[3].width = Mm(40)
 
 							row_cells[4].text = member.name
+							row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[4].width = Mm(30)
 
 							
 							row_cells[5].text = ''
 							if marks:
 								row_cells[5].text = str(marks[0].criterai_one)
+							row_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[5].width = Mm(20)
 
 							row_cells[6].text = ''
 							if marks:
 								row_cells[6].text = str(marks[0].criterai_two)
+							row_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[6].width = Mm(20)
 
 							row_cells[7].text = ''
 							if marks:
 								row_cells[7].text = str(marks[0].criterai_three)
+							row_cells[7].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[7].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[7].width = Mm(20)
 
 							row_cells[8].text = ''
 							if marks:
 								row_cells[8].text = str(marks[0].criterai_four)
+							row_cells[8].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[8].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[8].width = Mm(20)
 
 							row_cells[9].text = ''
 							if marks:
 								row_cells[9].text = str(marks[0].criterai_five)
+							row_cells[9].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[9].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[9].width = Mm(20)
 
 
 							row_cells[10].text = ''
+							row_cells[10].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[10].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 							row_cells[10].width = Mm(17)
 
 							summa = 0
@@ -1339,6 +1425,8 @@ def get_check_list(request, pk):
 								if marks[0].criterai_five:
 									summa += marks[0].criterai_five
 							row_cells[10].text = str(summa)
+							row_cells[10].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[10].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 
 							cnt += 1
 
