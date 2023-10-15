@@ -251,10 +251,20 @@
                                     <ul>
                                         <li class="nav-item list-unstyled ">
                                             <a class="nav-link" href="{% url 'marks:mark_card' %}">
-                                                <span data-feather="image"></span>
+                                                <span data-feather="film"></span>
                                                 <em><u>Очный этап</u></em>
                                             </a>
                                         </li>
+                                        {% for vocal in vocals %}
+                                             <li class="nav-item list-unstyled ">
+                                                {% with 'view-art-nomination/'|addstr:vocal.pk as tmp %}
+                                                    <a class="nav-link {% if tmp in request.path %}active{% endif %}" href="{% url 'nominations:view_movie_nomination' pk=vocal.pk %}">
+                                                        <span data-feather="film"></span>
+                                                        <em><u>{{ vocal }}</u></em>
+                                                    </a>
+                                                {% endwith %}
+                                            </li>
+                                        {% endfor %}
                                     </ul>
                                     {% endif %}
                                     <div class="border-top my-3"></div>

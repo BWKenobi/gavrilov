@@ -21,6 +21,7 @@ from marks.forms import PictureMarkForm, MovieMarkForm
 from .forms import PictureFilter, MovieFilter
 
 
+# Оценивание ДПИ ЗАОЧНО
 @login_required(login_url='/login/')
 def view_art_nomination(request, pk):
 	if not request.user.profile.juri_accecc and not request.user.profile.chef_juri_accecc:
@@ -81,6 +82,7 @@ def view_art_nomination(request, pk):
 	return render(request, 'nominations/view_art_nominations.html', args)
 
 
+# Оценивание ДПИ ОЧНО Админом
 @login_required(login_url='/login/')
 def view_art_far_nomination(request, pk = None):
 	if not request.user.profile.admin_access:
@@ -150,100 +152,56 @@ def view_art_far_nomination(request, pk = None):
 
 
 
+# Оценивание ВОКАЛ ЗАОЧНО
 @login_required(login_url='/login/')
 def view_movie_nomination(request, pk):
 	if not request.user.profile.juri_accecc and not request.user.profile.chef_juri_accecc:
 		return redirect('home')
 
 	nomination = VocalNomination.objects.get(pk=pk)
-	movies = Movie.objects.filter(nomination=nomination, author__profile__participation = '2')
+	movies = Movie.objects.filter(nomination=nomination, participation = '2')
 
-	if request.POST:
-		criterai_one = request.POST.getlist('criterai_one')
-		criterai_two = request.POST.getlist('criterai_two')
-		criterai_three = request.POST.getlist('criterai_three')
+	criterai1 = 'Соответствие названию, полнота раскрытия'
+	criterai2 = 'Техническое воспроизведение'
+	criterai3 = 'Авторское новаторство'
 
-		cnt = 0
-		for movie in movies:
-			marks = MovieMark.objects.filter(expert=request.user, work=movie)
-			if marks:
-				mark = marks[0]
-
-				if not criterai_one[cnt] and not criterai_two[cnt] and not criterai_three[cnt]:
-					mark.delete()
-				else:
-					if criterai_one[cnt]:
-						mark.criterai_one = int(criterai_one[cnt])
-						if mark.criterai_one>10:
-							mark.criterai_one = 10
-					else:
-						mark.criterai_one = 0
-
-					if criterai_two[cnt]:
-						mark.criterai_two = int(criterai_two[cnt])
-						if mark.criterai_two>10:
-							mark.criterai_two = 10
-					else:
-						mark.criterai_two = 0
-
-					if criterai_three[cnt]:
-						mark.criterai_three = int(criterai_three[cnt])
-						if mark.criterai_three>10:
-							mark.criterai_three = 10
-					else:
-						mark.criterai_three = 0
-
-					mark.save()
-			else:
-				if  criterai_one[cnt] or  criterai_two[cnt] or  criterai_three[cnt]:
-					mark = MovieMark.objects.create(expert = request.user, work = movie)
-
-					if criterai_one[cnt]:
-						mark.criterai_one = int(criterai_one[cnt])
-						if mark.criterai_one>10:
-							mark.criterai_one = 10
-					else:
-						mark.criterai_one = 0
-
-					if criterai_two[cnt]:
-						mark.criterai_two = int(criterai_two[cnt])
-						if mark.criterai_two>10:
-							mark.criterai_two = 10
-					else:
-						mark.criterai_two = 0
-
-					if criterai_three[cnt]:
-						mark.criterai_three = int(criterai_three[cnt])
-						if mark.criterai_three>10:
-							mark.criterai_three = 10
-					else:
-						mark.criterai_three = 0
-
-					mark.save()
-
-			cnt += 1
+	mark1_list = {}
+	mark2_list = {}
+	mark3_list = {}
 
 
-	forms = {}
 	for movie in movies:
-		mark = MovieMark.objects.filter(expert=request.user, work=movie)
-		if mark:
-			form = MovieMarkForm(instance=mark[0], label_suffix='')
-		else:
-			form = MovieMarkForm(label_suffix='')
+		marks = MovieMark.objects.filter(expert=request.user, work=movie).first()
+		mark1_list[movie.pk] = None
+		mark2_list[movie.pk] = None
+		mark3_list[movie.pk] = None
 
-		forms[movie.id] = form
+		if marks:
+			if marks.criterai_one:
+				mark1_list[movie.pk] = marks.criterai_one
+			if marks.criterai_two:
+				mark2_list[movie.pk] = marks.criterai_two
+			if marks.criterai_three:
+				mark3_list[movie.pk] = marks.criterai_three
+
+
 
 	args = {
-		'nomination': nomination, 
+		'nomination': nomination,
 		'movies': movies,
 		'nomination_pk': pk,
-		'forms': forms
+		'criterai1': criterai1,
+		'criterai2': criterai2,
+		'criterai3': criterai3,
+		'mark1_list': mark1_list,
+		'mark2_list': mark2_list,
+		'mark3_list': mark3_list,
 	}
 	return render(request, 'nominations/view_movie_nominations.html', args)
 
 
 
+# Оценивание ВОКАЛ ЗАОЧНО Админом
 @login_required(login_url='/login/')
 def view_movie_far_nomination(request, pk = None):
 	if not request.user.profile.admin_access:

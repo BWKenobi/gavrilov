@@ -7,8 +7,7 @@
 		<form action="" method="post" enctype="multipart/form-data" autocomplete="false" class="col-md-12 col-lg-12"> {% csrf_token %}
 			<div class="mx-auto mb-2 col-md-12 col-lg-12">
 				<h4 class="display-5 text-center">Номинация: <b>{{ nomination }}</b></h4>
-				<h5 class="text-center text-danger">После выставления оценок, нажмите кнопку <b>"Сохранить оценки работ"</b> внизу страницы</h5>
-				<h4 class="text-center text-danger"><b>Оценки от "0" до "10" без десятых.</b></h4>
+				<h5 class="text-center text-danger">Оценки сохраняются автоматически</h5>
 			</div>
 
 			<div class="mx-auto mb-3 col-md-12 col-lg-12">
@@ -22,60 +21,157 @@
 					<div class="tab-pane {% if not master %}active{% endif %}" id="pictures" role="tab-panel">
 						<div class="mx-auto mb-5 col-md-12 col-lg-12">
 							{% for movie in movies %}
-								<div class="mx-auto text-center">
-									<h3>{{ movie.name }}</h3>
+							<div>
+								<p class="text-center mb-0"><b style="font-size: 150%;">{{ movie.author.get_full_name }}</b><br>{{ movie.nomination}}</p>
+								<p class="text-center mb-0"><b>Категория участника: {{ movie.author.main_user.profile.get_category_display }}</b></p>
+								<p class="text-left mt-3 mb-0">
+									<div class="row">
+										<div class="col-md-12 mb-2">
+											<b>{{ movie.name_1 }}</b>{% if movie.composer_1 %} муз. {{ movie.composer_1 }}{% endif %}{% if movie.poet_1 %} сл. {{ movie.poet_1 }}{% endif %}{% if movie.region_1 %}<br><b>Регион:</b> {{ movie.region_1 }}{% endif %}
+										</div>
+										<div class="col-md-12">
+											<b>{{ movie.name_2 }}</b>{% if movie.composer_2 %} муз. {{ movie.composer_2 }}{% endif %}{% if movie.poet_2 %} сл. {{ movie.poet_2 }}{% endif %}{% if movie.region_2 %}<br><b>Регион:</b> {{ movie.region_2 }}{% endif %}
+										</div>
+									</div>
+								</p>
+
+								<div class="row">
+									{% if movie.file_1 %}
+										<div class="text-center mb-5 col-md-6 mx-auto">
+											{% if movie.youtube_flag_1 %}
+												<div class="embed-responsive embed-responsive-16by9">
+												 	<iframe class="embed-responsive-item" src="{{ movie.file_1 }}"></iframe>
+												</div>
+											{% else %}
+												<h4 class="display-5 text-center"><a href="{{ movie.file_1 }}" target="_blank">Просмотреть в отдельном окне</a></h4>
+											{% endif %}
+										</div>
+									{% endif %}
+									{% if movie.file_2 %}
+										<div class="text-center mb-5 col-md-6 mx-auto">
+											{% if movie.youtube_flag_2 %}
+												<div class="embed-responsive embed-responsive-16by9">
+												 	<iframe class="embed-responsive-item" src="{{ movie.file_2 }}"></iframe>
+												</div>
+											{% else %}
+												<h4 class="display-5 text-center"><a href="{{ movie.file_2 }}" target="_blank">Просмотреть в отдельном окне</a></h4>
+											{% endif %}
+										</div>
+									{% endif %}
 								</div>
 
-								{% if movie.youtube_flag %}
-									<div class="embed-responsive embed-responsive-16by9 mb-5">
-									 	<iframe class="embed-responsive-item" src="{{ movie.file }}"></iframe>
-									</div>
-								{% else %}
-									<h4 class="display-5 text-center mb-5"><a href="{{ movie.file }}" target="_blank">Просмотреть в отдельном окне</a></h4>
-								{% endif %}
 
-
-
-								<div class="row  mx-auto align-middle col-md-10 col-lg-10 mb-5">
-									<div class="col-md-8">
-										{% if movie.composer %}<b>Муз.</b> {{movie.composer}}{% endif %}{% if movie.poet %}, <b>Сл.</b> {{movie.poet}}{% endif %}{% if movie.descritpion %} (<em>{{movie.descritpion}}</em>){% endif %}
-									</div>
-									<div class="col-md-4 text-right">
-										<b>Категория:</b> {{ movie.author.profile.get_category_display }}
+								<div class="row">
+									<div class="col-md-3"><b>{{ criterai1 }}</b></div>
+									<div class="row text-center col-md-9" data-criteria='1' data-pk="{{ movie.pk }}">
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:movie.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:movie.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:movie.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:movie.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:movie.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:movie.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:movie.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:movie.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:movie.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:movie.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+										</div>
 									</div>
 								</div>
-								{% with form=forms|lookup:movie.pk %}
-									<div class="row  mx-auto align-middle col-md-12 col-lg-12">
-										<div class="text-center col-md-4 col-lg-4 mx-auto">
-											{{ form.criterai_one.label_tag }}
-										</div>
-										<div class="text-center col-md-4 col-lg-4 mx-auto">
-											{{ form.criterai_two.label_tag }}
-										</div>
-										<div class="text-center col-md-4 col-lg-4 mx-auto">
-											{{ form.criterai_three.label_tag }}
-										</div>
-									</div>
-									<div class="row  mx-auto align-middle col-md-12 col-lg-12">
-										<div class="text-center col-md-4 col-lg-4 mx-auto">
-											{{ form.criterai_one }}
-										</div>
-										<div class="text-center col-md-4 col-lg-4 mx-auto">
-											{{ form.criterai_two }}
-										</div>
-										<div class="text-center col-md-4 col-lg-4 mx-auto">
-											{{ form.criterai_three }}
-										</div>
-									</div>
-								{% endwith %}
 								<hr>
+								<div class="row">
+									<div class="col-md-3"><b>{{ criterai2 }}</b></div>
+									<div class="row text-center col-md-9" data-criteria='2' data-pk="{{ movie.pk }}">
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:movie.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:movie.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:movie.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:movie.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:movie.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:movie.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:movie.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:movie.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:movie.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:movie.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+										</div>
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-md-3"><b>{{ criterai3 }}</b></div>
+									<div class="row text-center col-md-9" data-criteria='3' data-pk="{{ movie.pk }}">
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:movie.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:movie.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:movie.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:movie.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:movie.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:movie.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:movie.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:movie.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:movie.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+										</div>
+										<div class="col-1-my">
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:movie.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+										</div>
+									</div>
+								</div>
+								<hr style="border-width: 5px; border-color: black;">
+							</div>
 							{% endfor %}
 						</div>
-					</div>
-				</div>
-				<div class="row align-middle">
-					<div class="col-md-12 text-center">
-						<input type="submit" value="Сохранить оценки работ" class="show-loader">
 					</div>
 				</div>
 			</form>
@@ -83,3 +179,74 @@
 	</div>
 {% endblock %}
 
+{% block scripts %}
+    {{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('button[type=button]').click(function(){
+				if ($(this).hasClass('btn-danger')){
+					$(this).removeClass('btn-danger');
+					$(this).addClass('btn-outline-secondary');
+				}else{
+					$(this).parent().parent().parent().find('button').removeClass('btn-danger');
+					$(this).parent().parent().parent().find('button').removeClass('btn-outline-secondary');
+					$(this).parent().parent().parent().find('button').addClass('btn-outline-secondary');
+					$(this).removeClass('btn-outline-secondary');
+					$(this).addClass('btn-danger');
+				}
+
+
+				url = "{% url 'marks:ajax_set_marks' %}";
+				mark1 = 0;
+				mark2 = 0;
+				mark3 = 0;
+
+				pk = $(this).parent().parent().attr('data-pk');
+
+				element = $(this).parent().parent().parent().parent().find('div[data-criteria=1]').find('.btn-danger');
+				if (element.length>0)
+					mark1 = $(element).text();
+				element = $(this).parent().parent().parent().parent().find('div[data-criteria=2]').find('.btn-danger');
+				if (element.length>0)
+					mark2 = $(element).text();
+				element = $(this).parent().parent().parent().parent().find('div[data-criteria=3]').find('.btn-danger');
+				if (element.length>0)
+					mark3 = $(element).text();
+
+
+				$.ajax({
+					url: url,
+					data: {
+						'mark1': mark1,
+						'mark2': mark2,
+						'mark3': mark3,
+
+						'pk': pk
+					},
+					success: function(data){
+						toastr.options = {
+						  "closeButton": false,
+						  "debug": false,
+						  "newestOnTop": false,
+						  "progressBar": false,
+						  "positionClass": "toast-top-right",
+						  "preventDuplicates": false,
+						  "onclick": null,
+						  "showDuration": "300",
+						  "hideDuration": "1000",
+						  "timeOut": "3000",
+						  "extendedTimeOut": "3000",
+						  "showEasing": "swing",
+						  "hideEasing": "linear",
+						  "showMethod": "fadeIn",
+						  "hideMethod": "fadeOut"
+						}
+						toastr["success"]("Оценка сохранена!");
+					}
+				});
+			});
+		});
+
+
+	</script>
+{% endblock %}

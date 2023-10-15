@@ -39,6 +39,8 @@ from pictures.models import Picture
 from profileuser.models import Profile
 from .models import MovieMark, PictureMark
 
+
+# Оценивание Вокала ОЧНО
 @login_required(login_url='/login/')
 def mark_card(request):
 	if not request.user.profile.juri_accecc:
@@ -121,14 +123,23 @@ def ajax_set_marks(request):
 	mark2 = int(request.GET['mark2'])
 	mark3 = int(request.GET['mark3'])
 
-	marks = MovieMark.objects.filter(expert=request.user, work=pk)
+	marks = MovieMark.objects.filter(expert=request.user, work=pk).last()
 	if marks:
-		marks[0].criterai_one = mark1
-		marks[0].criterai_two = mark2
-		marks[0].criterai_three = mark3
-		marks[0].save()
+		MovieMark.objects.filter(expert=request.user, work=pk).exclude(pk = marks.pk).delete()
+
+	if marks:
+		marks.criterai_one = mark1
+		marks.criterai_two = mark2
+		marks.criterai_three = mark3
+		marks.save()
 	else:
-		MovieMark.objects.create(expert=request.user, work=Movie.objects.get(pk=pk), criterai_one = mark1, criterai_two = mark2, criterai_three = mark3)
+		MovieMark.objects.create(
+			expert=request.user,
+			work=Movie.objects.get(pk=pk),
+			criterai_one = mark1,
+			criterai_two = mark2,
+			criterai_three = mark3
+		)
 	return HttpResponse(True)
 
 
