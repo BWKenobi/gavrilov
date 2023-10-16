@@ -28,7 +28,7 @@ from movies.models import Movie, CoMovie
 from nominations.models import ArtNomination, VocalNomination
 from marks.models import PictureMark, MovieMark
 
-from profileuser.models import CoProfile
+from profileuser.models import CoProfile, Profile
 
 from marks.forms import PictureMarkForm, MovieMarkForm
 
@@ -1248,7 +1248,7 @@ def get_check_list(request, pk, param):
 
 
 	if juri_type == '2':
-		#Вокал
+		#ДПИ
 		criteria1 = 'Соответствие названию, полнота раскрытия'
 		criteria2 = 'Техническое воспроизведение'
 		criteria3 = 'Авторское новаторство'
@@ -1446,6 +1446,666 @@ def get_check_list(request, pk, param):
 
 	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
 	response['Content-Disposition'] = 'attachment; filename=' + filename + '.docx'
+	document.save(response)
+
+	return response
+
+
+@login_required(login_url='/login/')
+def get_common_check_list_pic(request, param):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	CATEGORY_TYPES = {
+		'1': 'Студенты (профи) высших учебных заведений',
+		'2': 'Студенты (любители) высших учебных заведений',
+		'3': 'Студенты (профи) учреждений среднего профессионального образовани',
+		'4': 'Студенты (любители) учреждений среднего профессионального образовани',
+		'5': 'Профи',
+		'6': 'Любители',
+	}
+
+	place_str = ['Гран-при', 'I', 'II', 'III']
+	nominations = ArtNomination.objects.all()
+
+	filename = 'CommonList'
+	juri_chefs = Profile.objects.filter(chef_juri_accecc = True)
+	juris = Profile.objects.filter(juri_accecc = True, chef_juri_accecc = False, juri_type = '2').order_by('surname')
+
+	dte = date.today()
+	document = Document()
+	section = document.sections[-1]
+	new_width, new_height = section.page_height, section.page_width
+	section.orientation = WD_ORIENT.LANDSCAPE
+	section.page_width = Mm(297)
+	section.page_height = Mm(210)
+	section.left_margin = Mm(30)
+	section.right_margin = Mm(10)
+	section.top_margin = Mm(10)
+	section.bottom_margin = Mm(10)
+	section.header_distance = Mm(10)
+	section.footer_distance = Mm(10)
+
+	style = document.styles['Normal']
+	font = style.font
+	font.name = 'Times New Roman'
+	font.size = Pt(10)
+
+
+	p = document.add_paragraph()
+	p.add_run('ИТОГОВЫЙ ПРОТОКОЛ ЖЮРИ ВСЕРОССИЙСКОГО ФЕСТИВАЛЯ-КОНКУРСА').bold = True
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('«ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023 г.').bold = True
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	if param == '1':
+		p.add_run('Конкурсно-выставочная программа (очное участие)').underline = True
+		filename = 'CommonList-DPI-near'
+	else:
+		p.add_run('Конкурсно-выставочная программа (заочное участие)').underline = True
+		filename = 'CommonList-DPI-far'
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+
+	document.add_paragraph().paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('Председатель жюри:').bold = True
+	p.paragraph_format.space_after = 0
+
+	for juri_chef in juri_chefs:
+		p = document.add_paragraph()
+		p.add_run(juri_chef.get_full_name()).underline = True
+		p.add_run(' - ')
+		p.add_run(juri_chef.rank)
+		p.paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('Члены жюри:').bold = True
+	p.paragraph_format.space_after = 0
+
+	for juri in juris:
+		p = document.add_paragraph()
+		p.add_run(juri.get_full_name()).underline = True
+		p.add_run(' - ')
+		p.add_run(juri.rank)
+		p.paragraph_format.space_after = 0
+
+
+	for nomination in nominations:
+		find_cnt = Picture.objects.filter(nomination=nomination, participation = param).count()
+		if find_cnt:
+			document.add_paragraph()
+			p = document.add_paragraph()
+			p.add_run(nomination.name).bold = True
+			p.paragraph_format.space_after = 0
+
+			for cat_num in ['1','2','3','4','5','6']:
+				category = CATEGORY_TYPES[cat_num]
+				members = Picture.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param)
+
+				if members:
+					p = document.add_paragraph()
+					p.paragraph_format.space_after = 0
+					p = document.add_paragraph(category)
+					p.paragraph_format.space_after = 0
+
+
+					co_teachers = {}
+					for member in members:
+						co_teachers[member.pk] = CoPicturee.objects.filter(picture = member)
+
+					marks = PictureMark.objects.filter(work__in = members)
+					ratings = {}
+					member_list = {}
+
+					check_raitings = False
+					for member in members:
+						mrks = marks.filter(work=member)
+						if mrks:
+							length = len(mrks)
+							summa = 0;
+							for mark in mrks:
+								if mark.criterai_one:
+									summa += int(mark.criterai_one)
+								if mark.criterai_two:
+									summa += int(mark.criterai_two)
+								if mark.criterai_three:
+									summa += int(mark.criterai_three)
+								if mark.criterai_four:
+									summa += int(mark.criterai_four)
+								if mark.criterai_five:
+									summa += int(mark.criterai_five)
+
+
+							summa = round(summa / length, 1)
+							if summa > 0:
+								check_raitings = True
+							ratings[member.id] = summa
+						else:
+							ratings[member.id] = 0
+						member_list[member.id]=member
+
+					sorting = sorted(ratings.items(), key=operator.itemgetter(1), reverse=True)
+
+
+
+					table = document.add_table(rows=1, cols=7)
+					table.allow_autifit = False
+					table.style = 'TableGrid'
+					table.columns[0].width = Mm(10)
+					table.columns[1].width = Mm(50)
+					table.columns[2].width = Mm(40)
+					table.columns[3].width = Mm(50)
+					table.columns[4].width = Mm(70)
+					table.columns[5].width = Mm(17)
+					table.columns[6].width = Mm(20)
+
+					hdr_cells = table.rows[0].cells
+
+					hdr_cells[0].text = '№'
+					hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[0].width = Mm(10)
+
+					hdr_cells[1].text = 'Конкурсант (коллектив)'
+					hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[1].width = Mm(50)
+
+					hdr_cells[2].text = 'Руководитель/ преподаватель'
+					hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[2].width = Mm(40)
+
+					hdr_cells[3].text = 'Название работы'
+					hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[3].width = Mm(50)
+
+					hdr_cells[4].text = 'Учреждение'
+					hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[4].width = Mm(70)
+
+					hdr_cells[5].text = 'Оценка'
+					hdr_cells[5].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[5].width = Mm(17)
+
+
+					hdr_cells[6].text = 'Результат'
+					hdr_cells[6].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[6].width = Mm(20)
+
+
+					if check_raitings:
+						cnt = 1
+						for key, val in sorting:
+							member = member_list[key]
+
+							row_cells = table.add_row().cells
+
+							row_cells[0].text = str(cnt)
+							row_cells[0].paragraphs[0].runs[0].font.bold = True
+							row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[0].width = Mm(10)
+
+							row_cells[1].text = member.author.get_full_name()
+							row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[1].width = Mm(50)
+
+							row_cells[2].text = ''
+							if co_teachers[member.pk]:
+								for co_teacher in co_teachers[member.pk]:
+									row_cells[2].text += co_teacher.coauthor.short_profile_type() + ' ' + co_teacher.coauthor.get_file_name() + '\n'
+								row_cells[2].text = row_cells[2].text[:-2]
+							row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[2].width = Mm(40)
+
+							row_cells[3].text =  member.name
+							row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[3].width = Mm(50)
+
+							row_cells[4].text = member.author.main_user.profile.institution
+							row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[4].width = Mm(70)
+
+							row_cells[5].text = str(val)
+							row_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[5].width = Mm(17)
+
+
+							row_cells[6].text = ''
+							if member.place:
+								row_cells[6].text = place_str[int(member.place)]
+							row_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[6].width = Mm(20)
+
+
+							cnt += 1
+					else:
+						cnt = 1
+						for member in members:
+
+							row_cells = table.add_row().cells
+
+							row_cells[0].text = str(cnt)
+							row_cells[0].paragraphs[0].runs[0].font.bold = True
+							row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[0].width = Mm(10)
+
+							row_cells[1].text = member.author.get_full_name()
+							row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[1].width = Mm(50)
+
+							row_cells[2].text = ''
+							if co_teachers[member.pk]:
+								for co_teacher in co_teachers[member.pk]:
+									row_cells[2].text += '\n' + co_teacher.coauthor.short_profile_type() + ' ' + co_teacher.coauthor.get_file_name()
+								row_cells[2].text = row_cells[2].text[:-2]
+							row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[2].width = Mm(40)
+
+							row_cells[3].text =  member.name
+							row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[3].width = Mm(50)
+
+							row_cells[4].text = member.author.main_user.profile.institution
+							row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[4].width = Mm(70)
+
+							row_cells[5].text = ''
+							row_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[5].width = Mm(17)
+
+
+							row_cells[6].text = ''
+							if member.place:
+								row_cells[6].text = place_str[int(member.place)]
+							row_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[6].width = Mm(20)
+
+
+							cnt += 1
+
+
+	document.add_paragraph().paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('Председатель жюри:').bold = True
+	p.paragraph_format.space_after = 0
+
+	document.add_paragraph().paragraph_format.space_after = 0
+
+	for juri_chef in juri_chefs:
+		p = document.add_paragraph()
+		p.add_run('____________________________' + juri_chef.get_full_name())
+		p.paragraph_format.space_after = 0
+		document.add_paragraph().paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('Члены жюри:').bold = True
+	p.paragraph_format.space_after = 0
+
+	document.add_paragraph().paragraph_format.space_after = 0
+
+	for juri in juris:
+		p = document.add_paragraph()
+		p.add_run('____________________________' + juri.get_full_name())
+		p.paragraph_format.space_after = 0
+
+		document.add_paragraph().paragraph_format.space_after = 0
+
+	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+	response['Content-Disposition'] = 'attachment; filename=' + filename +' (' + dte.strftime('%d-%b-%Y') + ').docx'
+	document.save(response)
+
+	return response
+
+
+@login_required(login_url='/login/')
+def get_common_check_list_mov(request, param):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	CATEGORY_TYPES = {
+		'1': 'Студенты (профи) высших учебных заведений',
+		'2': 'Студенты (любители) высших учебных заведений',
+		'3': 'Студенты (профи) учреждений среднего профессионального образовани',
+		'4': 'Студенты (любители) учреждений среднего профессионального образовани',
+		'5': 'Профи',
+		'6': 'Любители',
+	}
+
+	place_str = ['Гран-при', 'I', 'II', 'III']
+	nominations = VocalNomination.objects.all()
+
+	filename = 'CommonList'
+	juri_chefs = Profile.objects.filter(chef_juri_accecc = True)
+	juris = Profile.objects.filter(juri_accecc = True, chef_juri_accecc = False, juri_type = '1').order_by('surname')
+
+	dte = date.today()
+	document = Document()
+	section = document.sections[-1]
+	new_width, new_height = section.page_height, section.page_width
+	section.orientation = WD_ORIENT.LANDSCAPE
+	section.page_width = Mm(297)
+	section.page_height = Mm(210)
+	section.left_margin = Mm(30)
+	section.right_margin = Mm(10)
+	section.top_margin = Mm(10)
+	section.bottom_margin = Mm(10)
+	section.header_distance = Mm(10)
+	section.footer_distance = Mm(10)
+
+	style = document.styles['Normal']
+	font = style.font
+	font.name = 'Times New Roman'
+	font.size = Pt(10)
+
+
+	p = document.add_paragraph()
+	p.add_run('ИТОГОВЫЙ ПРОТОКОЛ ЖЮРИ ВСЕРОССИЙСКОГО ФЕСТИВАЛЯ-КОНКУРСА').bold = True
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('«ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023 г.').bold = True
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	if param == '1':
+		p.add_run('Концертно-конкурсная программа (очное участие)').underline = True
+		filename = 'CommonList-Vocal-near'
+	else:
+		p.add_run('Концертно-конкурсная программа  (заочное участие)').underline = True
+		filename = 'CommonList-Vocal-far'
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+
+	document.add_paragraph().paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('Председатель жюри:').bold = True
+	p.paragraph_format.space_after = 0
+
+	for juri_chef in juri_chefs:
+		p = document.add_paragraph()
+		p.add_run(juri_chef.get_full_name()).underline = True
+		p.add_run(' - ')
+		p.add_run(juri_chef.rank)
+		p.paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('Члены жюри:').bold = True
+	p.paragraph_format.space_after = 0
+
+	for juri in juris:
+		p = document.add_paragraph()
+		p.add_run(juri.get_full_name()).underline = True
+		p.add_run(' - ')
+		p.add_run(juri.rank)
+		p.paragraph_format.space_after = 0
+
+
+	for nomination in nominations:
+		find_cnt = Movie.objects.filter(nomination=nomination, participation = param).count()
+		if find_cnt:
+			document.add_paragraph()
+			p = document.add_paragraph()
+			p.add_run(nomination.name).bold = True
+			p.paragraph_format.space_after = 0
+
+			for cat_num in ['1','2','3','4','5','6']:
+				category = CATEGORY_TYPES[cat_num]
+				members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param)
+
+				if members:
+					p = document.add_paragraph()
+					p.paragraph_format.space_after = 0
+					p = document.add_paragraph(category)
+					p.paragraph_format.space_after = 0
+
+
+					co_teachers = {}
+					for member in members:
+						co_teachers[member.pk] = CoMovie.objects.filter(movie = member)
+
+					marks = MovieMark.objects.filter(work__in = members)
+					ratings = {}
+					member_list = {}
+
+					check_raitings = False
+					for member in members:
+						mrks = marks.filter(work=member)
+						if mrks:
+							length = len(mrks)
+							summa = 0;
+							for mark in mrks:
+								if mark.criterai_one:
+									summa += int(mark.criterai_one)
+								if mark.criterai_two:
+									summa += int(mark.criterai_two)
+								if mark.criterai_three:
+									summa += int(mark.criterai_three)
+
+
+							summa = round(summa / length, 1)
+							if summa > 0:
+								check_raitings = True
+							ratings[member.id] = summa
+						else:
+							ratings[member.id] = 0
+						member_list[member.id]=member
+
+					sorting = sorted(ratings.items(), key=operator.itemgetter(1), reverse=True)
+
+
+
+					table = document.add_table(rows=1, cols=7)
+					table.allow_autifit = False
+					table.style = 'TableGrid'
+					table.columns[0].width = Mm(10)
+					table.columns[1].width = Mm(50)
+					table.columns[2].width = Mm(40)
+					table.columns[3].width = Mm(50)
+					table.columns[4].width = Mm(70)
+					table.columns[5].width = Mm(17)
+					table.columns[6].width = Mm(20)
+
+					hdr_cells = table.rows[0].cells
+
+					hdr_cells[0].text = '№'
+					hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[0].width = Mm(10)
+
+					hdr_cells[1].text = 'Конкурсант (коллектив)'
+					hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[1].width = Mm(50)
+
+					hdr_cells[2].text = 'Руководитель/ преподаватель'
+					hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[2].width = Mm(40)
+
+					hdr_cells[3].text = 'Название произведений'
+					hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[3].width = Mm(50)
+
+					hdr_cells[4].text = 'Учреждение'
+					hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[4].width = Mm(70)
+
+					hdr_cells[5].text = 'Оценка'
+					hdr_cells[5].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[5].width = Mm(17)
+
+
+					hdr_cells[6].text = 'Результат'
+					hdr_cells[6].paragraphs[0].runs[0].font.bold = True
+					hdr_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					hdr_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					hdr_cells[6].width = Mm(20)
+
+
+					if check_raitings:
+						cnt = 1
+						for key, val in sorting:
+							member = member_list[key]
+
+							row_cells = table.add_row().cells
+
+							row_cells[0].text = str(cnt)
+							row_cells[0].paragraphs[0].runs[0].font.bold = True
+							row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[0].width = Mm(10)
+
+							row_cells[1].text = member.author.get_full_name()
+							row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[1].width = Mm(50)
+
+							row_cells[2].text = ''
+							if co_teachers[member.pk]:
+								for co_teacher in co_teachers[member.pk]:
+									row_cells[2].text += co_teacher.coauthor.short_profile_type() + ' ' + co_teacher.coauthor.get_file_name() + '\n'
+								row_cells[2].text = row_cells[2].text[:-2]
+							row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[2].width = Mm(40)
+
+							row_cells[3].text =  member.name_1 + '\n' + member.name_2
+							row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[3].width = Mm(50)
+
+							row_cells[4].text = member.author.main_user.profile.institution
+							row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[4].width = Mm(70)
+
+							row_cells[5].text = str(val)
+							row_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[5].width = Mm(17)
+
+
+							row_cells[6].text = ''
+							if member.place:
+								row_cells[6].text = place_str[int(member.place)]
+							row_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[6].width = Mm(20)
+
+
+							cnt += 1
+					else:
+						cnt = 1
+						for member in members:
+
+							row_cells = table.add_row().cells
+
+							row_cells[0].text = str(cnt)
+							row_cells[0].paragraphs[0].runs[0].font.bold = True
+							row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[0].width = Mm(10)
+
+							row_cells[1].text = member.author.get_full_name()
+							row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[1].width = Mm(50)
+
+							row_cells[2].text = ''
+							if co_teachers[member.pk]:
+								for co_teacher in co_teachers[member.pk]:
+									row_cells[2].text += '\n' + co_teacher.coauthor.short_profile_type() + ' ' + co_teacher.coauthor.get_file_name()
+								row_cells[2].text = row_cells[2].text[:-2]
+							row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[2].width = Mm(40)
+
+							row_cells[3].text =  member.name_1 + '\n' + member.name_2
+							row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[3].width = Mm(50)
+
+							row_cells[4].text = member.author.main_user.profile.institution
+							row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[4].width = Mm(70)
+
+							row_cells[5].text = ''
+							row_cells[5].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[5].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[5].width = Mm(17)
+
+
+							row_cells[6].text = ''
+							if member.place:
+								row_cells[6].text = place_str[int(member.place)]
+							row_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+							row_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+							row_cells[6].width = Mm(20)
+
+
+							cnt += 1
+
+
+	document.add_paragraph().paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('Председатель жюри:').bold = True
+	p.paragraph_format.space_after = 0
+
+	document.add_paragraph().paragraph_format.space_after = 0
+
+	for juri_chef in juri_chefs:
+		p = document.add_paragraph()
+		p.add_run('____________________________' + juri_chef.get_full_name())
+		p.paragraph_format.space_after = 0
+		document.add_paragraph().paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('Члены жюри:').bold = True
+	p.paragraph_format.space_after = 0
+
+	document.add_paragraph().paragraph_format.space_after = 0
+
+	for juri in juris:
+		p = document.add_paragraph()
+		p.add_run('____________________________' + juri.get_full_name())
+		p.paragraph_format.space_after = 0
+
+		document.add_paragraph().paragraph_format.space_after = 0
+
+	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+	response['Content-Disposition'] = 'attachment; filename=' + filename +' (' + dte.strftime('%d-%b-%Y') + ').docx'
 	document.save(response)
 
 	return response

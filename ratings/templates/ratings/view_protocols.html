@@ -24,6 +24,18 @@
 				{% endfor %}
 			</tbody>
 		</table>
+		<div class="mx-auto mb-2 col-md-12 col-lg-12 border-top">
+			<a href="{% url 'ratings:get_common_check_list_pic' param=1 %}">Сводная ведомость (ДПИ)...</a>
+		</div>
+		<div class="mx-auto mb-2 col-md-12 col-lg-12">
+			<a href="{% url 'ratings:get_common_check_list_mov' param=1 %}">Сводная ведомость (Вокал)...</a>
+		</div>
+		<div class="mx-auto mb-2 col-md-12 col-lg-12">
+			<a href=" url 'ratings:get_protocol_pic' ">Итоговый протокол (ДПИ)...</a>
+		</div>
+		<div class="mx-auto mb-2 col-md-12 col-lg-12">
+			<a href=" url 'ratings:get_protocol_mov' ">Итоговый протокол (Вокал)...</a>
+		</div>
 		<p class="mt-5"><b>Заочное участие</b></p>
 		<table class="table">
 			<tbody>
@@ -43,9 +55,12 @@
 		</table>
 
 		<div class="mx-auto mb-2 col-md-12 col-lg-12 border-top">
-			<a href=" url 'ratings:get_common_check_list' ">Сводная ведомость...</a>
+			<a href="{% url 'ratings:get_common_check_list_pic' param=2 %}">Сводная ведомость (ДПИ)...</a>
 		</div>
-		<div class="mx-auto mb-2 col-md-12 col-lg-12 border-top">
+		<div class="mx-auto mb-2 col-md-12 col-lg-12">
+			<a href="{% url 'ratings:get_common_check_list_mov' param=2 %}">Сводная ведомость (Вокал)...</a>
+		</div>
+		<div class="mx-auto mb-2 col-md-12 col-lg-12">
 			<a href=" url 'ratings:get_protocol_pic' ">Итоговый протокол (ДПИ)...</a>
 		</div>
 		<div class="mx-auto mb-2 col-md-12 col-lg-12">
