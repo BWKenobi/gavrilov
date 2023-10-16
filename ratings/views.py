@@ -1692,7 +1692,7 @@ def get_common_check_list_pic(request, param):
 
 
 							row_cells[6].text = ''
-							if member.place:
+							if member.place != None:
 								row_cells[6].text = place_str[int(member.place)]
 							row_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 							row_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
@@ -1739,7 +1739,7 @@ def get_common_check_list_pic(request, param):
 
 
 							row_cells[6].text = ''
-							if member.place:
+							if member.place != None:
 								row_cells[6].text = place_str[int(member.place)]
 							row_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 							row_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
@@ -2020,7 +2020,7 @@ def get_common_check_list_mov(request, param):
 
 
 							row_cells[6].text = ''
-							if member.place:
+							if member.place != None:
 								row_cells[6].text = place_str[int(member.place)]
 							row_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 							row_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
@@ -2067,7 +2067,7 @@ def get_common_check_list_mov(request, param):
 
 
 							row_cells[6].text = ''
-							if member.place:
+							if member.place != None:
 								row_cells[6].text = place_str[int(member.place)]
 							row_cells[6].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 							row_cells[6].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
