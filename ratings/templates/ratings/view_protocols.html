@@ -31,10 +31,10 @@
 			<a href="{% url 'ratings:get_common_check_list_mov' param=1 %}">Сводная ведомость (Вокал)...</a>
 		</div>
 		<div class="mx-auto mb-2 col-md-12 col-lg-12">
-			<a href=" url 'ratings:get_protocol_pic' ">Итоговый протокол (ДПИ)...</a>
+			<a href="{% url 'ratings:get_protocol_pic' param=1 %}">Итоговый протокол (ДПИ)...</a>
 		</div>
 		<div class="mx-auto mb-2 col-md-12 col-lg-12">
-			<a href=" url 'ratings:get_protocol_mov' ">Итоговый протокол (Вокал)...</a>
+			<a href="{%  url 'ratings:get_protocol_mov'  param=1 %}">Итоговый протокол (Вокал)...</a>
 		</div>
 		<p class="mt-5"><b>Заочное участие</b></p>
 		<table class="table">
@@ -61,10 +61,10 @@
 			<a href="{% url 'ratings:get_common_check_list_mov' param=2 %}">Сводная ведомость (Вокал)...</a>
 		</div>
 		<div class="mx-auto mb-2 col-md-12 col-lg-12">
-			<a href=" url 'ratings:get_protocol_pic' ">Итоговый протокол (ДПИ)...</a>
+			<a href="{% url 'ratings:get_protocol_pic' param=2 %}">Итоговый протокол (ДПИ)...</a>
 		</div>
 		<div class="mx-auto mb-2 col-md-12 col-lg-12">
-			<a href=" url 'ratings:get_protocol_mov' ">Итоговый протокол (Вокал)...</a>
+			<a href="{%  url 'ratings:get_protocol_mov'  param=2 %}">Итоговый протокол (Вокал)...</a>
 		</div>
 	</div>
 {% endblock %}

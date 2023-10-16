@@ -2112,26 +2112,34 @@ def get_common_check_list_mov(request, param):
 
 
 login_required(login_url='/login/')
-def get_protocol_pic(request):
+def get_protocol_pic(request, param):
 	if not request.user.profile.admin_access:
 		return redirect('home')
 
-	nomin_list = ArtNomination.objects.all()
-	juri_chefs = Profile.objects.filter(chef_juri_accecc = True)
-	juris = Profile.objects.filter(juri_accecc = True, chef_juri_accecc = False).order_by('surname')
-
+	CATEGORY_TYPES = {
+		'1': 'Студенты (профи) высших учебных заведений',
+		'2': 'Студенты (любители) высших учебных заведений',
+		'3': 'Студенты (профи) учреждений среднего профессионального образовани',
+		'4': 'Студенты (любители) учреждений среднего профессионального образовани',
+		'5': 'Профи',
+		'6': 'Любители',
+	}
 
 	mark_array = ['Гран-при', 'Лауреат I степени', 'Лауреат II степени', 'Лауреат III степени']
+	nominations = ArtNomination.objects.all()
 
-	filename = translit.slugify('Протокол (ДПИ)')
+	filename = 'CommonList'
+	juri_chefs = Profile.objects.filter(chef_juri_accecc = True)
+	juris = Profile.objects.filter(juri_accecc = True, chef_juri_accecc = False, juri_type = '2').order_by('surname')
 
+	dte = date.today()
 	document = Document()
 	section = document.sections[-1]
 	new_width, new_height = section.page_height, section.page_width
-	section.orientation = WD_ORIENT.PORTRAIT
-	section.page_width = Mm(210)
-	section.page_height = Mm(297)
-	section.left_margin = Mm(20)
+	section.orientation = WD_ORIENT.LANDSCAPE
+	section.page_width = Mm(297)
+	section.page_height = Mm(210)
+	section.left_margin = Mm(30)
 	section.right_margin = Mm(10)
 	section.top_margin = Mm(10)
 	section.bottom_margin = Mm(10)
@@ -2141,14 +2149,28 @@ def get_protocol_pic(request):
 	style = document.styles['Normal']
 	font = style.font
 	font.name = 'Times New Roman'
-	font.size = Pt(12)
+	font.size = Pt(10)
 
 
 	p = document.add_paragraph()
-	p.add_run('Протокол заседания конкурсной комиссии по подведению итогов зонального хореографического конкурса «Пространство танца», 2023г.').bold = True
+	p.add_run('Протокол заседания конкурсной комиссии по подведению итогов').bold = True
 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 	p.paragraph_format.space_after = 0
-	document.add_paragraph()
+
+	p = document.add_paragraph()
+	p.add_run('всероссийского фестиваля-кокурса «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023 г.').bold = True
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	if param == '1':
+		p.add_run('Конкурсно-выставочная программа (очное участие)').underline = True
+		filename = translit.slugify('Протокол ДПИ (очно)')
+	else:
+		p.add_run('Конкурсно-выставочная программа (заочное участие)').underline = True
+		filename = translit.slugify('Протокол ДПИ (заочно)')
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
 
 	document.add_paragraph().paragraph_format.space_after = 0
 
@@ -2175,86 +2197,180 @@ def get_protocol_pic(request):
 		p.paragraph_format.space_after = 0
 
 
-
-	cnt = 1
-	for nomin in nomin_list:
-		if Member.objects.filter(nomination = nomin, coffee_break = False, place__in = [0, 1, 2, 3]).count():
-			document.add_paragraph().paragraph_format.space_after = 0
-			document.add_paragraph().paragraph_format.space_after = 0
-
-			nomination = dict(Member.NOMINATIONS_TYPES)[nomin]
-
+	for nomination in nominations:
+		find_cnt = Picture.objects.filter(nomination=nomination, participation = param, place__in = [0, 1, 2, 3]).count()
+		if find_cnt:
+			document.add_paragraph()
 			p = document.add_paragraph()
-			p.add_run('Номинация:' + nomination).bold = True
-			p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			p.add_run(nomination.name).bold = True
 			p.paragraph_format.space_after = 0
 
-			for dance_type in ['1', '2']:
-				for team_type in ['1', '2', '0']:
-					if team_type == '0':
-						test_members = Member.objects.filter(nomination = nomin, dance_type = dance_type, profi_flag = True, coffee_break = False, place__in = [0, 1, 2, 3]).count()
-					else:
-						test_members = Member.objects.filter(nomination = nomin, dance_type = dance_type, profi_flag = False, main_user__profile__team_type = team_type, coffee_break = False, place__in = [0, 1, 2, 3]).count()
+			for cat_num in ['1','2','3','4','5','6']:
+				category = CATEGORY_TYPES[cat_num]
+				members = Picture.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param, place__in = [0, 1, 2, 3]).order_by('place')
 
-					if test_members:
-						document.add_paragraph().paragraph_format.space_after = 0
-						document.add_paragraph().paragraph_format.space_after = 0
+				if members:
+					p = document.add_paragraph()
+					p.paragraph_format.space_after = 0
+					p = document.add_paragraph(category)
+					p.paragraph_format.space_after = 0
+					p = document.add_paragraph()
+					p.paragraph_format.space_after = 0
 
-						if team_type == '0':
-							p = document.add_paragraph()
-							p.add_run(dict(Member.DANCE_TYPE)[dance_type] + ': Народный или Образцовый' ).bold = True
-							p.paragraph_format.space_after = 0
-						else:
-							p = document.add_paragraph()
-							p.add_run(dict(Member.DANCE_TYPE)[dance_type] + ': ' + dict(Profile.TEAM_TYPE)[team_type] ).bold = True
-							p.paragraph_format.space_after = 0
+					co_teachers = {}
+					for member in members:
+						co_teachers[member.pk] = CoPicturee.objects.filter(picture = member)
 
-						if team_type == '2':
-							age_list = ['1', '2', '3', '4']
-						else:
-							age_list = ['1', '2', '3', '4', '5', '6']
+					for member in members:
+						p = document.add_paragraph()
+						p.add_run(mark_array[int(member.place)])
+						p.paragraph_format.space_after = 0
+						p = document.add_paragraph('', style = 'List Bullet')
 
-						for age in age_list:
-							if team_type == '2':
-								members = Member.objects.filter(nomination=nomin, age_2=age, dance_type = dance_type, profi_flag = False, main_user__profile__team_type = team_type, coffee_break = False, place__in = [0, 1, 2, 3]).order_by('number').order_by('place')
-							elif team_type == '1':
-								members = Member.objects.filter(nomination=nomin, age_1=age, dance_type = dance_type, profi_flag = False, main_user__profile__team_type = team_type, coffee_break = False, place__in = [0, 1, 2, 3]).order_by('number').order_by('place')
-							else:
-								members = Member.objects.filter(nomination=nomin, age_1=age, dance_type = dance_type, profi_flag = True, coffee_break = False, place__in = [0, 1, 2, 3]).order_by('number').order_by('place')
+						p.add_run(member.author.get_full_name())
 
-							if members:
-								document.add_paragraph().paragraph_format.space_after = 0
-								p = document.add_paragraph()
-								if team_type == '2':
-									p.add_run(dict(Member.AGE_TYPES_2)[age]).italic = True
-								else:
-									p.add_run(dict(Member.AGE_TYPES_1)[age]).italic = True
-								p.paragraph_format.space_after = 0
-
-								co_teachers = {}
-								for member in members:
-									co_teachers_pk = list(AdditionalTeacher.objects.filter(member = member).values_list('teacher', flat=True))
-									co_teachers[member.pk] = CoProfile.objects.filter(pk__in = co_teachers_pk)
+						p.add_run(' - ' + member.name)
+						if co_teachers[member.pk]:
+							for co_teacher in co_teachers[member.pk]:
+								p.add_run(', ' + co_teacher.coauthor.short_profile_type() + ' ' + co_teacher.coauthor.get_file_name())
+						p.add_run('. ' + member.author.main_user.profile.institution)
 
 
-								for member in members:
-									p = document.add_paragraph()
-									p.add_run(mark_array[int(member.place)])
-									p.paragraph_format.space_after = 0
-									p = document.add_paragraph('', style = 'List Bullet')
+	if juri_chefs:
+		document.add_paragraph()
+		p = document.add_paragraph()
+		p.add_run('Председатель	жюри:                                                     /' + juri_chefs[0].get_file_name() + '/')
 
-									if member.dance_type == '1':
-										p.add_run(member.get_full_name())
-									else:
-										p.add_run(member.team)
+	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+	response['Content-Disposition'] = 'attachment; filename=' + filename + '.docx'
+	document.save(response)
 
-									p.add_run(' - ' + member.performance + ' ,')
-									p.add_run(member.teacher.short_profile_type() + ' ' + member.teacher.get_file_name())
-									if co_teachers[member.pk]:
-										for co_teacher in co_teachers[member.pk]:
-											p.add_run(', ' + co_teacher.short_profile_type() + ' ' + co_teacher.get_file_name())
-									p.add_run('. ' + member.main_user.profile.institution)
+	return response
 
+
+login_required(login_url='/login/')
+def get_protocol_mov(request, param):
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	CATEGORY_TYPES = {
+		'1': 'Студенты (профи) высших учебных заведений',
+		'2': 'Студенты (любители) высших учебных заведений',
+		'3': 'Студенты (профи) учреждений среднего профессионального образовани',
+		'4': 'Студенты (любители) учреждений среднего профессионального образовани',
+		'5': 'Профи',
+		'6': 'Любители',
+	}
+
+	mark_array = ['Гран-при', 'Лауреат I степени', 'Лауреат II степени', 'Лауреат III степени']
+	nominations = VocalNomination.objects.all()
+
+	filename = 'CommonList'
+	juri_chefs = Profile.objects.filter(chef_juri_accecc = True)
+	juris = Profile.objects.filter(juri_accecc = True, chef_juri_accecc = False, juri_type = '1').order_by('surname')
+
+	dte = date.today()
+	document = Document()
+	section = document.sections[-1]
+	new_width, new_height = section.page_height, section.page_width
+	section.orientation = WD_ORIENT.LANDSCAPE
+	section.page_width = Mm(297)
+	section.page_height = Mm(210)
+	section.left_margin = Mm(30)
+	section.right_margin = Mm(10)
+	section.top_margin = Mm(10)
+	section.bottom_margin = Mm(10)
+	section.header_distance = Mm(10)
+	section.footer_distance = Mm(10)
+
+	style = document.styles['Normal']
+	font = style.font
+	font.name = 'Times New Roman'
+	font.size = Pt(10)
+
+
+	p = document.add_paragraph()
+	p.add_run('Протокол заседания конкурсной комиссии по подведению итогов').bold = True
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('всероссийского фестиваля-кокурса «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023 г.').bold = True
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	if param == '1':
+		p.add_run('Концертно-конкурсная программа (очное участие)').underline = True
+		filename = translit.slugify('Протокол ВОКАЛ (очно)')
+	else:
+		p.add_run('Концертно-конкурсная  программа (заочное участие)').underline = True
+		filename = translit.slugify('Протокол ВОКАЛ (заочно)')
+	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+	p.paragraph_format.space_after = 0
+
+	document.add_paragraph().paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('Председатель жюри:').bold = True
+	p.paragraph_format.space_after = 0
+
+	for juri_chef in juri_chefs:
+		p = document.add_paragraph()
+		p.add_run(juri_chef.get_full_name()).underline = True
+		p.add_run(' - ')
+		p.add_run(juri_chef.rank)
+		p.paragraph_format.space_after = 0
+
+	p = document.add_paragraph()
+	p.add_run('Члены жюри:').bold = True
+	p.paragraph_format.space_after = 0
+
+	for juri in juris:
+		p = document.add_paragraph()
+		p.add_run(juri.get_full_name()).underline = True
+		p.add_run(' - ')
+		p.add_run(juri.rank)
+		p.paragraph_format.space_after = 0
+
+
+	for nomination in nominations:
+		find_cnt = Movie.objects.filter(nomination=nomination, participation = param, place__in = [0, 1, 2, 3]).count()
+		if find_cnt:
+			document.add_paragraph()
+			p = document.add_paragraph()
+			p.add_run(nomination.name).bold = True
+			p.paragraph_format.space_after = 0
+
+			for cat_num in ['1','2','3','4','5','6']:
+				category = CATEGORY_TYPES[cat_num]
+				members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param, place__in = [0, 1, 2, 3]).order_by('place')
+
+				if members:
+					p = document.add_paragraph()
+					p.paragraph_format.space_after = 0
+					p = document.add_paragraph(category)
+					p.paragraph_format.space_after = 0
+					p = document.add_paragraph()
+					p.paragraph_format.space_after = 0
+
+					co_teachers = {}
+					for member in members:
+						co_teachers[member.pk] = CoMovie.objects.filter(movie = member)
+
+					for member in members:
+						p = document.add_paragraph()
+						p.add_run(mark_array[int(member.place)])
+						p.paragraph_format.space_after = 0
+						p = document.add_paragraph('', style = 'List Bullet')
+
+						p.add_run(member.author.get_full_name())
+
+						p.add_run(' - ' + member.name_1 + '/' + member.name_1)
+						if co_teachers[member.pk]:
+							for co_teacher in co_teachers[member.pk]:
+								p.add_run(', ' + co_teacher.coauthor.short_profile_type() + ' ' + co_teacher.coauthor.get_file_name())
+						p.add_run('. ' + member.author.main_user.profile.institution)
 
 
 	if juri_chefs:

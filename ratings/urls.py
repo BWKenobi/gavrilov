@@ -1,6 +1,6 @@
 from django.urls import path
 from django.conf.urls import url
-from .views import view_art_nomination, view_mov_nomination, view_protocols, get_check_list, get_protocol_pic#, get_protocol_mov
+from .views import view_art_nomination, view_mov_nomination, view_protocols, get_check_list, get_protocol_pic, get_protocol_mov
 from .views import get_common_check_list_pic, get_common_check_list_mov
 from .views import ajax_change_pic_place, ajax_change_mov_place
 
@@ -14,8 +14,8 @@ urlpatterns = [
 	path('get-common-check-list-pic/<str:param>', get_common_check_list_pic, name = 'get_common_check_list_pic'),
 	path('get-common-check-list-mov/<str:param>', get_common_check_list_mov, name = 'get_common_check_list_mov'),
 
-	path('get_protocol_pic', get_protocol_pic, name = 'get_protocol_pic'),
-	#path('get_protocol_mov', get_protocol_mov, name = 'get_protocol_mov'),
+	path('get_protocol_pic/<str:param>', get_protocol_pic, name = 'get_protocol_pic'),
+	path('get_protocol_mov/<str:param>', get_protocol_mov, name = 'get_protocol_mov'),
 ]
 
 urlpatterns += [
