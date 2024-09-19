@@ -90,12 +90,13 @@ def view_art_far_nomination(request, pk = None):
 
 	pictures = Picture.objects.filter(participation = '1').order_by('author__surname', 'author__name', 'author__team')
 	if not pk:
-		pk = pictures.first().pk
+		if pictures.first():
+			pk = pictures.first().pk
 
 
 	form = PictureFilter(pictures = pictures, selected = str(pk))
 
-	picture = Picture.objects.get(pk = pk)
+	picture = Picture.objects.filter(pk = pk).first()
 
 	users = User.objects.filter(profile__juri_accecc = True, profile__juri_type = '2')
 

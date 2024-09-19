@@ -16,7 +16,7 @@
 			<form action="" method="post" autocomplete="false"  enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
 				<p class="text-center movie-info">Добавьте "публичную" ссылку на Ваш видеофайл (Яндекс-диск, облако-mail.ru  и т.п.)</p>
-				<p class="text-center text-danger movie-info"><b>Однако рекомендуем использовать YouTube для Вашего видеофайла. </b></p>
+				<!-- <p class="text-center text-danger movie-info"><b>Однако рекомендуем использовать YouTube для Вашего видеофайла. </b></p> -->
 
 				<h5 class="text-center mt-5">Преподаватели/концертмейстеры и т.п.</h5>
 				{% if not user_name %}

@@ -24,9 +24,12 @@ class PictureUploadForm(forms.ModelForm):
 			if field == 'add_views':
 				self.fields[field].widget.attrs.update({'autocomplete':'false'})
 			else:
-				self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
+				if field == 'participation':
+					self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false', 'disabled': 'disabled'})
+				else:
+					self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
 
-			if field in ['file', 'add_view_1', 'add_view_2', 'technique', 'add_views']:
+			if field in ['file', 'add_view_1', 'add_view_2', 'technique', 'add_views', 'participation']:
 				self.fields[field].required=False
 			else:
 				self.fields[field].required=True
