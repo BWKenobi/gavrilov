@@ -55,7 +55,7 @@ class UserRegistrationForm(forms.ModelForm):
 	)
 
 	email = forms.EmailField(label = 'Ваш e-mail*', widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
-	less_institution = forms.BooleanField(label = "Участие без представения учреждения", widget=forms.CheckboxInput(attrs={'class': 'form-controll', 'autocomplete':'false'}), required=False)
+	less_institution = forms.BooleanField(label = "Участие без представления учреждения", widget=forms.CheckboxInput(attrs={'class': 'form-controll', 'autocomplete':'false'}), required=False)
 	category = forms.ChoiceField(choices=CHOICES, label = 'Категория*',  widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
 	surname = forms.CharField(label = 'Ваша фамилия*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
@@ -64,8 +64,8 @@ class UserRegistrationForm(forms.ModelForm):
 	profile_type = forms.ChoiceField(choices=PROFILE_TYPE, label='Должность*', widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	phone  = forms.CharField(label = 'Ваш телефон*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
-	institution = forms.CharField(label = 'Полное назавние учреждения (в соответсие с ЕГЮРЛ)*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	institution_shot = forms.CharField(label = 'Сокращеное назавние учреждения*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	institution = forms.CharField(label = 'Полное название учреждения (в соответствие с ЕГЮРЛ)*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	institution_shot = forms.CharField(label = 'Сокращенное название учреждения*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	adress = forms.CharField(label = 'Адрес учреждения*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 
 	add_team = forms.BooleanField(label = "Добавить коллектив", widget=forms.CheckboxInput(attrs={'class': 'form-controll', 'autocomplete':'false'}), required=False)
