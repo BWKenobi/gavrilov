@@ -52,9 +52,9 @@
 								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
 									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 									<td class="align-middle text-center table_click">
 										<select class="" data-pk="{{ picture.pk }}">
@@ -96,9 +96,9 @@
 								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
 									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 									<td class="align-middle text-center table_click">
 										<select class="" data-pk="{{ picture.pk }}">
@@ -142,9 +142,9 @@
 								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
 									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 									<td class="align-middle text-center table_click">
 										<select class="" data-pk="{{ picture.pk }}">
@@ -186,9 +186,9 @@
 								<tr class="table_hover" child-href="{% url 'pictures:edit_image_admin' pk=picture.pk %}">
 									<td scope="row" class="align-middle table_click">{{ forloop.counter }}</td>
 									<td class="align-middle table_click">{{ picture.name }}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.get_full_name }}</td>
+									<td class="align-middle table_click">{{ picture.author.get_full_name }}</td>
 									<td class="align-middle table_click">{% for copicture in copictures|lookup:key %}{{ copicture.coauthor.get_file_name }} ({{ copicture.coauthor.get_profile_type_display }})<br>{% endfor %}</td>
-									<td class="align-middle table_click">{{ picture.author.profile.institution }}</td>
+									<td class="align-middle table_click">{{ picture.author.main_user.profile.institution }}</td>
 									<td class="align-middle text-center table_click">{{ val }}</td>
 									<td class="align-middle text-center table_click">
 										<select class="" data-pk="{{ picture.pk }}">
