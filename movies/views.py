@@ -195,14 +195,14 @@ def view_movies(request):
 			document.add_paragraph().paragraph_format.space_after = 0
 
 			p = document.add_paragraph()
-			p.add_run('10. Технические требования для выступления:')
-			p.add_run(movie.descritpion)
+			p.add_run('10. ФИО руководителя направляющей организации')
+			p.add_run("________________________")
 			p.paragraph_format.space_after = 0
 
 			document.add_paragraph().paragraph_format.space_after = 0
 
 			p = document.add_paragraph()
-			p.add_run('Подпись ответственного лица: _________________________________________')
+			p.add_run('11. Подпись ответственного лица: _________________________________________')
 			p.paragraph_format.space_after = 0
 
 			document.add_paragraph().paragraph_format.space_after = 0

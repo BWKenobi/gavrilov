@@ -11,7 +11,7 @@ from profileuser.models import CoProfile
 class PictureUploadForm(forms.ModelForm):
 	class Meta:
 		model = Picture
-		fields = ('participation', 'author', 'ages', 'year', 'name', 'technique', 'nomination', 'file', 'add_views', 'add_view_1', 'add_view_2')
+		fields = ('participation', 'author', 'ages', 'year', 'name', 'technique', 'nomination')
 
 	def __init__(self, *args, **kwargs):
 		user = kwargs.pop('author', None)
@@ -21,15 +21,14 @@ class PictureUploadForm(forms.ModelForm):
 		self.fields['author'].empty_label = None
 
 		for field in self.fields:
-			if field == 'add_views':
-				self.fields[field].widget.attrs.update({'autocomplete':'false'})
-			else:
-				if field == 'participation':
-					self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false', 'disabled': 'disabled'})
-				else:
-					self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
+			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
 
-			if field in ['file', 'add_view_1', 'add_view_2', 'technique', 'add_views', 'participation']:
+			if field == 'participation':
+				self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false', 'disabled': 'disabled'})
+			else:
+				self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
+
+			if field in ['technique', 'participation']:
 				self.fields[field].required=False
 			else:
 				self.fields[field].required=True
@@ -40,13 +39,13 @@ class PictureUploadForm(forms.ModelForm):
 class PictureEditForm(forms.ModelForm):
 	class Meta:
 		model = Picture
-		fields = ('author', 'ages', 'year', 'name', 'technique', 'nomination', 'file', 'add_views', 'add_view_1', 'add_view_2')
+		fields = ('author', 'ages', 'year', 'name', 'technique', 'nomination')
 
-		widgets = {
-			'file': CustomClearableFileSimpleInput(),
-			'add_view_1': CustomClearableFileInput(),
-			'add_view_2': CustomClearableFileInput(),
-		}
+		# widgets = {
+		# 	'file': CustomClearableFileSimpleInput(),
+		# 	'add_view_1': CustomClearableFileInput(),
+		# 	'add_view_2': CustomClearableFileInput(),
+		# }
 
 	def __init__(self, *args, **kwargs):
 		user = kwargs.pop('author', None)
@@ -56,12 +55,9 @@ class PictureEditForm(forms.ModelForm):
 		self.fields['author'].empty_label = None
 
 		for field in self.fields:
-			if field == 'add_views':
-				self.fields[field].widget.attrs.update({'autocomplete':'false'})
-			else:
-				self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
+			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
 
-			if field in ['file', 'add_view_1', 'add_view_2', 'technique', 'add_views']:
+			if field in ['technique',]:
 				self.fields[field].required=False
 			else:
 				self.fields[field].required=True

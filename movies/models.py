@@ -22,7 +22,7 @@ class Movie(models.Model):
 
 	nomination = models.ForeignKey(VocalNomination, verbose_name='Номинация*', on_delete=models.SET_NULL, blank=True, null=True, default=None)
 
-	participation = models.CharField(verbose_name='Тип участия*', max_length=1, choices=PARTICIPATION_TYPE, default='2')
+	participation = models.CharField(verbose_name='Тип участия*', max_length=1, choices=PARTICIPATION_TYPE, default='1')
 
 	name_1 = models.CharField(verbose_name="Название первого произведения*", max_length=100, blank=True)
 	region_1 = models.CharField(verbose_name="Регион", max_length=100, blank=True)

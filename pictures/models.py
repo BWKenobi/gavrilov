@@ -38,7 +38,7 @@ class Picture(models.Model):
 	ages = models.DecimalField(verbose_name="Возраст на момент написания работы*", max_digits=2, decimal_places=0, default=0, blank=False)
 	year = models.DecimalField(verbose_name="Год исполнения работы*", max_digits=4, decimal_places=0, default=0, blank=False)
 
-	participation = models.CharField(verbose_name='Тип участия*', max_length=1, choices=PARTICIPATION_TYPE, default='2')
+	participation = models.CharField(verbose_name='Тип участия*', max_length=1, choices=PARTICIPATION_TYPE, default='1')
 
 	file = models.ImageField(verbose_name='Изображение работы*', blank=True, null=True, upload_to = make_picture_path)
 	add_views = models.BooleanField("Дополнительные ракурсы", default=False)

@@ -6,7 +6,7 @@ def base_context(request):
 	start = False
 
 	dte = date.today()
-	dte_deadline = date(2024,10,11)
+	dte_deadline = date(2025,10,6)
 	register_block = True
 	if dte<dte_deadline:
 		register_block = False
