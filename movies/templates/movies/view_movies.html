@@ -64,18 +64,8 @@
 							<div class="row align-middle">
 								<div class="col-md-4">
 									<b>Исполнитель:</b> {{ movie.author }}
-									<br>
-									<b>Название:</b> {{ movie.name_1 }}{% if movie.composer_1 %}, <b>муз.</b> {{movie.composer_1}}{% endif %}{% if movie.poet_1 %}, <b>сл.</b> {{movie.poet_1}}{% endif %}{% if movie.descritpion_1 %} (<em>{{movie.descritpion_1}}</em>){% endif %}
-									<br>
-									<b>Название:</b> {{ movie.name_2 }}{% if movie.composer_2 %}, <b>муз.</b> {{movie.composer_2}}{% endif %}{% if movie.poet_2 %}, <b>сл.</b> {{movie.poet_2}}{% endif %}{% if movie.descritpion_2 %} (<em>{{movie.descritpion_2}}</em>){% endif %}
-									{% for comovies in comovies_list|lookup:movie.pk %}
-										<br>{{ comovies.coauthor.get_file_name }} <em>({{ comovies.coauthor.get_profile_type_display }})</em>
-									{% endfor %}
-									<br><b>Участие: </b>{{ movie.get_participation_display }}
-									{% if movie.descritpion %}
-										<br><b>Технические требования: </b>{{ movie.descritpion }}
-									{% endif %}
 								</div>
+									
 								<div class="col-md-4 text-center">
 									<b>Номинация:</b> {{ movie.nomination }}
 								</div>
@@ -84,6 +74,19 @@
 								</div>
 								<div class="col-md-2 text-center">
 									{% if not register_block and memeber_flag %}<a href="{{ movie.pk }}" class="del_movie">Удалить</a>{% endif %}
+								</div>
+								<div class="col-md-12">
+									<br>
+									<b>Название:</b> {{ movie.name_1 }}{% if movie.composer_1 %}, <b>муз.</b> {{movie.composer_1}}{% endif %}{% if movie.poet_1 %}, <b>сл.</b> {{movie.poet_1}}{% endif %}{% if movie.descritpion_1 %} (<em>{{movie.descritpion_1}}</em>){% endif %}
+									<br>
+									<b>Название:</b> {{ movie.name_2 }}{% if movie.composer_2 %}, <b>муз.</b> {{movie.composer_2}}{% endif %}{% if movie.poet_2 %}, <b>сл.</b> {{movie.poet_2}}{% endif %}{% if movie.descritpion_2 %} (<em>{{movie.descritpion_2}}</em>){% endif %}
+									{% for comovies in comovies_list|lookup:movie.pk %}
+										<br>{{ comovies.coauthor.get_file_name }} <em>({{ comovies.coauthor.get_profile_type_display }})</em>
+									{% endfor %}
+									<br><b>Участие: </b><span style="text-decoration: underline;">{{ movie.get_participation_display }}</span>
+									{% if movie.descritpion %}
+										<br><b>Технические требования: </b>{{ movie.descritpion }}
+									{% endif %}
 								</div>
 							</div>
 							<hr>

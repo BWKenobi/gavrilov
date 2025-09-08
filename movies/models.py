@@ -14,7 +14,7 @@ from profileuser.models import CoProfile
 class Movie(models.Model):
 	PARTICIPATION_TYPE = (
 		('1', 'очное'),
-		('2', 'заочное'),
+		('2', 'онлайн-трансляция'),
 	)
 
 	author = models.ForeignKey(CoProfile, verbose_name='Исполнитель*', on_delete=models.CASCADE)

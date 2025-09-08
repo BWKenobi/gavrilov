@@ -59,12 +59,7 @@
 							{% endif %}
 							<div class="row align-middle">
 								<div class="col-md-4">
-									<b>Название:</b> {{ pict.name }}{% if pict.technique %}({{pict.technique}}){% endif %}
-									<br><b>Автор: </b>{{ pict.author }}
-									{% for copictures in copictures_list|lookup:pict.pk %}
-									<br>{{ copictures.coauthor.get_file_name }} <em>({{ copictures.coauthor.get_profile_type_display }})</em>
-									{% endfor %}
-									<br><b>Участие: </b>{{ pict.get_participation_display }}
+									<b>Автор: </b>{{ pict.author }}
 								</div>
 								<div class="col-md-4 text-center">
 									<b>Номинация:</b> {{ pict.nomination }}
@@ -74,6 +69,14 @@
 								</div>
 								<div class="col-md-2 text-center">
 									{% if not register_block and memeber_flag %}<a href="{{ pict.pk }}" class="del_image">Удалить</a>{% endif %}
+								</div>
+								<div class="col-md-12">
+									<br>
+									<b>Название:</b> {{ pict.name }}{% if pict.technique %}({{pict.technique}}){% endif %}
+									{% for copictures in copictures_list|lookup:pict.pk %}
+									<br>{{ copictures.coauthor.get_file_name }} <em>({{ copictures.coauthor.get_profile_type_display }})</em>
+									{% endfor %}
+									<br><b>Участие: </b><span style="text-decoration: underline;">{{ pict.get_participation_display }}</span>
 								</div>
 							</div>
 							<hr>

@@ -20,7 +20,7 @@ class MovieUploadForm(forms.ModelForm):
 
 		for field in self.fields:
 			if field == 'participation':
-				self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false', 'disabled': 'disabled'})
+				self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})#, 'disabled': 'disabled'})
 			else:
 				self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
 
@@ -36,7 +36,7 @@ class MovieUploadForm(forms.ModelForm):
 class MovieEditForm(forms.ModelForm):
 	class Meta:
 		model = Movie
-		fields = ('nomination', 'author', 'age', 'name_1', 'region_1', 'composer_1', 'poet_1',\
+		fields = ('participation', 'nomination', 'author', 'age', 'name_1', 'region_1', 'composer_1', 'poet_1',\
 			'name_2', 'region_2', 'composer_2', 'poet_2')#, 'file_1', 'file_2')#, 'descritpion')
 
 	def __init__(self, *args, **kwargs):
@@ -47,7 +47,10 @@ class MovieEditForm(forms.ModelForm):
 		self.fields['author'].empty_label = None
 
 		for field in self.fields:
-			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
+			if field == 'participation':
+				self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})#, 'disabled': 'disabled'})
+			else:
+				self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
 			if field in ['name_1', 'name_2', 'nomination']:
 				self.fields[field].required=True
 			else:

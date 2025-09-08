@@ -90,5 +90,19 @@
 	    		$('#id_age').removeAttr('required');
 	    	}
     	});
+
+    	if ($('#id_participation').val() == '2'){
+    		$('#id_participation').parent().after('<p style="color: red;" id="message">Возможность выступления в режиме онлайн-трансляции обязательна для согласования с оргкомитетом.</p');
+    	}else{
+    		$('#message').remove();
+    	}
+
+    	$('#id_participation').change(function(){
+    		if ($('#id_participation').val() == '2'){
+	    		$('#id_participation').parent().after('<p style="color: red; text-align: center;" id="message">Внимание! Возможность выступления в режиме онлайн-трансляции обязательна для согласования с оргкомитетом.</p');
+	    	}else{
+	    		$('#message').remove();
+	    	}
+    	});
 	</script>
 {% endblock %}
