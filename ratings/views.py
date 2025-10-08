@@ -539,19 +539,19 @@ def view_mov_nomination(request, pk):
 	for move_all in movies_all:
 		comovies[move_all.pk] = CoMovie.objects.filter(movie=move_all)
 
-	movies_1_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='1', participation='1')
-	movies_2_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='2', participation='1')
-	movies_3_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='3', participation='1')
-	movies_4_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='4', participation='1')
-	movies_5_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='5', participation='1')
-	movies_6_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='6', participation='1')
+	movies_1_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='1', participation__in =['1', '2'])
+	movies_2_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='2', participation__in =['1', '2'])
+	movies_3_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='3', participation__in =['1', '2'])
+	movies_4_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='4', participation__in =['1', '2'])
+	movies_5_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='5', participation__in =['1', '2'])
+	movies_6_1 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='6', participation__in =['1', '2'])
 
-	movies_1_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='1', participation='2')
-	movies_2_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='2', participation='2')
-	movies_3_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='3', participation='2')
-	movies_4_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='4', participation='2')
-	movies_5_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='5', participation='2')
-	movies_6_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='6', participation='2')
+	movies_1_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='1', participation='3')
+	movies_2_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='2', participation='3')
+	movies_3_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='3', participation='3')
+	movies_4_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='4', participation='3')
+	movies_5_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='5', participation='3')
+	movies_6_2 = Movie.objects.filter(nomination=nomination, author__main_user__profile__category='6', participation='3')
 
 	marks_1_1 = MovieMark.objects.filter(work__in = movies_1_1)
 	marks_2_1 = MovieMark.objects.filter(work__in = movies_2_1)
@@ -798,7 +798,7 @@ def view_mov_nomination(request, pk):
 		if 'type_1_1' in request.POST:
 			movies_list = movies_list_1_1
 			sorting = sorting_1_1
-			name = 'Студенты (профи) высших учебных заведений (очное участие)'
+			name = 'Студенты (профи) высших учебных заведений'
 			filename += 'students_vpo_profi_ochno (vocal)'
 		elif 'type_1_2' in request.POST:
 			movies_list = movies_list_1_2
@@ -808,7 +808,7 @@ def view_mov_nomination(request, pk):
 		elif  'type_2_1' in request.POST:
 			movies_list = movies_list_2_1
 			sorting = sorting_2_1
-			name = 'Студенты (любители) высших учебных заведений (очное участие)'
+			name = 'Студенты (любители) высших учебных заведений'
 			filename += 'students_vpo_lubiteli_ochno (vocal)'
 		elif  'type_2_2' in request.POST:
 			movies_list = movies_list_2_2
@@ -818,7 +818,7 @@ def view_mov_nomination(request, pk):
 		elif  'type_3_1' in request.POST:
 			movies_list = movies_list_3_1
 			sorting = sorting_3_1
-			name = 'Студенты (профи) учреждений среднего профессионального образовани (очное участие)'
+			name = 'Студенты (профи) учреждений среднего профессионального образовани'
 			filename += 'students_spo_profi_ochno (vocal)'
 		elif  'type_3_2' in request.POST:
 			movies_list = movies_list_3_2
@@ -828,7 +828,7 @@ def view_mov_nomination(request, pk):
 		elif  'type_4_1' in request.POST:
 			movies_list = movies_list_4_1
 			sorting = sorting_4_1
-			name = 'Студенты (любители) учреждений среднего профессионального образовани (очное участие)'
+			name = 'Студенты (любители) учреждений среднего профессионального образовани'
 			filename += 'students_spo_lubiteli_ochno (vocal)'
 		elif  'type_4_2' in request.POST:
 			movies_list = movies_list_4_2
@@ -838,7 +838,7 @@ def view_mov_nomination(request, pk):
 		elif  'type_5_1' in request.POST:
 			movies_list = movies_list_5_1
 			sorting = sorting_5_1
-			name = 'Профи (очное участие)'
+			name = 'Профи'
 			filename += 'profi_ochno (vocal)'
 		elif  'type_5_2' in request.POST:
 			movies_list = movies_list_5_2
@@ -848,7 +848,7 @@ def view_mov_nomination(request, pk):
 		elif  'type_6_1' in request.POST:
 			movies_list = movies_list_6_1
 			sorting = sorting_6_1
-			name = 'Любители (очное участие)'
+			name = 'Любители'
 			filename += 'lubiteli_ochno (vocal)'
 		elif  'type_6_2' in request.POST:
 			movies_list = movies_list_6_2
@@ -937,7 +937,12 @@ def view_mov_nomination(request, pk):
 			row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 			row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[0].width = Mm(10)
-			row_cells[1].text = movie.name_1
+
+			row_cells[1].text = ''
+			if movie.participation == '2':
+				row_cells[1].text += 'ONLINE\n\n'
+
+			row_cells[1].text += movie.name_1
 			if movie.composer_1:
 				row_cells[1].text += ' муз. ' + movie.composer_1
 			if movie.poet_1:
@@ -1059,10 +1064,10 @@ def get_check_list(request, pk, param):
 	font.size = Pt(8)
 
 	p = document.add_paragraph()
-	if param == '1':
-		p.add_run('Оценочный лист Всероссийского фестиваля конкурса народного творчества «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023г. (Очное участие)').bold = True
+	if param != '2':
+		p.add_run('Оценочный лист Всероссийского фестиваля конкурса народного творчества «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2025г.').bold = True
 	else:
-		p.add_run('Оценочный лист Всероссийского фестиваля конкурса народного творчества «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023г. (Зачное участие)').bold = True
+		p.add_run('Оценочный лист Всероссийского фестиваля конкурса народного творчества «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2025г. (Зачное участие)').bold = True
 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 	p.paragraph_format.space_after = 0
 	document.add_paragraph()
@@ -1074,16 +1079,18 @@ def get_check_list(request, pk, param):
 		criteria3 = 'Артистизм'
 
 
-		if param == '1':
-			filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист очного участия)')
+		if param != '2':
+			filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист)')
 		else:
 			filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист заочного участия)')
 
 		nominations = VocalNomination.objects.all()
 
 		for nomination in nominations:
-
-			find_cnt = Movie.objects.filter(nomination=nomination, participation = param).count()
+			if param == '0':
+				find_cnt = Movie.objects.filter(nomination=nomination).count()
+			else:
+				find_cnt = Movie.objects.filter(nomination=nomination, participation = param).count()
 			if find_cnt:
 				document.add_paragraph()
 				p = document.add_paragraph()
@@ -1093,8 +1100,10 @@ def get_check_list(request, pk, param):
 				for cat_num in ['1','2','3','4','5','6']:
 					category = CATEGORY_TYPES[cat_num]
 
-
-					members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param)
+					if param == '0':
+						members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num)
+					else:
+						members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param)
 
 					if members:
 						p = document.add_paragraph()
@@ -1256,16 +1265,18 @@ def get_check_list(request, pk, param):
 		criteria5 = 'Визуальное восприятие'
 
 
-		if param == '1':
-			filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист очного участия)')
+		if param != '2':
+			filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист)')
 		else:
 			filename = translit.slugify(str(user.profile.get_file_name()) + ' (оценочный лист заочного участия)')
 
 		nominations = ArtNomination.objects.all()
 
 		for nomination in nominations:
-
-			find_cnt = Picture.objects.filter(nomination=nomination, participation = param).count()
+			if param == '0':
+				find_cnt = Picture.objects.filter(nomination=nomination).count()
+			else:
+				find_cnt = Picture.objects.filter(nomination=nomination, participation = param).count()
 			if find_cnt:
 				document.add_paragraph()
 				p = document.add_paragraph()
@@ -1275,8 +1286,10 @@ def get_check_list(request, pk, param):
 				for cat_num in ['1','2','3','4','5','6']:
 					category = CATEGORY_TYPES[cat_num]
 
-
-					members = Picture.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param)
+					if param == '0':
+						members = Picture.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num)
+					else:
+						members = Picture.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param)
 
 					if members:
 						p = document.add_paragraph()
@@ -1498,13 +1511,13 @@ def get_common_check_list_pic(request, param):
 	p.paragraph_format.space_after = 0
 
 	p = document.add_paragraph()
-	p.add_run('«ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023 г.').bold = True
+	p.add_run('«ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2025 г.').bold = True
 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 	p.paragraph_format.space_after = 0
 
 	p = document.add_paragraph()
 	if param == '1':
-		p.add_run('Конкурсно-выставочная программа (очное участие)').underline = True
+		p.add_run('Конкурсно-выставочная программа').underline = True
 		filename = 'CommonList-DPI-near'
 	else:
 		p.add_run('Конкурсно-выставочная программа (заочное участие)').underline = True
@@ -1830,13 +1843,13 @@ def get_common_check_list_mov(request, param):
 	p.paragraph_format.space_after = 0
 
 	p = document.add_paragraph()
-	p.add_run('«ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023 г.').bold = True
+	p.add_run('«ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2025 г.').bold = True
 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 	p.paragraph_format.space_after = 0
 
 	p = document.add_paragraph()
-	if param == '1':
-		p.add_run('Концертно-конкурсная программа (очное участие)').underline = True
+	if param != '2':
+		p.add_run('Концертно-конкурсная программа').underline = True
 		filename = 'CommonList-Vocal-near'
 	else:
 		p.add_run('Концертно-конкурсная программа  (заочное участие)').underline = True
@@ -1870,7 +1883,10 @@ def get_common_check_list_mov(request, param):
 
 
 	for nomination in nominations:
-		find_cnt = Movie.objects.filter(nomination=nomination, participation = param).count()
+		if param == '0':
+			find_cnt = Movie.objects.filter(nomination=nomination).count()
+		else:
+			find_cnt = Movie.objects.filter(nomination=nomination, participation = param).count()
 		if find_cnt:
 			document.add_paragraph()
 			p = document.add_paragraph()
@@ -1879,7 +1895,10 @@ def get_common_check_list_mov(request, param):
 
 			for cat_num in ['1','2','3','4','5','6']:
 				category = CATEGORY_TYPES[cat_num]
-				members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param)
+				if param == '0':
+					members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num)
+				else:
+					members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param)
 
 				if members:
 					p = document.add_paragraph()
@@ -2158,14 +2177,14 @@ def get_protocol_pic(request, param):
 	p.paragraph_format.space_after = 0
 
 	p = document.add_paragraph()
-	p.add_run('всероссийского фестиваля-кокурса «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023 г.').bold = True
+	p.add_run('всероссийского фестиваля-кокурса «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2025 г.').bold = True
 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 	p.paragraph_format.space_after = 0
 
 	p = document.add_paragraph()
 	if param == '1':
-		p.add_run('Конкурсно-выставочная программа (очное участие)').underline = True
-		filename = translit.slugify('Протокол ДПИ (очно)')
+		p.add_run('Конкурсно-выставочная программа').underline = True
+		filename = translit.slugify('Протокол ДПИ')
 	else:
 		p.add_run('Конкурсно-выставочная программа (заочное участие)').underline = True
 		filename = translit.slugify('Протокол ДПИ (заочно)')
@@ -2295,14 +2314,14 @@ def get_protocol_mov(request, param):
 	p.paragraph_format.space_after = 0
 
 	p = document.add_paragraph()
-	p.add_run('всероссийского фестиваля-кокурса «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2023 г.').bold = True
+	p.add_run('всероссийского фестиваля-кокурса «ГАВРИЛОВСКИЕ ГУЛЯНИЯ», 2025 г.').bold = True
 	p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 	p.paragraph_format.space_after = 0
 
 	p = document.add_paragraph()
-	if param == '1':
-		p.add_run('Концертно-конкурсная программа (очное участие)').underline = True
-		filename = translit.slugify('Протокол ВОКАЛ (очно)')
+	if param != '2':
+		p.add_run('Концертно-конкурсная программа').underline = True
+		filename = translit.slugify('Протокол ВОКАЛ')
 	else:
 		p.add_run('Концертно-конкурсная  программа (заочное участие)').underline = True
 		filename = translit.slugify('Протокол ВОКАЛ (заочно)')
@@ -2335,7 +2354,11 @@ def get_protocol_mov(request, param):
 
 
 	for nomination in nominations:
-		find_cnt = Movie.objects.filter(nomination=nomination, participation = param, place__in = [0, 1, 2, 3]).count()
+		if param == '0':
+			find_cnt = Movie.objects.filter(nomination=nomination, place__in = [0, 1, 2, 3]).count()
+		else:
+			find_cnt = Movie.objects.filter(nomination=nomination, participation = param, place__in = [0, 1, 2, 3]).count()
+
 		if find_cnt:
 			document.add_paragraph()
 			p = document.add_paragraph()
@@ -2344,7 +2367,10 @@ def get_protocol_mov(request, param):
 
 			for cat_num in ['1','2','3','4','5','6']:
 				category = CATEGORY_TYPES[cat_num]
-				members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param, place__in = [0, 1, 2, 3]).order_by('place')
+				if param == '0':
+					members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, place__in = [0, 1, 2, 3]).order_by('place')
+				else:
+					members = Movie.objects.filter(nomination=nomination, author__main_user__profile__category=cat_num, participation = param, place__in = [0, 1, 2, 3]).order_by('place')
 
 				if members:
 					p = document.add_paragraph()

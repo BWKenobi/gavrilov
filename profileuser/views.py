@@ -478,14 +478,14 @@ def view_comings(request):
 	if not request.user.profile.register_accecc:
 		return redirect('home')
 
-	user_list = list(Movie.objects.filter(participation = '1').order_by('nomination').distinct().values_list('author__main_user', flat=True))
+	user_list = list(Movie.objects.filter(participation__in = ['1', '2']).order_by('nomination').distinct().values_list('author__main_user', flat=True))
 	users = User.objects.filter(pk__in = user_list)
 
 	movie_list = {}
 	for user in users:
-		movie_list[user.pk] = Movie.objects.filter(participation = '1', author__main_user = user)
+		movie_list[user.pk] = Movie.objects.filter(participation__in = ['1', '2'], author__main_user = user)
 
-	movies = Movie.objects.filter(participation = '1').order_by('nomination', 'author__main_user__profile__category')
+	movies = Movie.objects.filter(participation__in = ['1', '2']).order_by('nomination', 'author__main_user__profile__category')
 	
 	scene_numbers = movies.filter(scene_num=None)
 	scene_numbers_old = movies.filter(scene_num__isnull=False).order_by('-scene_num')
@@ -501,7 +501,7 @@ def view_comings(request):
 			movie.save()
 			cnt += 1
 
-	movies = Movie.objects.filter(participation = '1', has_come = True).order_by('scene_num')
+	movies = Movie.objects.filter(participation__in = ['1', '2'], has_come = True).order_by('scene_num')
 
 	if request.POST:
 		locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
@@ -583,6 +583,8 @@ def view_comings(request):
 			row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[0].width = Mm(10)
 			row_cells[1].text = str(movie)
+			if movie.participation == '2':
+				row_cells[1].text += ' (ONLINE)'
 			row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[1].width = Mm(70)
 			row_cells[2].text = movie.author.get_full_name()

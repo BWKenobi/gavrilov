@@ -65,7 +65,7 @@ def mark_card(request):
 	else:
 		pk = 1
 
-	movies = Movie.objects.filter(has_come = True, participation = '1').order_by('scene_num')
+	movies = Movie.objects.filter(has_come = True,).order_by('scene_num')
 	
 	criteria1 = 'Сложность и трактовка музыкальных произведений'
 	criteria2 = 'Интонационная выразительность'
