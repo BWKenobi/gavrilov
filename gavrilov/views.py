@@ -893,14 +893,14 @@ def move_order_view(request):
 		return redirect('home')
 
 
-	user_list = list(Movie.objects.filter(participation = '1').order_by('nomination').distinct().values_list('author__main_user', flat=True))
+	user_list = list(Movie.objects.filter(participation__in = ['1','2']).order_by('nomination').distinct().values_list('author__main_user', flat=True))
 	users = User.objects.filter(pk__in = user_list)
 
 	movie_list = {}
 	for user in users:
-		movie_list[user.pk] = Movie.objects.filter(participation = '1', author__main_user = user)
+		movie_list[user.pk] = Movie.objects.filter(participation__in = ['1','2'], author__main_user = user)
 
-	movies = Movie.objects.filter(participation = '1').order_by('nomination', 'author__main_user__profile__category')
+	movies = Movie.objects.filter(participation__in = ['1','2']).order_by('nomination', 'author__main_user__profile__category')
 
 	co_movies = {}
 	for movie in movies:
@@ -920,7 +920,7 @@ def move_order_view(request):
 			movie.save()
 			cnt += 1
 
-	movies = Movie.objects.filter(participation = '1').order_by('scene_num')
+	movies = Movie.objects.filter(participation__in = ['1','2']).order_by('scene_num')
 
 
 	if request.POST:
@@ -1003,7 +1003,11 @@ def move_order_view(request):
 			row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[0].width = Mm(10)
 
-			row_cells[1].text = movie.name_1
+			row_cells[1].text = ''
+			if movie.participation == '2':
+				row_cells[1].text += 'ONLINE\n\n'
+
+			row_cells[1].text += movie.name_1
 			if movie.composer_1:
 				row_cells[1].text += ' муз. ' +  movie.composer_1
 			if  movie.poet_1:
