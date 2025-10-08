@@ -1482,7 +1482,7 @@ def get_common_check_list_pic(request, param):
 	nominations = ArtNomination.objects.all()
 
 	filename = 'CommonList'
-	juri_chefs = Profile.objects.filter(chef_juri_accecc = True)
+	juri_chefs = Profile.objects.filter(chef_juri_accecc = True, juri_type = '2')
 	juris = Profile.objects.filter(juri_accecc = True, chef_juri_accecc = False, juri_type = '2').order_by('surname')
 
 	dte = date.today()
@@ -1814,7 +1814,7 @@ def get_common_check_list_mov(request, param):
 	nominations = VocalNomination.objects.all()
 
 	filename = 'CommonList'
-	juri_chefs = Profile.objects.filter(chef_juri_accecc = True)
+	juri_chefs = Profile.objects.filter(chef_juri_accecc = True, juri_type = '1')
 	juris = Profile.objects.filter(juri_accecc = True, chef_juri_accecc = False, juri_type = '1').order_by('surname')
 
 	dte = date.today()
@@ -2148,7 +2148,7 @@ def get_protocol_pic(request, param):
 	nominations = ArtNomination.objects.all()
 
 	filename = 'CommonList'
-	juri_chefs = Profile.objects.filter(chef_juri_accecc = True)
+	juri_chefs = Profile.objects.filter(chef_juri_accecc = True, juri_type = '2')
 	juris = Profile.objects.filter(juri_accecc = True, chef_juri_accecc = False, juri_type = '2').order_by('surname')
 
 	dte = date.today()
@@ -2285,7 +2285,7 @@ def get_protocol_mov(request, param):
 	nominations = VocalNomination.objects.all()
 
 	filename = 'CommonList'
-	juri_chefs = Profile.objects.filter(chef_juri_accecc = True)
+	juri_chefs = Profile.objects.filter(chef_juri_accecc = True, juri_type = '1')
 	juris = Profile.objects.filter(juri_accecc = True, chef_juri_accecc = False, juri_type = '1').order_by('surname')
 
 	dte = date.today()

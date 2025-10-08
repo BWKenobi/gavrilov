@@ -39,6 +39,8 @@ from pictures.models import Picture
 from profileuser.models import Profile
 from .models import MovieMark, PictureMark
 
+from .forms import MovieForm
+
 
 # Оценивание Вокала ОЧНО
 @login_required(login_url='/login/')
@@ -62,6 +64,8 @@ def mark_card(request):
 			pk = int(request.POST['pk']) - 1
 			if pk<1:
 				pk = 1
+		else:
+			pk = int(request.POST['movie'])
 	else:
 		pk = 1
 
@@ -96,8 +100,11 @@ def mark_card(request):
 
 		pk = movie.scene_num
 
+		movie_form = MovieForm(movies = movies, selected = pk, label_suffix='')
+
 	else: 
 		movie = None
+		movie_form = MovieForm(label_suffix='')
 
 	
 	args = {
@@ -109,6 +116,7 @@ def mark_card(request):
 		'mark1': mark1,
 		'mark2': mark2,
 		'mark3': mark3,
+		'movie_form': movie_form
 	}
 
 	return render(request, 'marks/mark_card.html', args)

@@ -155,10 +155,13 @@
 			<input type="text" value='{{pk}}' style="display: none;" name="pk">
 
 			<div class="row mt-2 pt-2 border-top border-info">
-				<div class="col-md-6">
+				<div class="col-md-3">
 					<button type="submit" class="btn btn-block mb-1 btn-success" name="rewerse">Назад</button>
 				</div>
 				<div class="col-md-6">
+					{{ movie_form.movie}}
+				</div>
+				<div class="col-md-3">
 					<button type="submit" class="btn btn-block mb-1 btn-primary" name="forward">Вперед</button>
 				</div>
 			</div>
@@ -268,6 +271,14 @@
 				$('.content-blocker').attr('style', 'display: block !important;');
 			});
 		});
+
+		$(document).ready(function(){
+			$('#id_movie').change(function(){
+				$('form').submit();
+				$('.content-blocker').attr('style', 'display: block !important;');
+			});
+		});
+		
 		
 	</script>
 {% endblock %}
