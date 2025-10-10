@@ -28,7 +28,7 @@ def view_art_nomination(request, pk):
 		return redirect('home')
 
 	nomination = ArtNomination.objects.get(pk=pk)
-	pictures = Picture.objects.filter(nomination=nomination, participation = '2')
+	pictures = Picture.objects.filter(nomination=nomination, participation = '1')
 
 	criterai1 = 'Соответствие названию, полнота раскрытия'
 	criterai2 = 'Техническое воспроизведение'

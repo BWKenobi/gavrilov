@@ -3,10 +3,10 @@
 {% load static %}
 
 {% block content %}
-	<div class="row col-md-12 col-lg-12 ">
+	<div class="row col-md-12 col-lg-12 width-auto">
 		<form action="" method="post" enctype="multipart/form-data" autocomplete="false" class="col-md-12 col-lg-12"> {% csrf_token %}
 			<div class="mx-auto mb-2 col-md-12 col-lg-12">
-				<h4 class="display-5 text-center">Номинация: <b>{{ nomination }}</b> (заочно)</h4>
+				<h4 class="display-5 text-center">Номинация: <b>{{ nomination }}</b></h4>
 				<h5 class="text-center text-danger">Оценки сохраняются автоматически</h5>
 
 			</div>
@@ -20,7 +20,7 @@
 			<form action="" method="post" autocomplete="false"> {% csrf_token %}
 				<div class="tab-content col-md-12 col-lg-12">
 					<div class="tab-pane {% if not master %}active{% endif %}" id="pictures" role="tab-panel">
-						<div class="mx-auto mb-5 col-md-12 col-lg-12">
+						<div class="mx-auto mb-5 col-md-12 col-lg-12 padding-small">
 							{% for pict in pictures %}
 							<div>
 								<div class="mx-auto text-center">
@@ -74,34 +74,34 @@
 									<div class="col-md-3"><b>{{ criterai1 }}</b></div>
 									<div class="row text-center col-md-9" data-criteria='1' data-pk="{{ pict.pk }}">
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>1</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>2</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>3</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>4</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>5</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>6</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>7</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>8</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>9</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark1_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span class="span-last">10</span></button>
 										</div>
 									</div>
 								</div>
@@ -110,34 +110,34 @@
 									<div class="col-md-3"><b>{{ criterai2 }}</b></div>
 									<div class="row text-center col-md-9" data-criteria='2' data-pk="{{ pict.pk }}">
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>1</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>2</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>3</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>4</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>5</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>6</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>7</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>8</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>9</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark2_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span class="span-last">10</button>
 										</div>
 									</div>
 								</div>
@@ -146,34 +146,34 @@
 									<div class="col-md-3"><b>{{ criterai3 }}</b></div>
 									<div class="row text-center col-md-9" data-criteria='3' data-pk="{{ pict.pk }}">
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>1</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>2</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>3</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>4</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>5</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>6</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>7</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>8</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>9</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark3_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span class="span-last">10</span></button>
 										</div>
 									</div>
 								</div>
@@ -182,34 +182,34 @@
 									<div class="col-md-3"><b>{{ criterai4 }}</b></div>
 									<div class="row text-center col-md-9" data-criteria='4' data-pk="{{ pict.pk }}">
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>1</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>2</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>3</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>4</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>5</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>6</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>7</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>8</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>9</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark4_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span class="span-last">10</span></button>
 										</div>
 									</div>
 								</div>
@@ -218,34 +218,34 @@
 									<div class="col-md-3"><b>{{ criterai5 }}</b></div>
 									<div class="row text-center col-md-9" data-criteria='5' data-pk="{{ pict.pk }}">
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}">1</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 1 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>1</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}">2</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 2 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>2</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}">3</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 3 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>3</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}">4</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 4 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>4</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}">5</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 5 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>5</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}">6</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 6 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>6</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}">7</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 7 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>7</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}">8</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 8 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>8</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}">9</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 9 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span>9</span></button>
 										</div>
 										<div class="col-1-my">
-											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}">10</button>
+											<button type="button" class="btn btn-block mb-1 {% if mark5_list|lookup:pict.pk == 10 %}btn-danger{% else %}btn-outline-secondary{% endif %}"><span class="span-last">10</span></button>
 										</div>
 									</div>
 								</div>
@@ -307,19 +307,19 @@
 
 				element = $(this).parent().parent().parent().parent().find('div[data-criteria=1]').find('.btn-danger');
 				if (element.length>0)
-					mark1 = $(element).text();
+					mark1 = $(element).find('span').text();
 				element = $(this).parent().parent().parent().parent().find('div[data-criteria=2]').find('.btn-danger');
 				if (element.length>0)
-					mark2 = $(element).text();
+					mark2 = $(element).find('span').text();
 				element = $(this).parent().parent().parent().parent().find('div[data-criteria=3]').find('.btn-danger');
 				if (element.length>0)
-					mark3 = $(element).text();
+					mark3 = $(element).find('span').text();
 				element = $(this).parent().parent().parent().parent().find('div[data-criteria=4]').find('.btn-danger');
 				if (element.length>0)
-					mark4 = $(element).text();
+					mark4 = $(element).find('span').text();
 				element = $(this).parent().parent().parent().parent().find('div[data-criteria=5]').find('.btn-danger');
 				if (element.length>0)
-					mark5 = $(element).text();
+					mark5 = $(element).find('span').text();
 
 				$.ajax({
 					url: url,
