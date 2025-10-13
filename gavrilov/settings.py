@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'years',
     'statements',
     'personals',
+    'certificates',
 ]
 
 MIDDLEWARE = [

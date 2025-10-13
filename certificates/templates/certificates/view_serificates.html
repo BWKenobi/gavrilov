@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="text-left mt-3 px-5" style="width: 100%;">
+		<b>СПИСОК УЧАСТНИКОВ</b>
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col" class="table-cel-width-5 align-middle">№</th>
+					<th scope="col" class="table-cel-width-30 align-middle">Участник</th>
+					<th scope="col" class="table-cel-width-35 align-middle">Учреждение</th>
+					<th scope="col" class="table-cel-width-20 align-middle">Руководители/преподаватели</th>
+					<th scope="col" class="table-cel-width-10 align-middle text-center">Сертификат</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for movie in movies %}
+					<tr class="members" data-pk="{{ movie.pk }}">
+						<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+						<td class="align-middle">{{ movie.author.get_full_name }}</td>
+						<td class="align-middle">{{ movie.author.main_user.profile.institution }}></td>
+						<td class="align-middle">
+							{% for teacher in teachers|lookup:movie.pk %}
+								{% if forloop.counter > 1 %}<br>{% endif %}
+								{{ teacher.coauthor.short_profile_type }} {{ teacher.coauthor.get_file_name }}
+							{% endfor %}
+						</td>
+						<td class="align-middle text-center">
+							{% if movie.certificate_file %}
+								<a href="{{ movie.certificate_file.url }}" target="_blank">скачать</a>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

@@ -57,7 +57,7 @@ urlpatterns += [
     path('statements/', include(('statements.urls', 'statements'))),
     path('personals/', include(('personals.urls', 'personals'))),
     path('marks/', include(('marks.urls', 'marks'))),
-    #path('certificates/', include(('certificates.urls', 'certificates'))),
+    path('certificates/', include(('certificates.urls', 'certificates'))),
 ]
 
 urlpatterns += [

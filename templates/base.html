@@ -103,7 +103,7 @@
                                 <div class="border-top my-3"></div>
                                 {% if request.user.profile.admin_access or request.user.profile.message_accecc %}
                                     <li class="nav-item">
-                                        <div class="nav-link {% if 'mailing' in request.path or 'statistic' in request.path or 'juri' in request.path %}active{% endif %}">
+                                        <div class="nav-link {% if 'mailing' in request.path or 'statistic' in request.path or 'juri' in request.path or 'certificates' in request.path or 'move_order' in request.path %}active{% endif %}">
                                             <span data-feather="command"></span>
                                             Администрирование 
                                         </div>
@@ -111,7 +111,7 @@
                                     <ul>
                                         {% if request.user.profile.message_accecc %}
                                             <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'mailing:send_info_message' %}">
+                                                <a class="nav-link {% if 'mailing' in request.path %}active{% endif %}" href="{% url 'mailing:send_info_message' %}">
                                                     <span data-feather="minus"></span>
                                                     Cообщения
                                                 </a>
@@ -119,25 +119,25 @@
                                         {% endif %}
                                         {% if request.user.profile.admin_access %}
                                             <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'juri_view' %}">
+                                                <a class="nav-link {% if 'juri' in request.path %}active{% endif %}" href="{% url 'juri_view' %}">
                                                     <span data-feather="minus"></span>
                                                     Члены жюри
                                                 </a>
                                             </li>
                                             <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'statistic_contestant' %}">
+                                                <a class="nav-link {% if not 'statistic_contestant_add' in request.path and 'statistic_contestant' in request.path %}active{% endif %}" href="{% url 'statistic_contestant' %}">
                                                     <span data-feather="minus"></span>
                                                     Учреждения
                                                 </a>
                                             </li>
                                             <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'statistic_contestant_add' %}">
+                                                <a class="nav-link {% if 'statistic_contestant_add' in request.path %}active{% endif %}" href="{% url 'statistic_contestant_add' %}">
                                                     <span data-feather="minus"></span>
                                                     Заявки
                                                 </a>
                                             </li>
                                             <li class="nav-item list-unstyled ">
-                                                <a class="nav-link" href="{% url 'statistic_invoices' %}">
+                                                <a class="nav-link {% if 'statistic_invoices' in request.path %}active{% endif %}" href="{% url 'statistic_invoices' %}">
                                                     <span data-feather="minus"></span>
                                                     Статистика по оплате
                                                 </a>
@@ -147,6 +147,13 @@
                                                     <span data-feather="minus"></span>
                                                     Порядок выступлений
                                                 </a>
+                                            </li>
+                                            <li class="nav-item list-unstyled ">
+                                                <a class="nav-link {% if 'certificates' in request.path %}active{% endif %}" href="{% url 'certificates:view_serificates' %}" >
+                                                    <span data-feather="minus"></span>
+                                                    Сертификаты
+                                                </a>
+                                            </li>
                                         {% endif %}
                                     </ul>
                                     <li class="nav-item">
