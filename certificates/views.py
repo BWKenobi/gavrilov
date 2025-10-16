@@ -96,7 +96,7 @@ def send_serificates(request):
 		if settings.DEBUG:
 			to_email = 'bwkenobi@yandex.ru'
 		else:
-			to_email = user.user.email
+			to_email = user.email
 
 		sex = user.profile.sex()
 		sex_valid = user.profile.sex_valid()
