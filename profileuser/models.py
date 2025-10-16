@@ -8,6 +8,19 @@ from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 
 
+def make_certificate_path(instance, filename):
+	names = filename.split('.')
+	new_filename = ''
+	for name in names:
+		if name != names[0]:
+			new_filename += '.'
+		new_filename += translit.slugify(name)
+
+	path = 'sertificate/%s' % new_filename
+
+	return path
+
+
 class Profile(models.Model):
 	CATEGORY_TYPES = (
 		('1', 'Студенты (профи) высших учебных заведений'),
@@ -194,6 +207,8 @@ class CoProfile(models.Model):
 
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 
+	certificate_file = models.FileField(verbose_name='Сертификат', blank=True, null=True, upload_to = make_certificate_path)
+
 	def __str__(self):
 		if self.profile_type == '0':
 			if self.coprofile_type == '2':
@@ -349,3 +364,30 @@ def save_post_profile(sender, **kwargs):
 		)
 
 
+@receiver(post_delete, sender = CoProfile)
+def coprofile_post_delete_handler(sender, **kwargs):
+	coprofile = kwargs['instance']
+
+	if coprofile.certificate_file:
+		if os.path.isfile(coprofile.certificate_file.path):
+			os.remove(coprofile.certificate_file.path)
+
+
+@receiver(pre_save, sender = CoProfile)
+def coprofile_pre_save_handler(sender, **kwargs):
+	coprofile = kwargs['instance']
+
+	if not coprofile.pk:
+		return False
+
+	try:
+		old_file = CoProfile.objects.get(pk=coprofile.pk).certificate_file
+
+		if old_file:
+			new_file = coprofile.certificate_file
+			if not old_file==new_file:
+				if os.path.isfile(old_file.path):
+					os.remove(old_file.path)
+	except CoProfile.DoesNotExist:
+		pass
+	

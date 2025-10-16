@@ -21,8 +21,7 @@ def make_certificate_path(instance, filename):
 	path = 'sertificate/%s' % new_filename
 
 	return path
-
-
+	
 class Movie(models.Model):
 	PARTICIPATION_TYPE = (
 		('1', 'очное'),
@@ -62,7 +61,7 @@ class Movie(models.Model):
 
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 
-	certificate_file = models.FileField(verbose_name='Сертификат', blank=True, null=True, upload_to = make_certificate_path)
+	
 
 	class Meta:
 		ordering = ['nomination', 'name_1', 'name_2']
@@ -90,30 +89,3 @@ class CoMovie(models.Model):
 		return str(self.movie) + ' - ' + str(self.coauthor)
 
 
-@receiver(post_delete, sender = Movie)
-def movie_post_delete_handler(sender, **kwargs):
-	movie = kwargs['instance']
-
-	if movie.certificate_file:
-		if os.path.isfile(movie.certificate_file.path):
-			os.remove(movie.certificate_file.path)
-
-
-@receiver(pre_save, sender = Movie)
-def profile_pre_save_handler(sender, **kwargs):
-	movie = kwargs['instance']
-
-	if not movie.pk:
-		return False
-
-	try:
-		old_file = Movie.objects.get(pk=movie.pk).certificate_file
-
-		if old_file:
-			new_file = movie.certificate_file
-			if not old_file==new_file:
-				if os.path.isfile(old_file.path):
-					os.remove(old_file.path)
-	except Movie.DoesNotExist:
-		pass
-	

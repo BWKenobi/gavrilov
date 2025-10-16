@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="col-md-12">
+		<div class="text-left mt-3 px-5" style="width: 100%;">
+			<b>СПИСОК ПОЛУЧАТЕЛЕЙ СЕРТИФИКАТОВ</b>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col" class="table-cel-width-5 align-middle">№</th>
+						<th scope="col" class="table-cel-width-65 align-middle">Участник</th>
+						<th scope="col" class="table-cel-width-20 align-middle">Тип участника</th>
+						<th scope="col" class="table-cel-width-10 align-middle text-center">Сертификат</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for coprofile in coprofiles %}
+						<tr class="members" data-pk="{{ coprofile.pk }}">
+							<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+							<td class="align-middle">{{ coprofile.get_full_name }}</td>
+							<td class="align-middle">{{ coprofile.get_profile_type_display }}</td>
+							<td class="align-middle text-center">
+								{% if coprofile.certificate_file %}
+									<a href="{{ coprofile.certificate_file.url }}" target="_blank">скачать</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% endblock %}

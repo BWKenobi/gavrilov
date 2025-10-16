@@ -6,6 +6,8 @@ import json
 from io import BytesIO
 import base64
 
+from django.contrib.auth.models import User
+
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, redirect
@@ -37,86 +39,98 @@ def view_serificates(request):
 		return redirect('home')
 
 	movies = Movie.objects.filter(has_come = True)
-	teachers = {}
+
+	coprofiles_pk = []
 	for movie in movies:
-		teachers[movie.pk] = CoMovie.objects.filter(movie = movie)
+		coprofiles_pk.append(movie.author.pk)
+		comovies = CoMovie.objects.filter(movie = movie)
+		for comovie in comovies:
+			coprofiles_pk.append(comovie.coauthor.pk)
+
+	coprofiles = CoProfile.objects.filter(pk__in = coprofiles_pk).order_by('main_user', 'surname', 'name','name2')
 
 	args = {
-		'movies': movies,
-		'teachers': teachers,
+		'coprofiles': coprofiles,
 	}
 	return render(request, 'certificates/view_serificates.html', args)
 
 
 @login_required(login_url='/login/')
+def view_my_serificates(request):
+	coprofiles = CoProfile.objects.filter(main_user = request.user).order_by('surname', 'name','name2')
+
+	args = {
+		'coprofiles': coprofiles,
+	}
+	return render(request, 'certificates/view_my_serificates.html', args)
+
+
+@login_required(login_url='/login/')
 def del_serificates(request):
-	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False)
+	coprofiles = CoProfile.objects.all()
 
-	for user in users:
-		user.certificate_num = ''
-		user.certificate_file = None
-		user.save()
-		comembers = CoProfile.objects.filter(lead=user.user)
-		for comember in comembers:
-			comember.certificate_num = ''
-			comember.certificate_file = None
-			comember.save()
+	for coprofile in coprofiles:
+		coprofile.certificate_file = None
+		coprofile.save()
 
-	return redirect('home')
+	return redirect('certificates:view_serificates')
 
 
 @login_required(login_url='/login/')
 def send_serificates(request):
-	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False)
-	
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	users_pk = list(Movie.objects.filter(has_come = True).values_list('author__main_user', flat=True))
+	users = User.objects.filter(pk__in = users_pk)
+
 	current_site = get_current_site(request)
 	protocol = 'http'
 	if request.is_secure():
 		protocol = 'https'
 	domain = current_site.domain
 
-	signature = 'С уважением,\r\nавторы портала - AstVisionScience'
-	sign = signature.split('\r\n')
-	message = 'Во вложении иенные сертификаты'
-	text = message.split('\r\n')
-
 	count = 0
 	for user in users:
 		mail_subject = 'Информационное письмо'
-		to_email = user.user.email
-		sex = user.sex()
-		sex_valid = user.sex_valid()
-		name = user.get_io_name()
+		if settings.DEBUG:
+			to_email = 'bwkenobi@yandex.ru'
+		else:
+			to_email = user.user.email
 
-		addons= CoProfile.objects.filter(lead=user.user)
+		sex = user.profile.sex()
+		sex_valid = user.profile.sex_valid()
+		name = user.profile.get_io_name()
 
+		movies = Movie.objects.filter(author__main_user = user)
+
+		coprofiles_pk = []
+		for movie in movies:
+			comovies = CoMovie.objects.filter(movie = movie)
+			for comovie in comovies:
+				coprofiles_pk.append(comovie.coauthor.pk)
+
+		addons = CoProfile.objects.filter(pk__in = coprofiles_pk).order_by('surname', 'name','name2')
+
+		coprofile = CoProfile.objects.filter(main_user=user, self_flag = True).first()
 		args = {
 			'sex_valid': sex_valid,
 			'sex': sex, 
 			'name': name,
-			'message': message,
-			'text': text,
-			'signature': signature,
-			'sign': sign,
-			'user': user,
 			'addons': addons,
 			'protocol': protocol,
 			'domain': domain
 		}
 		
-		message = render_to_string('info_email.html', args)
+		message = render_to_string('certificates/info_email.html', args)
 
-		message_html = render_to_string('info_email_html.html', args)
+		message_html = render_to_string('certificates/info_email_html.html', args)
 
 		email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
 
-		email.attach_file(user.certificate_file.path)
-		
-
-		
+		email.attach_file(coprofile.certificate_file.path)
+				
 		email.send()
-
-		#send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
 
 		count += 1
 
@@ -124,81 +138,52 @@ def send_serificates(request):
 			count = 0
 			time.sleep(1.5)
 
+	return redirect('certificates:view_serificates')
 
-
-
-	return redirect('home')
 
 @login_required(login_url='/login/')
 def generate_sertificates(request):
-	sertificate_num = int(request.GET['field1'])
-	sertificate_add = request.GET['field2']
-	if not sertificate_add:
-		sertificate_add = ' '
-	sertificate_add += request.GET['field3']
+	if not request.user.profile.admin_access:
+		return redirect('home')
+
+	movies = Movie.objects.filter(has_come = True)
+
+	coprofiles_pk = []
+	for movie in movies:
+		coprofiles_pk.append(movie.author.pk)
+		comovies = CoMovie.objects.filter(movie = movie)
+		for comovie in comovies:
+			coprofiles_pk.append(comovie.coauthor.pk)
+
+	coprofiles = CoProfile.objects.filter(pk__in = coprofiles_pk).order_by('main_user', 'surname', 'name','name2')
 
 
-	members = []
-
-	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False). \
-		order_by('-moderator_access', '-admin_access', '-speaker', 'surname', 'name', 'name2')
-
-	for user in users:
-		member = {
-			'name': user.get_full_name(),
-			'status': user.speaker,
-			'model': user
-		}
-		members.append(member)
-		comembers = CoProfile.objects.filter(lead=user.user)
-		if comembers:
-			for comember in comembers:
-				member = {
-					'name': comember.get_full_name(),
-					'status': comember.speaker,
-					'model': comember
-				}
-				members.append(member)
-	
-	members =  sorted(members, key=lambda i: (i['name']))
-
-	time.sleep(1)
-
-	
 	font_url = os.path.join(settings.BASE_DIR, 'static/fonts/chekhovskoy.ttf')
-	img_speaker_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate_speaker_2025-1.jpg')
-	img_member_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate_member_2025-1.jpg')
+	img_url = os.path.join(settings.BASE_DIR, 'static/img/cer-2025.jpg')
 
-	for member in members:
-		sertificate_str_num = str(sertificate_num)+sertificate_add
-		pdf = PDF(orientation='L', unit='mm', format='A4')
+	for coprofile in coprofiles:
+		pdf = PDF(orientation='P', unit='mm', format='A4')
 		pdf.add_page()
 		pdf.add_font('Chehkovskoy', '', font_url , uni=True)
-		
-		if member['status']!='2':
-			pdf.image(img_speaker_url, 0, 0, pdf.w, pdf.h)
-		else:
-			pdf.image(img_member_url, 0, 0, pdf.w, pdf.h)
+		pdf.image(img_url, 0, 0, pdf.w, pdf.h)
 		
 		pdf.set_font('Chehkovskoy', '', 18)
 		pdf.set_text_color(0, 0, 0)
-		pdf.set_xy(0.0, 110.0)
-		pdf.cell(w=297.0, h=5.0, align='C', txt = '№' + sertificate_str_num)
-		pdf.set_xy(0.0, 130.0)
-		pdf.cell(w=297.0, h=5.0, align='C', txt = member['name'])
+		pdf.set_xy(5.0, 180.0)
+		if coprofile.profile_type == '0':
+			pdf.multi_cell(w=200.0, h=5.0, align='C', txt = coprofile.get_full_name() + '\n\n' + coprofile.main_user.profile.institution)
+		else:
+			pdf.multi_cell(w=200.0, h=5.0, align='C', txt = coprofile.get_full_name() + ' (' + coprofile.get_profile_type_display() + ')\n\n' + coprofile.main_user.profile.institution)
 
 		pdf.output(os.path.join(settings.MEDIA_ROOT, 'test.pdf'), 'F')
 		file  = open(os.path.join(settings.MEDIA_ROOT, 'test.pdf'), 'rb')
 		djangofile = File(file)
 
-		member['model'].certificate_file.save((member['name'])+'.pdf', djangofile)
-		member['model'].certificate_num = sertificate_str_num
-		member['model'].save()
+		coprofile.certificate_file.save(coprofile.get_full_name() + '.pdf', djangofile)
+		coprofile.save()
 
 		file.close()
 
-		sertificate_num += 1
-	sertificate_num -= 1
 
-	return HttpResponse(json.dumps({'last_num': str(sertificate_num) + sertificate_add}))
+	return HttpResponse('')
 

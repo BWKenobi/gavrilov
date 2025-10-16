@@ -325,6 +325,12 @@
                                             Сканы согласий
                                         </a>
                                     </li>
+                                    <li class="nav-item list-unstyled">
+                                        <a class="nav-link {% if 'my_serificates' in request.path %}active{% endif %}" href="{% url 'certificates:view_my_serificates' %}">
+                                            <span data-feather="layers"></span>
+                                            Сертификаты
+                                        </a>
+                                    </li>
                                     <div class="border-top my-3"></div>
                                 {% endif %}
                             {% endif %}

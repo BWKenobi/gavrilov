@@ -3,38 +3,77 @@
 {% load static %}
 
 {% block content %}
-	<div class="text-left mt-3 px-5" style="width: 100%;">
-		<b>СПИСОК УЧАСТНИКОВ</b>
-		<table class="table">
-			<thead>
-				<tr>
-					<th scope="col" class="table-cel-width-5 align-middle">№</th>
-					<th scope="col" class="table-cel-width-30 align-middle">Участник</th>
-					<th scope="col" class="table-cel-width-35 align-middle">Учреждение</th>
-					<th scope="col" class="table-cel-width-20 align-middle">Руководители/преподаватели</th>
-					<th scope="col" class="table-cel-width-10 align-middle text-center">Сертификат</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for movie in movies %}
-					<tr class="members" data-pk="{{ movie.pk }}">
-						<th scope="row" class="align-middle">{{ forloop.counter}}</th>
-						<td class="align-middle">{{ movie.author.get_full_name }}</td>
-						<td class="align-middle">{{ movie.author.main_user.profile.institution }}></td>
-						<td class="align-middle">
-							{% for teacher in teachers|lookup:movie.pk %}
-								{% if forloop.counter > 1 %}<br>{% endif %}
-								{{ teacher.coauthor.short_profile_type }} {{ teacher.coauthor.get_file_name }}
-							{% endfor %}
-						</td>
-						<td class="align-middle text-center">
-							{% if movie.certificate_file %}
-								<a href="{{ movie.certificate_file.url }}" target="_blank">скачать</a>
-							{% endif %}
-						</td>
+	<div class="col-md-12">
+		{% if request.user.profile.message_accecc %}
+			<div class="row align-middle px-5">
+				<div class="col-md-12 text-right mb-5">
+
+					<input type="submit" value="Сформировать сертификаты" name="create_sert" id="all_creation" >
+					<input type="submit" value="Разослать сертификаты" name="send_sert" id="send_sert">
+					<input type="submit" value="Удалить сертификаты" name="delete_sert" id="delete_sert">
+				</div>
+			</div>
+		{% endif %}
+
+		<div class="text-left mt-3 px-5" style="width: 100%;">
+			<b>СПИСОК ПОЛУЧАТЕЛЕЙ СЕРТИФИКАТОВ</b>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col" class="table-cel-width-5 align-middle">№</th>
+						<th scope="col" class="table-cel-width-30 align-middle">Участник</th>
+						<th scope="col" class="table-cel-width-35 align-middle">Учреждение</th>
+						<th scope="col" class="table-cel-width-20 align-middle">Тип участника</th>
+						<th scope="col" class="table-cel-width-10 align-middle text-center">Сертификат</th>
 					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{% for coprofile in coprofiles %}
+						<tr class="members" data-pk="{{ coprofile.pk }}">
+							<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+							<td class="align-middle">{{ coprofile.get_full_name }}</td>
+							<td class="align-middle">{{ coprofile.main_user.profile.institution }}></td>
+							<td class="align-middle">{{ coprofile.get_profile_type_display }}</td>
+							<td class="align-middle text-center">
+								{% if coprofile.certificate_file %}
+									<a href="{{ coprofile.certificate_file.url }}" target="_blank">скачать</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$('#all_creation').click(function(){
+			$('.content-blocker').show();
+			$.ajax({
+				url: "{% url 'certificates:generate_sertificates' %}",
+				data: {
+				},
+				success: function(data){
+					$('.content-blocker').hide();
+					alert("Сертификаты сформированы.");
+					document.location.reload();
+				}
+			});
+		});
+		
+		$('#delete_sert').click(function(){
+			window.location.href = "{% url 'certificates:del_serificates' %}";
+		});
+
+		$('#send_sert').click(function(){
+			$('.content-blocker').show();
+			window.location.href = "{% url 'certificates:send_serificates' %}";
+		});
+	});
+
+	</script>
 {% endblock %}
